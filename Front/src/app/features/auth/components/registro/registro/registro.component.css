@@ -1,0 +1,22 @@
+
+.login-link {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+
+  p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: var(--color-accent-hover);
+        text-decoration: underline;
+      }
+    }
+  }
+}

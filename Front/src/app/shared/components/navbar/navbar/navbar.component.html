@@ -1,0 +1,69 @@
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <a routerLink="/dashboard" class="logo-link">
+        <i class="pi pi-box text-3xl"></i>
+        <span class="logo-text">Gestión Peticiones</span>
+      </a>
+    </div>
+
+    <!-- Search (opcional) -->
+    <div class="navbar-search">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input 
+          type="text" 
+          pInputText 
+          placeholder="Buscar... (Ctrl+K)"
+          class="search-input"
+        />
+      </span>
+    </div>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+      <!-- Toggle Theme -->
+      <button 
+        pButton 
+        type="button" 
+        [icon]="(isDarkMode$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
+        class="p-button-rounded p-button-text"
+        (click)="toggleTheme()"
+        pTooltip="Cambiar tema"
+        tooltipPosition="bottom"
+      ></button>
+
+      <!-- Notifications -->
+      <button 
+        pButton 
+        type="button" 
+        icon="pi pi-bell"
+        class="p-button-rounded p-button-text"
+        (click)="openNotifications()"
+        pTooltip="Notificaciones"
+        tooltipPosition="bottom"
+        pBadge
+        [value]="(unreadCount$ | async)?.toString() || '0'"
+        [severity]="(unreadCount$ | async) && (unreadCount$ | async)! > 0 ? 'danger' : 'secondary'"
+      ></button>
+
+      <!-- User Menu -->
+      <div class="user-menu">
+        <p-avatar 
+          [label]="currentUser?.nombre_completo | initials"
+          size="large"
+          shape="circle"
+          [style]="{ 'background-color': 'var(--color-accent)', 'color': '#000' }"
+          (click)="menu.toggle($event)"
+        ></p-avatar>
+        
+        <p-menu 
+          #menu 
+          [model]="userMenuItems" 
+          [popup]="true"
+        ></p-menu>
+      </div>
+    </div>
+  </div>
+</nav>

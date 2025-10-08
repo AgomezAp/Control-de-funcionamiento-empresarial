@@ -1,0 +1,90 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <i class="pi pi-box logo-icon"></i>
+      <h1>Sistema de Gestión de Peticiones</h1>
+      <p>Inicia sesión para continuar</p>
+    </div>
+
+    <p-card>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="correo">Correo electrónico</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input 
+              id="correo"
+              type="email" 
+              pInputText 
+              formControlName="correo"
+              placeholder="correo@ejemplo.com"
+              class="w-full"
+              [class.ng-invalid]="hasError('correo', 'required') || hasError('correo', 'email')"
+            />
+          </span>
+          <small class="p-error" *ngIf="hasError('correo', 'required')">
+            El correo es requerido
+          </small>
+          <small class="p-error" *ngIf="hasError('correo', 'email')">
+            Ingresa un correo válido
+          </small>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="contrasena">Contraseña</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-lock"></i>
+            <p-password 
+              id="contrasena"
+              formControlName="contrasena"
+              placeholder="••••••••"
+              [toggleMask]="true"
+              [feedback]="false"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              [class.ng-invalid]="hasError('contrasena', 'required') || hasError('contrasena', 'minlength')"
+            ></p-password>
+          </span>
+          <small class="p-error" *ngIf="hasError('contrasena', 'required')">
+            La contraseña es requerida
+          </small>
+          <small class="p-error" *ngIf="hasError('contrasena', 'minlength')">
+            La contraseña debe tener al menos 6 caracteres
+          </small>
+        </div>
+
+        <!-- Remember & Forgot -->
+        <div class="form-options">
+          <p-checkbox 
+            formControlName="recordar" 
+            label="Recordarme"
+            binary="true"
+          ></p-checkbox>
+          <a routerLink="/auth/recuperar-password" class="forgot-link">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          pButton 
+          type="submit" 
+          label="Iniciar Sesión"
+          icon="pi pi-sign-in"
+          class="w-full"
+          [loading]="loading"
+          [disabled]="loginForm.invalid || loading"
+        ></button>
+
+        <!-- Register Link -->
+        <div class="register-link">
+          <p>¿No tienes cuenta? 
+            <a routerLink="/auth/registro">Regístrate aquí</a>
+          </p>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

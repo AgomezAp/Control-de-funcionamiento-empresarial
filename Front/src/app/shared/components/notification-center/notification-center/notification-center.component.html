@@ -1,0 +1,63 @@
+<div class="notification-center">
+  <div class="notification-header">
+    <h3>Notificaciones</h3>
+    <div class="header-actions">
+      <button 
+        pButton 
+        type="button" 
+        label="Marcar todas como leídas"
+        icon="pi pi-check"
+        class="p-button-text p-button-sm"
+        (click)="markAllAsRead()"
+        *ngIf="(unreadCount$ | async)! > 0"
+      ></button>
+      <button 
+        pButton 
+        type="button" 
+        icon="pi pi-trash"
+        class="p-button-text p-button-sm p-button-danger"
+        pTooltip="Limpiar todas"
+        (click)="clearAll()"
+      ></button>
+    </div>
+  </div>
+
+  <p-scrollPanel [style]="{width: '100%', height: '500px'}">
+    <div class="notification-list" *ngIf="(notificaciones$ | async) as notificaciones">
+      <div 
+        *ngFor="let notif of notificaciones"
+        class="notification-item"
+        [class.unread]="!notif.leida"
+        (click)="markAsRead(notif)"
+      >
+        <div class="notification-icon">
+          <i [class]="getIcon(notif.tipo)"></i>
+        </div>
+        
+        <div class="notification-content">
+          <h4 class="notification-title">{{ notif.titulo }}</h4>
+          <p class="notification-message">{{ notif.mensaje }}</p>
+          <span class="notification-time">{{ notif.fecha | timeAgo }}</span>
+        </div>
+
+        <div class="notification-actions">
+          <span class="unread-indicator" *ngIf="!notif.leida"></span>
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-times"
+            class="p-button-rounded p-button-text p-button-sm"
+            (click)="deleteNotification(notif, $event)"
+          ></button>
+        </div>
+      </div>
+
+      <app-empty-state
+        *ngIf="notificaciones.length === 0"
+        icon="pi pi-bell-slash"
+        title="No hay notificaciones"
+        message="Aquí aparecerán tus notificaciones"
+      ></app-empty-state>
+    </div>
+  </p-scrollPanel>
+</div>

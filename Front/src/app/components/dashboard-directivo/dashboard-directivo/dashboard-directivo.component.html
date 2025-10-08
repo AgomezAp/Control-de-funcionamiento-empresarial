@@ -1,0 +1,90 @@
+<div class="dashboard-directivo">
+  <div class="dashboard-header">
+    <h1>Dashboard - {{ areaUsuario }}</h1>
+    <p class="subtitle">Vista general de tu área</p>
+  </div>
+
+  <!-- KPIs del Área -->
+  <div class="kpi-grid">
+    <p-card styleClass="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-icon" style="background-color: rgba(33, 150, 243, 0.1);">
+          <i class="pi pi-file" style="color: #2196F3;"></i>
+        </div>
+        <div class="kpi-details">
+          <p class="kpi-label">Total Peticiones</p>
+          <h2 class="kpi-value">{{ totalPeticionesArea }}</h2>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1);">
+          <i class="pi pi-clock" style="color: #FFC107;"></i>
+        </div>
+        <div class="kpi-details">
+          <p class="kpi-label">Pendientes</p>
+          <h2 class="kpi-value">{{ peticionesPendientes }}</h2>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-icon" style="background-color: rgba(76, 175, 80, 0.1);">
+          <i class="pi pi-spin pi-spinner" style="color: #4CAF50;"></i>
+        </div>
+        <div class="kpi-details">
+          <p class="kpi-label">En Progreso</p>
+          <h2 class="kpi-value">{{ peticionesEnProgreso }}</h2>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1);">
+          <i class="pi pi-dollar" style="color: #FFC107;"></i>
+        </div>
+        <div class="kpi-details">
+          <p class="kpi-label">Costo Total Área</p>
+          <h2 class="kpi-value">{{ costoTotalArea | currencyCop }}</h2>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Gráfica de Productividad del Equipo -->
+  <p-card header="Productividad del Equipo">
+    <p-chart type="bar" [data]="chartPeticiones" [options]="chartOptions"></p-chart>
+  </p-card>
+
+  <!-- Tabla de Estadísticas del Equipo -->
+  <p-card header="Estadísticas del Equipo">
+    <p-table [value]="equipoStats" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Usuario</th>
+          <th>Creadas</th>
+          <th>Resueltas</th>
+          <th>Tiempo Promedio</th>
+          <th>Costo Generado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-stat>
+        <tr>
+          <td>{{ stat.usuario }}</td>
+          <td>
+            <app-badge [label]="stat.peticionesCreadas.toString()" severity="info"></app-badge>
+          </td>
+          <td>
+            <app-badge [label]="stat.peticionesResueltas.toString()" severity="success"></app-badge>
+          </td>
+          <td>{{ stat.tiempoPromedio?.toFixed(2) || 'N/A' }} horas</td>
+          <td>{{ stat.costoGenerado | currencyCop }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

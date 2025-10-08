@@ -1,0 +1,56 @@
+<div class="file-upload-container">
+  <div 
+    class="drop-zone"
+    appDragDrop
+    (filesDropped)="onFilesDropped($event)"
+    [class.disabled]="disabled"
+  >
+    <i class="pi pi-cloud-upload drop-icon"></i>
+    <p class="drop-text">Arrastra archivos aquí o haz clic para seleccionar</p>
+    <p class="drop-hint">Tamaño máximo: {{ maxFileSize | fileSize }}</p>
+    
+    <input 
+      type="file" 
+      #fileInput
+      [multiple]="multiple"
+      [accept]="accept"
+      [disabled]="disabled"
+      (change)="onSelect($event)"
+      style="display: none;"
+    />
+    
+    <button 
+      pButton 
+      type="button" 
+      label="Seleccionar archivos"
+      icon="pi pi-folder-open"
+      class="p-button-outlined"
+      (click)="fileInput.click()"
+      [disabled]="disabled"
+    ></button>
+  </div>
+
+  <div class="upload-progress" *ngIf="uploading">
+    <p-progressBar [value]="uploadProgress"></p-progressBar>
+  </div>
+
+  <div class="uploaded-files" *ngIf="uploadedFiles.length > 0">
+    <h4>Archivos seleccionados ({{ uploadedFiles.length }})</h4>
+    <div class="file-list">
+      <div class="file-item" *ngFor="let file of uploadedFiles">
+        <i class="pi pi-file file-icon"></i>
+        <div class="file-info">
+          <p class="file-name">{{ file.name }}</p>
+          <p class="file-size">{{ file.size | fileSize }}</p>
+        </div>
+        <button 
+          pButton 
+          type="button" 
+          icon="pi pi-times"
+          class="p-button-rounded p-button-text p-button-danger"
+          (click)="removeFile(file)"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>

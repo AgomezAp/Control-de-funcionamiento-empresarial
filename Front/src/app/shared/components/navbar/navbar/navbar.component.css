@@ -1,0 +1,84 @@
+.navbar {
+  height: 70px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all var(--transition-normal);
+}
+
+.navbar-content {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+
+    &:hover {
+      color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    i {
+      color: var(--color-accent);
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+  }
+}
+
+.navbar-search {
+  flex: 1;
+  max-width: 500px;
+
+  .search-input {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.user-menu {
+  cursor: pointer;
+  
+  ::ng-deep .p-avatar {
+    transition: transform var(--transition-fast);
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

@@ -1,0 +1,116 @@
+.timer-container {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%);
+  border: 2px solid var(--color-en-progreso);
+  border-radius: var(--border-radius-lg);
+  transition: all var(--transition-normal);
+
+  &.warning {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
+    border-color: var(--color-warning);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  &.expired {
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(211, 47, 47, 0.1) 100%);
+    border-color: var(--color-danger);
+    animation: shake 0.5s ease-in-out;
+  }
+}
+
+.timer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-en-progreso);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+
+  .warning & {
+    background-color: var(--color-warning);
+  }
+
+  .expired & {
+    background-color: var(--color-danger);
+  }
+}
+
+.timer-content {
+  flex: 1;
+}
+
+.timer-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-xs) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timer-countdown {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: 'Courier New', monospace;
+
+  .warning & {
+    color: var(--color-warning);
+  }
+
+  .expired & {
+    color: var(--color-danger);
+  }
+}
+
+.timer-progress {
+  height: 8px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-full);
+  margin: var(--spacing-sm) 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-en-progreso) 0%, var(--color-resuelta) 100%);
+  border-radius: var(--border-radius-full);
+  transition: width 1s linear;
+
+  .warning & {
+    background: linear-gradient(90deg, var(--color-warning) 0%, var(--color-accent) 100%);
+  }
+
+  .expired & {
+    background: var(--color-danger);
+  }
+}
+
+.timer-date {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}

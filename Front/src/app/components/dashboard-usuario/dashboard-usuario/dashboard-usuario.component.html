@@ -1,0 +1,123 @@
+<div class="dashboard-usuario">
+  <div class="dashboard-header">
+    <h1>Mi Dashboard</h1>
+    <p class="subtitle">Bienvenido a tu espacio de trabajo</p>
+  </div>
+
+  <!-- Mis Estadísticas -->
+  <div class="stats-grid" *ngIf="misEstadisticas">
+    <p-card styleClass="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-file-plus stat-icon" style="color: #2196F3;"></i>
+        <div class="stat-details">
+          <p class="stat-label">Peticiones Creadas</p>
+          <h3 class="stat-value">{{ misEstadisticas.peticiones_creadas }}</h3>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-check-circle stat-icon" style="color: #4CAF50;"></i>
+        <div class="stat-details">
+          <p class="stat-label">Peticiones Resueltas</p>
+          <h3 class="stat-value">{{ misEstadisticas.peticiones_resueltas }}</h3>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-clock stat-icon" style="color: #FF9800;"></i>
+        <div class="stat-details">
+          <p class="stat-label">Tiempo Promedio</p>
+          <h3 class="stat-value">{{ misEstadisticas.tiempo_promedio_resolucion_horas?.toFixed(1) || 'N/A' }}h</h3>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-dollar stat-icon" style="color: #FFC107;"></i>
+        <div class="stat-details">
+          <p class="stat-label">Costo Generado</p>
+          <h3 class="stat-value">{{ misEstadisticas.costo_total_generado | currencyCop }}</h3>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Peticiones Asignadas -->
+  <p-card header="Mis Peticiones en Progreso" *ngIf="peticionesAsignadas.length > 0">
+    <div class="peticiones-grid">
+      <div class="peticion-card" *ngFor="let peticion of peticionesAsignadas">
+        <div class="peticion-header">
+          <h4>#{{ peticion.id }} - {{ peticion.cliente?.nombre }}</h4>
+          <app-badge [label]="peticion.estado" severity="en-progreso"></app-badge>
+        </div>
+        
+        <p class="peticion-categoria">{{ peticion.categoria?.nombre }}</p>
+        
+        <app-timer 
+          *ngIf="peticion.fecha_limite"
+          [fechaLimite]="peticion.fecha_limite"
+          [tiempoLimiteHoras]="peticion.tiempo_limite_horas"
+        ></app-timer>
+
+        <div class="peticion-actions">
+          <button 
+            pButton 
+            label="Ver Detalles" 
+            icon="pi pi-eye"
+            class="p-button-outlined p-button-sm"
+            (click)="verPeticion(peticion.id)"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Peticiones Pendientes Disponibles -->
+  <p-card header="Peticiones Disponibles para Aceptar" *ngIf="peticionesPendientes.length > 0">
+    <p-table [value]="peticionesPendientes" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Categoría</th>
+          <th>Costo</th>
+          <th>Creada</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-peticion>
+        <tr>
+          <td>#{{ peticion.id }}</td>
+          <td>{{ peticion.cliente?.nombre }}</td>
+          <td>{{ peticion.categoria?.nombre }}</td>
+                    <td>{{ peticion.costo | currencyCop }}</td>
+          <td>{{ peticion.fecha_creacion | timeAgo }}</td>
+          <td>
+            <button 
+              pButton 
+              label="Aceptar" 
+              icon="pi pi-check"
+              class="p-button-success p-button-sm"
+              (click)="aceptarPeticion(peticion.id)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Estado vacío -->
+  <app-empty-state
+    *ngIf="peticionesAsignadas.length === 0 && peticionesPendientes.length === 0"
+    icon="pi pi-inbox"
+    title="No tienes peticiones activas"
+    message="Comienza aceptando peticiones pendientes o crea una nueva"
+    actionLabel="Ver Peticiones Pendientes"
+    actionIcon="pi pi-search"
+  ></app-empty-state>
+</div>

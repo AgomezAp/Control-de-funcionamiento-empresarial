@@ -1,0 +1,18 @@
+<aside class="sidebar">
+  <div class="sidebar-content">
+    <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+  </div>
+  
+  <div class="sidebar-footer">
+    <div class="user-info" *ngIf="currentUser">
+      <div class="user-avatar">
+        {{ currentUser.nombre_completo.charAt(0) }}
+      </div>
+      <div class="user-details">
+        <p class="user-name">{{ currentUser.nombre_completo }}</p>
+        <p class="user-role">{{ currentUser.rol }}</p>
+        <p class="user-area">{{ currentUser.area }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
