@@ -1,1 +1,370 @@
-<p>lista-peticiones works!</p>
+<div class="peticiones-container">
+  <!-- Toolbar -->
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <h2 class="m-0">
+        <i class="pi pi-file-edit mr-2"></i>
+        Peticiones
+        <p-badge [value]="peticiones.length.toString()" styleClass="ml-2"></p-badge>
+      </h2>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <!-- Botón Crear Nueva -->
+      <button
+        *appHasRole="[RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER, RoleEnum.USUARIO]"
+        pButton
+        label="Crear Nueva"
+        icon="pi pi-plus"
+        class="p-button-success mr-2"
+        (click)="crearNueva()"
+        appTooltip="Crear nueva petición"
+      ></button>
+
+      <!-- Filtros Toggle -->
+      <button
+        pButton
+        icon="pi pi-filter"
+        class="p-button-outlined mr-2"
+        (click)="mostrarFiltros = !mostrarFiltros"
+        pBadge
+        [value]="(filtroEstado.length + (filtroCliente ? 1 : 0)).toString()"
+        [severity]="(filtroEstado.length + (filtroCliente ? 1 : 0)) > 0 ? 'info' : undefined"
+      ></button>
+
+      <!-- Cambiar Vista -->
+      <button
+        pButton
+        [icon]="vistaActual === 'tabla' ? 'pi pi-th-large' : 'pi pi-list'"
+        class="p-button-outlined mr-2"
+        (click)="cambiarVista(vistaActual === 'tabla' ? 'cards' : 'tabla')"
+      ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <!-- Panel de Filtros -->
+  <p-card *ngIf="mostrarFiltros" styleClass="mb-4">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center justify-content-between p-3">
+        <h3 class="m-0"><i class="pi pi-filter mr-2"></i>Filtros Avanzados</h3>
+        <button
+          pButton
+          icon="pi pi-times"
+          class="p-button-text p-button-rounded"
+          (click)="mostrarFiltros = false"
+        ></button>
+      </div>
+    </ng-template>
+
+    <div class="grid">
+      <!-- Buscador -->
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Buscar</label>
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="ID, cliente, descripción..."
+            class="w-full"
+          />
+        </span>
+      </div>
+
+      <!-- Filtro Estado -->
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Estado</label>
+        <p-multiSelect
+          [options]="estadosOptions"
+          [(ngModel)]="filtroEstado"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccionar estados"
+          [showClear]="true"
+          styleClass="w-full"
+        ></p-multiSelect>
+      </div>
+
+      <!-- Filtro Cliente -->
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Cliente</label>
+        <p-dropdown
+          [options]="clientes"
+          [(ngModel)]="filtroCliente"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Seleccionar cliente"
+          [showClear]="true"
+          [filter]="true"
+          filterBy="nombre"
+          styleClass="w-full"
+        ></p-dropdown>
+      </div>
+
+      <!-- Filtro Fecha -->
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Rango de Fechas</label>
+        <div class="flex gap-2">
+          <p-calendar
+            [(ngModel)]="filtroFechaInicio"
+            placeholder="Desde"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            styleClass="flex-1"
+          ></p-calendar>
+          <p-calendar
+            [(ngModel)]="filtroFechaFin"
+            placeholder="Hasta"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            styleClass="flex-1"
+          ></p-calendar>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="col-12 flex justify-content-end gap-2">
+        <button
+          pButton
+          label="Limpiar"
+          icon="pi pi-filter-slash"
+          class="p-button-outlined p-button-secondary"
+          (click)="limpiarFiltros()"
+        ></button>
+        <button
+          pButton
+          label="Aplicar Filtros"
+          icon="pi pi-check"
+          (click)="aplicarFiltros()"
+        ></button>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Loading -->
+  <app-loader *ngIf="loading"></app-loader>
+
+  <!-- Vista Tabla -->
+  <p-card *ngIf="!loading && vistaActual === 'tabla'">
+    <p-table
+      [value]="peticionesFiltradas"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [globalFilterFields]="['id', 'descripcion']"
+      [scrollable]="true"
+      scrollHeight="600px"
+      [(selection)]="selectedPeticiones"
+      dataKey="id"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+    >
+      <!-- Empty State -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            <app-empty-state
+              icon="pi-file-edit"
+              title="No hay peticiones"
+              message="No se encontraron peticiones"
+            ></app-empty-state>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="id">
+            ID <p-sortIcon field="id"></p-sortIcon>
+          </th>
+          <th>Cliente</th>
+          <th>Categoría</th>
+          <th pSortableColumn="costo">
+            Costo <p-sortIcon field="costo"></p-sortIcon>
+          </th>
+          <th>Estado</th>
+          <th>Creado</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-peticion>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="peticion"></p-tableCheckbox>
+          </td>
+
+          <!-- ID -->
+          <td>
+            <strong>#{{ peticion.id }}</strong>
+          </td>
+
+          <!-- Cliente -->
+          <td>
+            <div class="flex align-items-center gap-2">
+              <div class="avatar-circle" appTooltip="{{ peticion.cliente?.nombre }}">
+                {{ peticion.cliente?.nombre | initials }}
+              </div>
+              <span>{{ peticion.cliente?.nombre | truncate:25 }}</span>
+            </div>
+          </td>
+
+          <!-- Categoría -->
+          <td>
+            <span [innerHTML]="peticion.categoria?.nombre | highlight:searchTerm"></span>
+            <br />
+            <small class="text-muted">{{ peticion.categoria?.area_tipo }}</small>
+          </td>
+
+          <!-- Costo -->
+          <td>
+            <strong>{{ peticion.costo | currencyCop }}</strong>
+          </td>
+
+          <!-- Estado -->
+          <td>
+            <p-tag
+              [value]="peticion.estado"
+              [severity]="getSeverity(peticion.estado)"
+            ></p-tag>
+
+            <app-timer
+              *ngIf="peticion.estado === 'En Progreso' && peticion.fecha_limite"
+              [fechaLimite]="peticion.fecha_limite"
+            ></app-timer>
+          </td>
+
+          <!-- Fecha -->
+          <td>
+            <div appTooltip="{{ peticion.fecha_creacion | date:'dd/MM/yyyy HH:mm' }}">
+              <i class="pi pi-clock mr-1"></i>
+              {{ peticion.fecha_creacion | timeAgo }}
+            </div>
+            <small class="text-muted">
+              por {{ peticion.creador?.nombre_completo | truncate:20 }}
+            </small>
+          </td>
+
+          <!-- Acciones -->
+          <td>
+            <div class="flex gap-2">
+              <button
+                pButton
+                icon="pi pi-eye"
+                class="p-button-rounded p-button-text p-button-info"
+                appTooltip="Ver detalle"
+                (click)="verDetalle(peticion.id)"
+              ></button>
+
+              <button
+                *ngIf="canAcceptPeticion(peticion)"
+                pButton
+                icon="pi pi-check"
+                class="p-button-rounded p-button-text p-button-success"
+                appTooltip="Aceptar petición"
+                (click)="aceptarPeticion(peticion)"
+              ></button>
+
+              <button
+                *ngIf="canCancelPeticion(peticion) && peticion.estado !== 'Cancelada'"
+                pButton
+                icon="pi pi-times"
+                class="p-button-rounded p-button-text p-button-danger"
+                appTooltip="Cancelar petición"
+                (click)="cancelarPeticion(peticion)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Vista Cards -->
+  <div *ngIf="!loading && vistaActual === 'cards'" class="grid">
+    <div *ngFor="let peticion of peticionesFiltradas" class="col-12 md:col-6 lg:col-4">
+      <p-card styleClass="peticion-card h-full">
+        <ng-template pTemplate="header">
+          <div class="card-header p-3 flex justify-content-between align-items-center">
+            <span class="text-xl font-bold">#{{ peticion.id }}</span>
+            <p-tag
+              [value]="peticion.estado"
+              [severity]="getSeverity(peticion.estado)"
+            ></p-tag>
+          </div>
+        </ng-template>
+
+        <div class="flex flex-column gap-3">
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-building text-muted"></i>
+            <span class="font-semibold">{{ peticion.cliente?.nombre }}</span>
+          </div>
+
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-tag text-muted"></i>
+            <span>{{ peticion.categoria?.nombre }}</span>
+          </div>
+
+          <div class="flex align-items-start gap-2">
+            <i class="pi pi-align-left text-muted mt-1"></i>
+            <span class="text-sm">{{ peticion.descripcion | truncate:100 }}</span>
+          </div>
+
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-dollar text-muted"></i>
+            <span class="font-bold text-primary text-xl">
+              {{ peticion.costo | currencyCop }}
+            </span>
+          </div>
+
+          <app-timer
+            *ngIf="peticion.estado === 'En Progreso' && peticion.fecha_limite"
+            [fechaLimite]="peticion.fecha_limite"
+          ></app-timer>
+
+          <div class="flex align-items-center gap-2 text-sm text-muted">
+            <i class="pi pi-clock"></i>
+            <span>Creada {{ peticion.fecha_creacion | timeAgo }}</span>
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <div class="flex gap-2 justify-content-end">
+            <button
+              pButton
+              label="Ver"
+              icon="pi pi-eye"
+              class="p-button-outlined flex-1"
+              (click)="verDetalle(peticion.id)"
+            ></button>
+            <button
+              *ngIf="canAcceptPeticion(peticion)"
+              pButton
+              label="Aceptar"
+              icon="pi pi-check"
+              class="p-button-success flex-1"
+              (click)="aceptarPeticion(peticion)"
+            ></button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+
+    <div *ngIf="peticionesFiltradas.length === 0" class="col-12">
+      <app-empty-state
+        icon="pi-file-edit"
+        title="No hay peticiones"
+        message="No se encontraron peticiones"
+      ></app-empty-state>
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

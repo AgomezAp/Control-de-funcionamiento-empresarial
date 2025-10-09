@@ -36,10 +36,7 @@ export const routes: Routes = [
           ),
         data: { breadcrumb: 'Dashboard' },
       },
-    ]
-    },
-
-/*       {
+      {
         path: 'peticiones',
         loadChildren: () =>
           import('./features/peticiones/peticiones.routes').then(
@@ -47,50 +44,12 @@ export const routes: Routes = [
           ),
         data: { breadcrumb: 'Peticiones' },
       },
-      {
-        path: 'clientes',
-        loadChildren: () =>
-          import('./features/clientes/clientes.routes').then(
-            (m) => m.CLIENTES_ROUTES
-          ),
-        data: { breadcrumb: 'Clientes' },
-      },
-      {
-        path: 'usuarios',
-        canActivate: [roleGuard],
-        data: { roles: [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER] },
-        loadChildren: () =>
-          import('./features/usuarios/usuarios.routes').then(
-            (m) => m.USUARIOS_ROUTES
-          ),
-      },
-      {
-        path: 'estadisticas',
-        loadChildren: () =>
-          import('./features/estadisticas/estadisticas.routes').then(
-            (m) => m.ESTADISTICAS_ROUTES
-          ),
-        data: { breadcrumb: 'Estadísticas' },
-      },
-      {
-        path: 'facturacion',
-        canActivate: [roleGuard],
-        data: { roles: [RoleEnum.ADMIN, RoleEnum.DIRECTIVO] },
-        loadChildren: () =>
-          import('./features/facturacion/facturacion.routes').then(
-            (m) => m.FACTURACION_ROUTES
-          ),
-      },
     ],
   },
 
   // Ruta 404
   {
     path: '**',
-    loadComponent: () =>
-      import('./shared/components/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent
-      ),
-  }, */
+    redirectTo: 'dashboard'
+  },
 ];
-  

@@ -1,0 +1,200 @@
+<div class="container p-4">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="p-4">
+        <h2 class="m-0"><i class="pi pi-plus-circle mr-2"></i>Crear Nueva Petición</h2>
+      </div>
+    </ng-template>
+
+    <!-- Steps -->
+    <p-steps [model]="items" [activeIndex]="activeIndex" [readonly]="true" class="mb-4"></p-steps>
+
+    <app-loader *ngIf="loading"></app-loader>
+
+    <!-- Paso 1: Seleccionar Cliente -->
+    <div *ngIf="activeIndex === 0 && !loading">
+      <form [formGroup]="formCliente">
+        <div class="field">
+          <label for="cliente_id" class="block mb-2">
+            Seleccionar Cliente <span class="text-red-500">*</span>
+          </label>
+          <p-dropdown
+            id="cliente_id"
+            formControlName="cliente_id"
+            [options]="clientes"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione un cliente"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            (onChange)="onClienteChange($event)"
+            styleClass="w-full"
+          ></p-dropdown>
+        </div>
+
+        <div *ngIf="clienteSeleccionado" class="mt-4 p-3 border-round bg-primary-50">
+          <h4>Información del Cliente</h4>
+          <p><strong>Nombre:</strong> {{ clienteSeleccionado.nombre }}</p>
+          <p><strong>País:</strong> {{ clienteSeleccionado.pais }}</p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Paso 2: Seleccionar Categoría -->
+    <div *ngIf="activeIndex === 1 && !loading">
+      <form [formGroup]="formCategoria">
+        <div class="field">
+          <label for="categoria_id" class="block mb-2">
+            Seleccionar Categoría <span class="text-red-500">*</span>
+          </label>
+          <p-dropdown
+            id="categoria_id"
+            formControlName="categoria_id"
+            [options]="categoriasFiltradas"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una categoría"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            (onChange)="onCategoriaChange($event)"
+            styleClass="w-full"
+          ></p-dropdown>
+        </div>
+
+        <div *ngIf="categoriaSeleccionada" class="mt-4 p-3 border-round bg-primary-50">
+          <h4>{{ categoriaSeleccionada.nombre }}</h4>
+          <p><strong>Área:</strong> {{ categoriaSeleccionada.area_tipo }}</p>
+          <p><strong>Costo:</strong> {{ categoriaSeleccionada.costo | currencyCop }}</p>
+        </div>
+
+        <!-- Campo de costo custom si es variable -->
+        <div *ngIf="categoriaSeleccionada?.es_variable" class="field mt-4">
+          <label for="costo_custom" class="block mb-2">
+            Costo Personalizado <span class="text-red-500">*</span>
+          </label>
+          <p-inputNumber
+            id="costo_custom"
+            formControlName="costo_custom"
+            mode="currency"
+            currency="COP"
+            locale="es-CO"
+            [min]="1"
+            placeholder="Ingrese el costo"
+            styleClass="w-full"
+          ></p-inputNumber>
+        </div>
+      </form>
+    </div>
+
+    <!-- Paso 3: Descripción -->
+    <div *ngIf="activeIndex === 2 && !loading">
+      <form [formGroup]="formDescripcion">
+        <div class="field">
+          <label for="descripcion" class="block mb-2">
+            Descripción <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            pInputTextarea
+            id="descripcion"
+            formControlName="descripcion"
+            rows="5"
+            placeholder="Describa detalladamente la petición..."
+            class="w-full"
+          ></textarea>
+          <small class="text-muted">Mínimo 10 caracteres</small>
+        </div>
+
+        <div *ngIf="categoriaSeleccionada?.requiere_descripcion_extra" class="field mt-4">
+          <label for="descripcion_extra" class="block mb-2">
+            Descripción Extra <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            pInputTextarea
+            id="descripcion_extra"
+            formControlName="descripcion_extra"
+            rows="3"
+            placeholder="Información adicional requerida..."
+            class="w-full"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- Paso 4: Confirmar -->
+    <div *ngIf="activeIndex === 3 && !loading">
+      <h3 class="mb-4">Resumen de la Petición</h3>
+      
+      <div class="p-4 border-round bg-primary-50">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label class="text-muted">Cliente</label>
+            <p class="font-semibold">{{ resumen.cliente?.nombre }}</p>
+          </div>
+          <div class="col-12 md:col-6">
+            <label class="text-muted">Categoría</label>
+            <p class="font-semibold">{{ resumen.categoria?.nombre }}</p>
+          </div>
+          <div class="col-12">
+            <label class="text-muted">Descripción</label>
+            <p class="white-space-pre-wrap">{{ resumen.descripcion }}</p>
+          </div>
+          <div *ngIf="resumen.descripcionExtra" class="col-12">
+            <label class="text-muted">Descripción Extra</label>
+            <p class="white-space-pre-wrap">{{ resumen.descripcionExtra }}</p>
+          </div>
+          <div class="col-12">
+            <label class="text-muted">Costo Total</label>
+            <p class="font-bold text-primary text-3xl">{{ resumen.costo | currencyCop }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex gap-2 justify-content-between mt-4">
+        <button
+          pButton
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-outlined p-button-secondary"
+          (click)="cancelar()"
+        ></button>
+        
+        <div class="flex gap-2">
+          <button
+            *ngIf="activeIndex > 0"
+            pButton
+            label="Anterior"
+            icon="pi pi-arrow-left"
+            class="p-button-outlined"
+            (click)="prevStep()"
+          ></button>
+          
+          <button
+            *ngIf="activeIndex < items.length - 1"
+            pButton
+            label="Siguiente"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            (click)="nextStep()"
+          ></button>
+          
+          <button
+            *ngIf="activeIndex === items.length - 1"
+            pButton
+            label="Crear Petición"
+            icon="pi pi-check"
+            class="p-button-success"
+            (click)="crearPeticion()"
+            [disabled]="submitting"
+            [loading]="submitting"
+          ></button>
+        </div>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

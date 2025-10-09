@@ -37,7 +37,7 @@ export class TooltipDirective {
     this.renderer.appendChild(document.body, this.tooltipElement);
     
     const hostPos = this.el.nativeElement.getBoundingClientRect();
-    const tooltipPos = this.tooltipElement.getBoundingClientRect();
+    const tooltipPos = this.tooltipElement!.getBoundingClientRect();
     
     let top: number, left: number;
     
