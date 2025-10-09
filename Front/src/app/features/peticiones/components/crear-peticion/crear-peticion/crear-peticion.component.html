@@ -1,22 +1,42 @@
-<div class="container p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="p-4">
-        <h2 class="m-0"><i class="pi pi-plus-circle mr-2"></i>Crear Nueva Petición</h2>
-      </div>
-    </ng-template>
+<div class="crear-peticion-page">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <i class="pi pi-plus-circle header-icon"></i>
+      <h2 class="page-title">Crear Nueva Petición</h2>
+    </div>
+    <button class="btn btn-cancel" (click)="cancelar()">
+      <i class="pi pi-times"></i>
+      Cancelar
+    </button>
+  </div>
 
-    <!-- Steps -->
-    <p-steps [model]="items" [activeIndex]="activeIndex" [readonly]="true" class="mb-4"></p-steps>
+  <!-- Steps -->
+  <div class="steps-container">
+    <p-steps 
+      [model]="items" 
+      [activeIndex]="activeIndex" 
+      [readonly]="true"
+      styleClass="custom-steps"
+    ></p-steps>
+  </div>
 
-    <app-loader *ngIf="loading"></app-loader>
+  <!-- Loader -->
+  <app-loader *ngIf="loading"></app-loader>
 
-    <!-- Paso 1: Seleccionar Cliente -->
-    <div *ngIf="activeIndex === 0 && !loading">
-      <form [formGroup]="formCliente">
-        <div class="field">
-          <label for="cliente_id" class="block mb-2">
-            Seleccionar Cliente <span class="text-red-500">*</span>
+  <!-- Contenido Principal -->
+  <div class="peticion-content" *ngIf="!loading">
+
+    <!-- PASO 1: Seleccionar Cliente -->
+    <div *ngIf="activeIndex === 0" class="step-content">
+      <form [formGroup]="formCliente" class="step-form">
+        
+        <div class="form-field">
+          <label for="cliente_id" class="form-label">
+            <i class="pi pi-building"></i>
+            Seleccionar Cliente 
+            <span class="required">*</span>
           </label>
           <p-dropdown
             id="cliente_id"
@@ -29,24 +49,40 @@
             filterBy="nombre"
             [showClear]="true"
             (onChange)="onClienteChange($event)"
-            styleClass="w-full"
+            styleClass="form-dropdown"
           ></p-dropdown>
         </div>
 
-        <div *ngIf="clienteSeleccionado" class="mt-4 p-3 border-round bg-primary-50">
-          <h4>Información del Cliente</h4>
-          <p><strong>Nombre:</strong> {{ clienteSeleccionado.nombre }}</p>
-          <p><strong>País:</strong> {{ clienteSeleccionado.pais }}</p>
+        <!-- Info del Cliente Seleccionado -->
+        <div *ngIf="clienteSeleccionado" class="info-box">
+          <div class="info-box-header">
+            <i class="pi pi-info-circle"></i>
+            <h4>Información del Cliente</h4>
+          </div>
+          <div class="info-box-content">
+            <div class="info-item">
+              <span class="info-label">Nombre:</span>
+              <span class="info-value">{{ clienteSeleccionado.nombre }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">País:</span>
+              <span class="info-value">{{ clienteSeleccionado.pais }}</span>
+            </div>
+          </div>
         </div>
+
       </form>
     </div>
 
-    <!-- Paso 2: Seleccionar Categoría -->
-    <div *ngIf="activeIndex === 1 && !loading">
-      <form [formGroup]="formCategoria">
-        <div class="field">
-          <label for="categoria_id" class="block mb-2">
-            Seleccionar Categoría <span class="text-red-500">*</span>
+    <!-- PASO 2: Seleccionar Categoría -->
+    <div *ngIf="activeIndex === 1" class="step-content">
+      <form [formGroup]="formCategoria" class="step-form">
+        
+        <div class="form-field">
+          <label for="categoria_id" class="form-label">
+            <i class="pi pi-tag"></i>
+            Seleccionar Categoría 
+            <span class="required">*</span>
           </label>
           <p-dropdown
             id="categoria_id"
@@ -59,20 +95,34 @@
             filterBy="nombre"
             [showClear]="true"
             (onChange)="onCategoriaChange($event)"
-            styleClass="w-full"
+            styleClass="form-dropdown"
           ></p-dropdown>
         </div>
 
-        <div *ngIf="categoriaSeleccionada" class="mt-4 p-3 border-round bg-primary-50">
-          <h4>{{ categoriaSeleccionada.nombre }}</h4>
-          <p><strong>Área:</strong> {{ categoriaSeleccionada.area_tipo }}</p>
-          <p><strong>Costo:</strong> {{ categoriaSeleccionada.costo | currencyCop }}</p>
+        <!-- Info de la Categoría Seleccionada -->
+        <div *ngIf="categoriaSeleccionada" class="info-box">
+          <div class="info-box-header">
+            <i class="pi pi-tag"></i>
+            <h4>{{ categoriaSeleccionada.nombre }}</h4>
+          </div>
+          <div class="info-box-content">
+            <div class="info-item">
+              <span class="info-label">Área:</span>
+              <span class="info-value">{{ categoriaSeleccionada.area_tipo }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Costo:</span>
+              <span class="info-value highlight">{{ categoriaSeleccionada.costo | currencyCop }}</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Campo de costo custom si es variable -->
-        <div *ngIf="categoriaSeleccionada?.es_variable" class="field mt-4">
-          <label for="costo_custom" class="block mb-2">
-            Costo Personalizado <span class="text-red-500">*</span>
+        <!-- Costo Personalizado (si es variable) -->
+        <div *ngIf="categoriaSeleccionada?.es_variable" class="form-field">
+          <label for="costo_custom" class="form-label">
+            <i class="pi pi-money-bill"></i>
+            Costo Personalizado 
+            <span class="required">*</span>
           </label>
           <p-inputNumber
             id="costo_custom"
@@ -82,33 +132,40 @@
             locale="es-CO"
             [min]="1"
             placeholder="Ingrese el costo"
-            styleClass="w-full"
+            styleClass="form-input-number"
           ></p-inputNumber>
         </div>
+
       </form>
     </div>
 
-    <!-- Paso 3: Descripción -->
-    <div *ngIf="activeIndex === 2 && !loading">
-      <form [formGroup]="formDescripcion">
-        <div class="field">
-          <label for="descripcion" class="block mb-2">
-            Descripción <span class="text-red-500">*</span>
+    <!-- PASO 3: Descripción -->
+    <div *ngIf="activeIndex === 2" class="step-content">
+      <form [formGroup]="formDescripcion" class="step-form">
+        
+        <div class="form-field">
+          <label for="descripcion" class="form-label">
+            <i class="pi pi-file-edit"></i>
+            Descripción 
+            <span class="required">*</span>
           </label>
           <textarea
             pInputTextarea
             id="descripcion"
             formControlName="descripcion"
-            rows="5"
+            rows="4"
             placeholder="Describa detalladamente la petición..."
-            class="w-full"
+            class="form-textarea"
           ></textarea>
-          <small class="text-muted">Mínimo 10 caracteres</small>
+          <small class="field-help">Mínimo 10 caracteres</small>
         </div>
 
-        <div *ngIf="categoriaSeleccionada?.requiere_descripcion_extra" class="field mt-4">
-          <label for="descripcion_extra" class="block mb-2">
-            Descripción Extra <span class="text-red-500">*</span>
+        <!-- Descripción Extra (si es requerida) -->
+        <div *ngIf="categoriaSeleccionada?.requiere_descripcion_extra" class="form-field">
+          <label for="descripcion_extra" class="form-label">
+            <i class="pi pi-align-left"></i>
+            Descripción Extra 
+            <span class="required">*</span>
           </label>
           <textarea
             pInputTextarea
@@ -116,85 +173,100 @@
             formControlName="descripcion_extra"
             rows="3"
             placeholder="Información adicional requerida..."
-            class="w-full"
+            class="form-textarea"
           ></textarea>
         </div>
+
       </form>
     </div>
 
-    <!-- Paso 4: Confirmar -->
-    <div *ngIf="activeIndex === 3 && !loading">
-      <h3 class="mb-4">Resumen de la Petición</h3>
+    <!-- PASO 4: Confirmar -->
+    <div *ngIf="activeIndex === 3" class="step-content">
+      <h3 class="summary-title">
+        <i class="pi pi-check-circle"></i>
+        Resumen de la Petición
+      </h3>
       
-      <div class="p-4 border-round bg-primary-50">
-        <div class="grid">
-          <div class="col-12 md:col-6">
-            <label class="text-muted">Cliente</label>
-            <p class="font-semibold">{{ resumen.cliente?.nombre }}</p>
+      <div class="summary-box">
+        <div class="summary-grid">
+          
+          <div class="summary-item">
+            <label class="summary-label">
+              <i class="pi pi-building"></i>
+              Cliente
+            </label>
+            <p class="summary-value">{{ resumen.cliente?.nombre }}</p>
           </div>
-          <div class="col-12 md:col-6">
-            <label class="text-muted">Categoría</label>
-            <p class="font-semibold">{{ resumen.categoria?.nombre }}</p>
+
+          <div class="summary-item">
+            <label class="summary-label">
+              <i class="pi pi-tag"></i>
+              Categoría
+            </label>
+            <p class="summary-value">{{ resumen.categoria?.nombre }}</p>
           </div>
-          <div class="col-12">
-            <label class="text-muted">Descripción</label>
-            <p class="white-space-pre-wrap">{{ resumen.descripcion }}</p>
+
+          <div class="summary-item full-width">
+            <label class="summary-label">
+              <i class="pi pi-file-edit"></i>
+              Descripción
+            </label>
+            <p class="summary-value description">{{ resumen.descripcion }}</p>
           </div>
-          <div *ngIf="resumen.descripcionExtra" class="col-12">
-            <label class="text-muted">Descripción Extra</label>
-            <p class="white-space-pre-wrap">{{ resumen.descripcionExtra }}</p>
+
+          <div *ngIf="resumen.descripcionExtra" class="summary-item full-width">
+            <label class="summary-label">
+              <i class="pi pi-align-left"></i>
+              Descripción Extra
+            </label>
+            <p class="summary-value description">{{ resumen.descripcionExtra }}</p>
           </div>
-          <div class="col-12">
-            <label class="text-muted">Costo Total</label>
-            <p class="font-bold text-primary text-3xl">{{ resumen.costo | currencyCop }}</p>
+
+          <div class="summary-item full-width cost-item">
+            <label class="summary-label">
+              <i class="pi pi-money-bill"></i>
+              Costo Total
+            </label>
+            <p class="summary-cost">{{ resumen.costo | currencyCop }}</p>
           </div>
+
         </div>
       </div>
     </div>
 
-    <ng-template pTemplate="footer">
-      <div class="flex gap-2 justify-content-between mt-4">
-        <button
-          pButton
-          label="Cancelar"
-          icon="pi pi-times"
-          class="p-button-outlined p-button-secondary"
-          (click)="cancelar()"
-        ></button>
-        
-        <div class="flex gap-2">
-          <button
-            *ngIf="activeIndex > 0"
-            pButton
-            label="Anterior"
-            icon="pi pi-arrow-left"
-            class="p-button-outlined"
-            (click)="prevStep()"
-          ></button>
-          
-          <button
-            *ngIf="activeIndex < items.length - 1"
-            pButton
-            label="Siguiente"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            (click)="nextStep()"
-          ></button>
-          
-          <button
-            *ngIf="activeIndex === items.length - 1"
-            pButton
-            label="Crear Petición"
-            icon="pi pi-check"
-            class="p-button-success"
-            (click)="crearPeticion()"
-            [disabled]="submitting"
-            [loading]="submitting"
-          ></button>
-        </div>
-      </div>
-    </ng-template>
-  </p-card>
+  </div>
+
+  <!-- Botones de Navegación -->
+  <div class="navigation-buttons" *ngIf="!loading">
+    <button
+      class="btn btn-secondary"
+      (click)="prevStep()"
+      *ngIf="activeIndex > 0"
+    >
+      <i class="pi pi-arrow-left"></i>
+      Anterior
+    </button>
+    
+    <button
+      class="btn btn-primary"
+      (click)="nextStep()"
+      *ngIf="activeIndex < items.length - 1"
+    >
+      Siguiente
+      <i class="pi pi-arrow-right"></i>
+    </button>
+    
+    <button
+      class="btn btn-success"
+      (click)="crearPeticion()"
+      *ngIf="activeIndex === items.length - 1"
+      [disabled]="submitting"
+    >
+      <i [class]="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></i>
+      {{ submitting ? 'Creando...' : 'Crear Petición' }}
+    </button>
+  </div>
+
 </div>
 
 <p-toast></p-toast>

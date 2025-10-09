@@ -1,0 +1,76 @@
+<div class="container p-4">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center justify-content-between p-3">
+        <h2 class="m-0">
+          <i class="pi pi-history mr-2"></i>Histórico de Peticiones
+        </h2>
+      </div>
+    </ng-template>
+
+    <app-loader *ngIf="loading"></app-loader>
+
+    <p-table
+      *ngIf="!loading"
+      [value]="historico"
+      [paginator]="true"
+      [rows]="15"
+      [scrollable]="true"
+      scrollHeight="600px"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <app-empty-state
+              icon="pi-history"
+              title="Sin histórico"
+              message="No hay peticiones en el histórico"
+            ></app-empty-state>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Categoría</th>
+          <th>Costo</th>
+          <th>Estado Final</th>
+          <th>Fecha Resolución</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-peticion>
+        <tr>
+          <td>
+            <strong>#{{ peticion.id }}</strong>
+          </td>
+          <td>{{ peticion.cliente?.nombre }}</td>
+          <td>{{ peticion.categoria?.nombre }}</td>
+          <td>{{ peticion.costo | currencyCop }}</td>
+          <td>
+            <p-tag
+              [value]="peticion.estado"
+              [severity]="peticion.estado === 'Resuelta' ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>{{ peticion.fecha_resolucion | timeAgo }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button-rounded p-button-text"
+              [routerLink]="[
+                '/peticiones',
+                peticion.peticion_id_original || peticion.id
+              ]"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

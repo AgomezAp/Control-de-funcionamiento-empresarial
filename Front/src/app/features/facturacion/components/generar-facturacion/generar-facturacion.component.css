@@ -1,0 +1,16 @@
+:host ::ng-deep .p-card {
+  border-radius: 10px;
+}
+
+:host ::ng-deep .p-radiobutton {
+  width: 20px;
+  height: 20px;
+}
+
+:host ::ng-deep .p-divider {
+  margin: 1.5rem 0;
+}
+
+:host ::ng-deep .p-dropdown {
+  border-radius: 6px;
+}

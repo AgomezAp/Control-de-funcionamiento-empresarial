@@ -194,7 +194,7 @@ export class PeticionController {
       if (año) filtros.año = Number(año);
       if (mes) filtros.mes = Number(mes);
 
-      const historico = await peticionService.obtenerHistorico(filtros);
+      const historico = await peticionService.obtenerHistorico(filtros, req.usuario);
 
       return ApiResponse.success(
         res,

@@ -1,0 +1,422 @@
+/* ===================================== */
+/* CONTENEDOR PRINCIPAL */
+/* ===================================== */
+.usuarios-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===================================== */
+/* UTILITIES */
+/* ===================================== */
+.p-4 {
+  padding: 1rem;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* ===================================== */
+/* TOOLBAR */
+/* ===================================== */
+::ng-deep .p-toolbar {
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Título en toolbar */
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+h2 i {
+  font-size: 1.5rem;
+}
+
+/* ===================================== */
+/* CARD */
+/* ===================================== */
+::ng-deep .p-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 0;
+}
+
+::ng-deep .p-card .p-card-content {
+  padding: 0;
+}
+
+/* ===================================== */
+/* TABLA */
+/* ===================================== */
+::ng-deep .p-datatable {
+  font-size: 0.875rem;
+}
+
+/* Header de tabla */
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  font-weight: 600;
+  padding: 1rem;
+}
+
+/* Cuerpo de tabla */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.875rem 1rem;
+  vertical-align: middle;
+}
+
+/* Hover en filas */
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  transition: background-color 0.2s;
+}
+
+/* Caption con buscador */
+::ng-deep .p-datatable .p-datatable-caption {
+  padding: 1rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* Input de búsqueda */
+::ng-deep .p-input-icon-left {
+  display: inline-block;
+  position: relative;
+}
+
+::ng-deep .p-input-icon-left > i {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-secondary);
+}
+
+::ng-deep .p-input-icon-left > input {
+  padding-left: 2.5rem;
+  width: 300px;
+  border-radius: 6px;
+}
+
+/* Mensaje vacío */
+::ng-deep .p-datatable .p-datatable-emptymessage > td {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ===================================== */
+/* TAGS */
+/* ===================================== */
+::ng-deep .p-tag {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Tags de roles - modo claro */
+::ng-deep .p-tag.p-tag-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+::ng-deep .p-tag.p-tag-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+::ng-deep .p-tag.p-tag-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+::ng-deep .p-tag.p-tag-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Tags de roles - modo oscuro */
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-success {
+  background-color: #1e4620;
+  color: #a3d9a5;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-info {
+  background-color: #1e3a5f;
+  color: #7ec8e3;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-warning {
+  background-color: #5a4a1a;
+  color: #ffd666;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-danger {
+  background-color: #5a1a1a;
+  color: #f1aeb5;
+}
+
+/* ===================================== */
+/* BOTONES */
+/* ===================================== */
+::ng-deep .p-button {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón crear usuario */
+::ng-deep .p-button.p-button-success {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+::ng-deep .p-button.p-button-success:hover {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+/* Botones de acción */
+::ng-deep .p-button.p-button-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text {
+  transition: all 0.2s;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text:hover {
+  transform: scale(1.1);
+}
+
+/* Botón info (ver) */
+::ng-deep .p-button.p-button-info.p-button-text {
+  color: #3b82f6;
+}
+
+::ng-deep .p-button.p-button-info.p-button-text:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Botón warning (editar) */
+::ng-deep .p-button.p-button-warning.p-button-text {
+  color: #f59e0b;
+}
+
+::ng-deep .p-button.p-button-warning.p-button-text:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* ===================================== */
+/* PAGINADOR */
+/* ===================================== */
+::ng-deep .p-paginator {
+  padding: 1rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  margin: 0 0.25rem;
+  border-radius: 6px;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+/* ===================================== */
+/* TOOLTIPS */
+/* ===================================== */
+::ng-deep .p-tooltip {
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+::ng-deep .p-tooltip .p-tooltip-text {
+  padding: 0.5rem 0.75rem;
+}
+
+/* ===================================== */
+/* SCROLLBAR */
+/* ===================================== */
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
+  background: var(--surface-ground);
+  border-radius: 4px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
+  background: var(--text-color-secondary);
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+  opacity: 0.8;
+}
+
+/* ===================================== */
+/* LOADER */
+/* ===================================== */
+app-loader {
+  display: block;
+  min-height: 400px;
+}
+
+/* ===================================== */
+/* RESPONSIVE */
+/* ===================================== */
+@media (max-width: 768px) {
+  .usuarios-container {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h2 i {
+    font-size: 1.25rem;
+  }
+
+  /* Toolbar responsive */
+  ::ng-deep .p-toolbar {
+    padding: 0.75rem 1rem;
+  }
+
+  ::ng-deep .p-toolbar .p-toolbar-group-left,
+  ::ng-deep .p-toolbar .p-toolbar-group-right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  /* Botones más pequeños */
+  ::ng-deep .p-button.p-button-rounded {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Input de búsqueda */
+  ::ng-deep .p-input-icon-left > input {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  /* Tabla responsive */
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  /* Tags más pequeños */
+  ::ng-deep .p-tag {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .usuarios-container {
+    padding: 0.25rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  ::ng-deep .p-button {
+    font-size: 0.875rem;
+  }
+
+  ::ng-deep .p-button-label {
+    display: none;
+  }
+
+  ::ng-deep .p-datatable {
+    font-size: 0.75rem;
+  }
+
+  .gap-2 {
+    gap: 0.25rem;
+  }
+}
+
+/* ===================================== */
+/* ANIMACIONES */
+/* ===================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.usuarios-container {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ===================================== */
+/* ACCESIBILIDAD */
+/* ===================================== */
+button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+input:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}

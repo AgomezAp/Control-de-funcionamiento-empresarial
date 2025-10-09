@@ -19,6 +19,7 @@ const sequelize_1 = require("sequelize");
 const peticion_service_1 = require("../services/peticion.service");
 const estadistica_service_1 = require("../services/estadistica.service");
 const facturacion_service_1 = require("../services/facturacion.service");
+const webSocket_service_1 = require("../services/webSocket.service");
 const peticionService = new peticion_service_1.PeticionService();
 const estadisticaService = new estadistica_service_1.EstadisticaService();
 const facturacionService = new facturacion_service_1.FacturacionService();
@@ -47,7 +48,9 @@ exports.verificarPeticionesVencidas = node_cron_1.default.schedule("*/30 * * * *
             // 3. Registrar en auditoría
             for (const peticion of peticionesVencidas) {
                 console.log(`❌ Petición ${peticion.id} vencida - Límite: ${peticion.fecha_limite}`);
-                // TODO: Implementar notificaciones (email, websockets, etc.)
+                // Emitir evento WebSocket de petición vencida
+                const peticionCompleta = yield peticionService.obtenerPorId(peticion.id);
+                webSocket_service_1.webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
             }
         }
         else {

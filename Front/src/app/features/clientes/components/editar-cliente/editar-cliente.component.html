@@ -1,0 +1,201 @@
+<div class="editar-cliente-page">
+  <!-- Header Compacto -->
+  <div class="page-header">
+    <div class="header-left">
+      <i class="pi pi-pencil header-icon"></i>
+      <h2 class="page-title">
+        {{ cargando ? "Cargando..." : "Editar Cliente" }}
+      </h2>
+    </div>
+    <button class="btn-back" (click)="volver()" type="button">
+      <i class="pi pi-arrow-left"></i>
+      Volver
+    </button>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <div class="form-grid">
+      <p-skeleton height="4.5rem"></p-skeleton>
+      <p-skeleton height="4.5rem"></p-skeleton>
+      <p-skeleton height="4.5rem"></p-skeleton>
+      <p-skeleton height="4.5rem"></p-skeleton>
+      <p-skeleton height="4.5rem"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Formulario Ultra Compacto -->
+  <form
+    *ngIf="!cargando && clienteForm"
+    [formGroup]="clienteForm"
+    (ngSubmit)="onSubmit()"
+    class="cliente-form"
+  >
+    <div class="form-grid">
+      <!-- Nombre del Cliente -->
+      <div class="form-field full-width">
+        <label for="nombre" class="form-label">
+          Nombre del Cliente <span class="required">*</span>
+        </label>
+        <input
+          pInputText
+          id="nombre"
+          formControlName="nombre"
+          class="form-input"
+          placeholder="Ingrese el nombre del cliente"
+        />
+        <small
+          *ngIf="
+            clienteForm.get('nombre')?.invalid &&
+            clienteForm.get('nombre')?.touched
+          "
+          class="error-message"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          El nombre es requerido (mínimo 3 caracteres)
+        </small>
+      </div>
+
+      <!-- País -->
+      <div class="form-field">
+        <label for="pais" class="form-label">
+          País <span class="required">*</span>
+        </label>
+        <p-dropdown
+          id="pais"
+          formControlName="pais"
+          [options]="paises"
+          placeholder="Seleccione un país"
+          optionLabel="nombre"
+          optionValue="codigo"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          styleClass="form-dropdown"
+        ></p-dropdown>
+        <small
+          *ngIf="
+            clienteForm.get('pais')?.invalid && clienteForm.get('pais')?.touched
+          "
+          class="error-message"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          El país es requerido
+        </small>
+      </div>
+
+      <!-- Pautador -->
+      <div class="form-field">
+        <label for="pautador" class="form-label">
+          Pautador <span class="required">*</span>
+        </label>
+        <p-dropdown
+          id="pautador"
+          formControlName="pautador_id"
+          [options]="pautadores"
+          placeholder="Seleccione un pautador"
+          optionLabel="nombre_completo"
+          optionValue="uid"
+          [filter]="true"
+          filterBy="nombre_completo,correo"
+          [showClear]="true"
+          styleClass="form-dropdown"
+        ></p-dropdown>
+        <small
+          *ngIf="
+            clienteForm.get('pautador_id')?.invalid &&
+            clienteForm.get('pautador_id')?.touched
+          "
+          class="error-message"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          El pautador es requerido
+        </small>
+      </div>
+
+      <!-- Diseñador -->
+      <div class="form-field">
+        <label for="disenador" class="form-label">
+          Diseñador <span class="optional">(Opcional)</span>
+        </label>
+        <p-dropdown
+          id="disenador"
+          formControlName="disenador_id"
+          [options]="disenadores"
+          placeholder="Seleccione un diseñador"
+          optionLabel="nombre_completo"
+          optionValue="uid"
+          [filter]="true"
+          filterBy="nombre_completo,correo"
+          [showClear]="true"
+          styleClass="form-dropdown"
+        ></p-dropdown>
+      </div>
+
+      <!-- Fecha de Inicio -->
+      <div class="form-field">
+        <label for="fecha_inicio" class="form-label">
+          Fecha de Inicio <span class="required">*</span>
+        </label>
+        <p-calendar
+          id="fecha_inicio"
+          formControlName="fecha_inicio"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          placeholder="Seleccione una fecha"
+          styleClass="form-calendar"
+        ></p-calendar>
+        <small
+          *ngIf="
+            clienteForm.get('fecha_inicio')?.invalid &&
+            clienteForm.get('fecha_inicio')?.touched
+          "
+          class="error-message"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          La fecha de inicio es requerida
+        </small>
+      </div>
+
+      <!-- Estado -->
+      <div class="form-field">
+        <label for="status" class="form-label">Estado</label>
+        <div class="status-toggle">
+          <p-inputSwitch id="status" formControlName="status"></p-inputSwitch>
+          <span
+            [class]="
+              clienteForm.get('status')?.value
+                ? 'status-active'
+                : 'status-inactive'
+            "
+          >
+            <i
+              [class]="
+                clienteForm.get('status')?.value
+                  ? 'pi pi-check-circle'
+                  : 'pi pi-times-circle'
+              "
+            ></i>
+            {{ clienteForm.get("status")?.value ? "Activo" : "Inactivo" }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="form-actions">
+      <button class="btn btn-secondary" (click)="volver()" type="button">
+        <i class="pi pi-times"></i>
+        Cancelar
+      </button>
+      <button
+        class="btn btn-primary"
+        [disabled]="clienteForm.invalid || guardando"
+        type="submit"
+      >
+        <i [class]="guardando ? 'pi pi-spin pi-spinner' : 'pi pi-save'"></i>
+        <span>{{ guardando ? "Guardando..." : "Guardar Cambios" }}</span>
+      </button>
+    </div>
+  </form>
+</div>

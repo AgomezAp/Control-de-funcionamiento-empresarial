@@ -1,0 +1,859 @@
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
+}
+
+/* ============================================
+   PAGE CONTAINER - CERO ESPACIO PERDIDO
+   ============================================ */
+.editar-cliente-page {
+  padding: 0.5rem;
+  max-width: 100%;
+  margin: 0;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   PAGE HEADER - ULTRA COMPACTO
+   ============================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .page-header {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  color: var(--color-yellow);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .page-title {
+  color: var(--color-white);
+}
+
+/* ============================================
+   BUTTONS - COMPACTOS
+   ============================================ */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: transparent;
+  color: var(--color-gray-dark);
+}
+
+.btn-back:hover {
+  background-color: var(--color-gray-light);
+  border-color: var(--color-gray-dark);
+  transform: translateY(-1px);
+}
+
+:host-context(.dark-mode) .btn-back {
+  color: var(--color-white);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) .btn-back:hover {
+  background-color: #2a2a2a;
+  border-color: var(--color-white);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+}
+
+.btn-primary {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-yellow-dark);
+  border-color: var(--color-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-gray-dark);
+  border-color: var(--color-gray-dark);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+:host-context(.dark-mode) .btn-secondary {
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+:host-context(.dark-mode) .btn-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+.skeleton-container {
+  padding: 0.5rem;
+}
+
+.skeleton-container .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+/* ============================================
+   FORM - GRID ULTRA COMPACTO
+   ============================================ */
+.cliente-form {
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+:host-context(.dark-mode) .cliente-form {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+:host-context(.dark-mode) .form-label {
+  color: var(--color-white);
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.optional {
+  color: var(--color-gray-dark);
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
+:host-context(.dark-mode) .optional {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+.form-input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--color-gray-dark);
+  opacity: 0.7;
+}
+
+:host-context(.dark-mode) .form-input {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .form-input:focus {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .form-input::placeholder {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   ERROR MESSAGES
+   ============================================ */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color-error);
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.error-message i {
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   STATUS TOGGLE
+   ============================================ */
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0;
+}
+
+.status-active {
+  color: var(--color-success);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.status-inactive {
+  color: var(--color-error);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .form-actions {
+  border-top-color: #555555;
+}
+
+/* ============================================
+   PRIMENG OVERRIDES
+   ============================================ */
+:host ::ng-deep .form-dropdown,
+:host ::ng-deep .form-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep .p-dropdown {
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--color-yellow);
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext:enabled:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .p-inputswitch {
+  width: 2.5rem;
+  height: 1.35rem;
+}
+
+:host ::ng-deep .p-inputswitch .p-inputswitch-slider {
+  border-radius: 30px;
+}
+
+:host ::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background-color: var(--color-success);
+}
+
+:host ::ng-deep .p-inputswitch .p-inputswitch-slider {
+  background-color: var(--color-gray-medium);
+}
+
+:host ::ng-deep .p-inputswitch .p-inputswitch-slider:before {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Modo Oscuro - PrimeNG */
+:host-context(.dark-mode) ::ng-deep .p-dropdown {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown .p-dropdown-label {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown .p-dropdown-trigger {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-calendar .p-inputtext {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-calendar .p-inputtext:enabled:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-calendar .p-datepicker-trigger {
+  color: var(--color-white);
+}
+
+/* ============================================
+   DROPDOWN PANEL
+   ============================================ */
+:host ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-header {
+  background-color: var(--color-gray-light);
+  border-bottom: 1px solid var(--color-gray-medium);
+  padding: 0.5rem 0.75rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-filter {
+  padding: 0.4rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.5rem 0.75rem;
+  color: var(--color-black);
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+:host
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-empty-message {
+  padding: 0.75rem;
+  color: var(--color-gray-dark);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* Modo Oscuro - Dropdown Panel */
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-header {
+  background-color: #2a2a2a;
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-filter {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-empty-message {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   CALENDAR PANEL
+   ============================================ */
+:host ::ng-deep .p-datepicker {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-header {
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-medium);
+  padding: 0.4rem;
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-title {
+  color: var(--color-black);
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-prev,
+:host ::ng-deep .p-datepicker .p-datepicker-next {
+  color: var(--color-black);
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-prev:hover,
+:host ::ng-deep .p-datepicker .p-datepicker-next:hover {
+  background-color: var(--color-gray-light);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-datepicker table td {
+  padding: 0.15rem;
+}
+
+:host ::ng-deep .p-datepicker table td > span {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  color: var(--color-black);
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .p-datepicker table td > span:hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-datepicker table td > span.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-datepicker table td.p-datepicker-today > span {
+  border: 2px solid var(--color-yellow);
+}
+
+:host ::ng-deep .p-datepicker .p-monthpicker .p-monthpicker-month,
+:host ::ng-deep .p-datepicker .p-yearpicker .p-yearpicker-year {
+  color: var(--color-black);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+}
+
+:host ::ng-deep .p-datepicker .p-monthpicker .p-monthpicker-month:hover,
+:host ::ng-deep .p-datepicker .p-yearpicker .p-yearpicker-year:hover {
+  background-color: var(--color-yellow-light);
+}
+
+:host ::ng-deep .p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight,
+:host ::ng-deep .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+/* Modo Oscuro - Calendar Panel */
+:host-context(.dark-mode) ::ng-deep .p-datepicker {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-header {
+  background-color: var(--color-gray-dark);
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-title {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-prev,
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-next {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-prev:hover,
+:host-context(.dark-mode) ::ng-deep .p-datepicker .p-datepicker-next:hover {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-monthpicker
+  .p-monthpicker-month,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-yearpicker
+  .p-yearpicker-year {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-monthpicker
+  .p-monthpicker-month:hover,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-yearpicker
+  .p-yearpicker-year:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-monthpicker
+  .p-monthpicker-month.p-highlight,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datepicker
+  .p-yearpicker
+  .p-yearpicker-year.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+/* ============================================
+   SKELETON DARK MODE
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-skeleton {
+  background-color: #2a2a2a;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-skeleton:after {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .editar-cliente-page {
+    padding: 0.25rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .header-icon {
+    font-size: 1.25rem;
+  }
+
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cliente-form {
+    padding: 0.75rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .editar-cliente-page {
+    padding: 0.15rem;
+  }
+
+  .page-header {
+    padding: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .cliente-form {
+    padding: 0.5rem;
+  }
+
+  .form-grid {
+    gap: 0.65rem;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.btn:focus-visible,
+.btn-back:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+:host-context(.dark-mode) .btn:focus-visible,
+:host-context(.dark-mode) .btn-back:focus-visible {
+  outline-color: var(--color-yellow-light);
+}
+
+.form-input:focus-visible {
+  outline: none;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .page-header .btn-back,
+  .form-actions {
+    display: none !important;
+  }
+
+  .editar-cliente-page {
+    padding: 0;
+  }
+
+  .cliente-form {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

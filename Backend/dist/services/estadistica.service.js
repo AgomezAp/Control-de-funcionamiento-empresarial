@@ -25,8 +25,8 @@ class EstadisticaService {
         return __awaiter(this, void 0, void 0, function* () {
             const fechaInicio = new Date(año, mes - 1, 1);
             const fechaFin = new Date(año, mes, 0, 23, 59, 59);
-            // Peticiones creadas
-            const peticiones_creadas = yield Peticion_1.default.count({
+            // Peticiones creadas (activas + históricas)
+            const peticiones_creadas_activas = yield Peticion_1.default.count({
                 where: {
                     creador_id: usuario_id,
                     fecha_creacion: {
@@ -34,7 +34,16 @@ class EstadisticaService {
                     },
                 },
             });
-            // Peticiones resueltas
+            const peticiones_creadas_historico = yield PeticionHistorico_1.default.count({
+                where: {
+                    creador_id: usuario_id,
+                    fecha_creacion: {
+                        [sequelize_1.Op.between]: [fechaInicio, fechaFin],
+                    },
+                },
+            });
+            const peticiones_creadas = peticiones_creadas_activas + peticiones_creadas_historico;
+            // Peticiones resueltas (solo históricas porque las resueltas se mueven ahí)
             const peticiones_resueltas = yield PeticionHistorico_1.default.count({
                 where: {
                     asignado_a: usuario_id,
@@ -44,7 +53,7 @@ class EstadisticaService {
                     },
                 },
             });
-            // Peticiones canceladas
+            // Peticiones canceladas (solo históricas porque las canceladas se mueven ahí)
             const peticiones_canceladas = yield PeticionHistorico_1.default.count({
                 where: {
                     asignado_a: usuario_id,

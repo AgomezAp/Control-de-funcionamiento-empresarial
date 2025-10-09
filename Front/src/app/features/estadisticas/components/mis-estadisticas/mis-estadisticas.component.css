@@ -1,0 +1,17 @@
+.stat-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .p-card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-card-content {
+  padding: 1rem;
+}

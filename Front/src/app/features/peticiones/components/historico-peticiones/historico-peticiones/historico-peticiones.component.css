@@ -1,0 +1,190 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Utilities */
+.flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.p-3 {
+  padding: 1rem;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.p-4 {
+  padding: 1.5rem;
+}
+
+/* Título - adaptable a tema */
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+h2 i {
+  font-size: 1.5rem;
+}
+
+/* ===================================== */
+/* ESTILOS QUE RESPETAN EL TEMA */
+/* ===================================== */
+
+/* Eliminar estilos que sobreescriben el tema de PrimeNG */
+::ng-deep .p-datatable {
+  font-size: 0.875rem;
+}
+
+/* Mejorar hover sin forzar colores */
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  transition: background-color 0.2s;
+}
+
+/* Asegurar que el strong se vea bien en ambos modos */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td strong {
+  font-weight: 600;
+}
+
+/* Mensaje vacío */
+::ng-deep .p-datatable .p-datatable-emptymessage > td {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Tags - Mantener colores específicos pero mejorados */
+::ng-deep .p-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+::ng-deep .p-tag.p-tag-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+::ng-deep .p-tag.p-tag-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Tags para modo oscuro */
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-success {
+  background-color: #1e4620;
+  color: #a3d9a5;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-danger {
+  background-color: #5a1a1a;
+  color: #f1aeb5;
+}
+
+/* Botones - dejar que PrimeNG maneje los colores */
+::ng-deep .p-button.p-button-rounded.p-button-text {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Scrollbar personalizado */
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
+  background: var(--surface-ground);
+  border-radius: 4px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
+  background: var(--text-color-secondary);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+::ng-deep
+  .p-datatable
+  .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+  opacity: 0.7;
+}
+
+/* Card - usar variables de PrimeNG */
+::ng-deep .p-card {
+  box-shadow: var(--card-shadow);
+  border-radius: 8px;
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 0;
+}
+
+::ng-deep .p-card .p-card-content {
+  padding: 0;
+}
+
+/* Loader */
+app-loader {
+  display: block;
+  min-height: 400px;
+}
+
+/* Estilos generales */
+td {
+  vertical-align: middle;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  ::ng-deep .p-button.p-button-rounded.p-button-text {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .p-4 {
+    padding: 0.5rem;
+  }
+
+  ::ng-deep .p-datatable {
+    font-size: 0.75rem;
+  }
+}

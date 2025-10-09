@@ -21,6 +21,7 @@ const Usuario_1 = __importDefault(require("../models/Usuario"));
 const Area_1 = __importDefault(require("../models/Area"));
 const error_util_1 = require("../utils/error.util");
 const auditoria_service_1 = require("./auditoria.service");
+const webSocket_service_1 = require("./webSocket.service");
 const sequelize_1 = require("sequelize");
 class PeticionService {
     constructor() {
@@ -72,7 +73,11 @@ class PeticionService {
                 usuario_id: usuarioActual.uid,
                 descripcion: "Creación de nueva petición",
             });
-            return yield this.obtenerPorId(peticion.id);
+            // Obtener petición completa con relaciones
+            const peticionCompleta = yield this.obtenerPorId(peticion.id);
+            // Emitir evento WebSocket de nueva petición
+            webSocket_service_1.webSocketService.emitNuevaPeticion(peticionCompleta);
+            return peticionCompleta;
         });
     }
     obtenerTodos(usuarioActual, filtros) {
@@ -249,7 +254,15 @@ class PeticionService {
                 usuario_id: usuarioActual.uid,
                 descripcion: `Petición aceptada con ${tiempo_limite_horas} horas de límite`,
             });
-            return yield this.obtenerPorId(id);
+            // Obtener petición actualizada con relaciones
+            const peticionActualizada = yield this.obtenerPorId(id);
+            // Emitir evento WebSocket de petición aceptada
+            webSocket_service_1.webSocketService.emitPeticionAceptada(id, usuarioActual.uid, {
+                uid: usuarioActual.uid,
+                nombre_completo: usuarioActual.nombre_completo,
+                email: usuarioActual.email,
+            }, fecha_aceptacion, fecha_limite, tiempo_limite_horas);
+            return peticionActualizada;
         });
     }
     cambiarEstado(id, nuevoEstado, usuarioActual) {
@@ -286,6 +299,8 @@ class PeticionService {
                 usuario_id: usuarioActual.uid,
                 descripcion: `Cambio de estado de ${estadoAnterior} a ${nuevoEstado}`,
             });
+            // Emitir evento WebSocket de cambio de estado
+            webSocket_service_1.webSocketService.emitCambioEstado(id, nuevoEstado, nuevoEstado === "Resuelta" ? updateData.fecha_resolucion : undefined);
             // Si se marca como Resuelta o Cancelada, mover al histórico
             if (nuevoEstado === "Resuelta" || nuevoEstado === "Cancelada") {
                 yield this.moverAHistorico(peticion);
@@ -394,9 +409,18 @@ class PeticionService {
             console.log(`✅ Petición ${peticion.id} movida al histórico`);
         });
     }
-    obtenerHistorico(filtros) {
+    obtenerHistorico(filtros, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
             const whereClause = {};
+            // Si el usuario no es Admin, solo puede ver:
+            // - Peticiones que él creó (creador_id)
+            // - Peticiones que le fueron asignadas (asignado_a)
+            if (usuarioActual && usuarioActual.role !== "Admin") {
+                whereClause[sequelize_1.Op.or] = [
+                    { creador_id: usuarioActual.uid },
+                    { asignado_a: usuarioActual.uid },
+                ];
+            }
             if (filtros === null || filtros === void 0 ? void 0 : filtros.cliente_id) {
                 whereClause.cliente_id = filtros.cliente_id;
             }

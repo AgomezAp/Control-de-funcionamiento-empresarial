@@ -1,55 +1,143 @@
+/* dashboard-admin.component.css */
+
+/* ============================================
+   VARIABLES DE COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  /* Colores institucionales */
+  --institutional-yellow: #ffc107;
+  --institutional-yellow-light: #ffd54f;
+  --institutional-yellow-dark: #ffa000;
+  --institutional-black: #1a1a1a;
+  --institutional-white: #ffffff;
+
+  /* Modo Claro */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6c757d;
+  --border-color: #e0e0e0;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Modo Oscuro */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-card: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #3a3a3a;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 .dashboard-admin {
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
+/* ============================================
+   HEADER
+   ============================================ */
 .dashboard-header {
-  margin-bottom: var(--spacing-2xl);
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 var(--spacing-xs) 0;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid var(--institutional-yellow);
 }
 
+.dashboard-header h1 {
+  color: var(--text-primary);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-header h1::before {
+  content: "";
+  width: 6px;
+  height: 2.5rem;
+  background: linear-gradient(
+    180deg,
+    var(--institutional-yellow),
+    var(--institutional-yellow-dark)
+  );
+  border-radius: 3px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin: 0;
+  padding-left: 1.6rem;
+}
+
+/* ============================================
+   GRID DE KPIs
+   ============================================ */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.kpi-card {
-  ::ng-deep .p-card-body {
-    padding: var(--spacing-lg);
-  }
+::ng-deep .kpi-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+::ng-deep .kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--institutional-yellow);
+}
+
+::ng-deep .kpi-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .kpi-card .p-card-content {
+  padding: 0;
 }
 
 .kpi-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: 1.25rem;
 }
 
 .kpi-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--border-radius-lg);
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
 
-  i {
-    font-size: 1.75rem;
-  }
+::ng-deep .kpi-card:hover .kpi-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.kpi-icon i {
+  font-size: 1.8rem;
 }
 
 .kpi-details {
@@ -57,66 +145,324 @@
 }
 
 .kpi-label {
-  font-size: 0.875rem;
   color: var(--text-secondary);
-  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .kpi-value {
+  color: var(--text-primary);
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary);
   margin: 0;
+  line-height: 1;
 }
 
-.alert-card {
-  margin-bottom: var(--spacing-2xl);
-  
-  ::ng-deep .p-card {
-    background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
-    border-left: 4px solid var(--color-warning);
-  }
+/* Colores especiales para KPI de costo */
+.kpi-grid p-card:last-child .kpi-icon {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+}
+
+.kpi-grid p-card:last-child .kpi-value {
+  color: var(--institutional-yellow-dark);
+}
+
+/* ============================================
+   TARJETA DE ALERTAS
+   ============================================ */
+::ng-deep .alert-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.1) 0%,
+    rgba(255, 193, 7, 0.05) 100%
+  );
+  border: 2px solid var(--institutional-yellow);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+::ng-deep .alert-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .alert-card .p-card-content {
+  padding: 0;
 }
 
 .alert-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: 1.5rem;
+}
 
-  .alert-icon {
-    font-size: 2.5rem;
-    color: var(--color-warning);
+.alert-icon {
+  font-size: 2.5rem;
+  color: var(--institutional-yellow-dark);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
-
-  .alert-details {
-    flex: 1;
-
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0 0 var(--spacing-xs) 0;
-    }
-
-    p {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin: 0;
-    }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
   }
 }
 
+.alert-details {
+  flex: 1;
+}
+
+.alert-details h3 {
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.alert-details p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1rem;
+}
+
+::ng-deep .alert-card .p-button-warning {
+  background-color: var(--institutional-yellow);
+  border-color: var(--institutional-yellow);
+  color: var(--institutional-black);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .alert-card .p-button-warning:hover {
+  background-color: var(--institutional-yellow-dark);
+  border-color: var(--institutional-yellow-dark);
+  transform: translateX(4px);
+}
+
+/* ============================================
+   GRID DE GRÁFICAS
+   ============================================ */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-::ng-deep {
+::ng-deep .charts-grid .p-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .charts-grid .p-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+::ng-deep .charts-grid .p-card .p-card-header {
+  background-color: transparent;
+  border-bottom: 2px solid var(--institutional-yellow);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+::ng-deep .charts-grid .p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .charts-grid .p-card .p-card-content {
+  padding: 0;
+}
+
+/* ============================================
+   TABLA TOP DISEÑADORES
+   ============================================ */
+::ng-deep .dashboard-admin > p-card:last-child {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+::ng-deep .dashboard-admin > p-card:last-child .p-card-header {
+  background: linear-gradient(
+    135deg,
+    var(--institutional-black) 0%,
+    #2a2a2a 100%
+  );
+  color: var(--institutional-white);
+  border-bottom: 3px solid var(--institutional-yellow);
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px 12px 0 0;
+}
+
+[data-theme="dark"]
+  ::ng-deep
+  .dashboard-admin
+  > p-card:last-child
   .p-card-header {
-    font-weight: 600;
-    font-size: 1.125rem;
+  background: linear-gradient(
+    135deg,
+    var(--institutional-yellow-dark) 0%,
+    var(--institutional-yellow) 100%
+  );
+  color: var(--institutional-black);
+}
+
+::ng-deep .dashboard-admin > p-card:last-child .p-card-body {
+  padding: 0;
+}
+
+::ng-deep .dashboard-admin > p-card:last-child .p-card-content {
+  padding: 0;
+}
+
+/* Estilos de tabla */
+::ng-deep .p-datatable {
+  background-color: transparent;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--institutional-yellow);
+  padding: 1rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background-color: var(--bg-card);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: rgba(255, 193, 7, 0.1);
+  transform: scale(1.01);
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+/* Primera columna (número) con estilo especial */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:first-child {
+  font-weight: 700;
+  color: var(--institutional-yellow-dark);
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+::ng-deep app-badge {
+  display: inline-block;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
+  .dashboard-admin {
+    padding: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-admin > * {
+  animation: fadeIn 0.6s ease-out backwards;
+}
+
+.dashboard-admin > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.dashboard-admin > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dashboard-admin > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.dashboard-admin > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.dashboard-admin > *:nth-child(5) {
+  animation-delay: 0.5s;
 }

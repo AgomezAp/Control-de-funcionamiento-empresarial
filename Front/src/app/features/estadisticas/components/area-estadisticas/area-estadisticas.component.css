@@ -1,0 +1,11 @@
+:host ::ng-deep .p-card {
+  border-radius: 10px;
+}
+
+:host ::ng-deep .p-datatable .p-sortable-column-icon {
+  margin-left: 0.5rem;
+}
+
+:host ::ng-deep .p-tag {
+  font-weight: bold;
+}

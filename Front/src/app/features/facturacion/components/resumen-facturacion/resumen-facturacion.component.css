@@ -1,0 +1,450 @@
+/* ===================================== */
+/* CONTENEDOR PRINCIPAL */
+/* ===================================== */
+.container {
+  max-width: 1400px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+/* ===================================== */
+/* HEADER Y FILTROS */
+/* ===================================== */
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+/* Título principal - adaptable a tema */
+h2 {
+  display: flex;
+  align-items: center;
+}
+
+h2 i {
+  color: #ea580c;
+}
+
+/* ===================================== */
+/* CARDS DE RESUMEN */
+/* ===================================== */
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+/* Cards - respetan el tema */
+::ng-deep .p-card {
+  border-radius: 0.75rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+}
+
+::ng-deep .p-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+/* Cards con colores - modo claro */
+::ng-deep .p-card.bg-blue-50 {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-left: 4px solid #3b82f6;
+}
+
+::ng-deep .p-card.bg-purple-50 {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border-left: 4px solid #a855f7;
+}
+
+::ng-deep .p-card.bg-green-50 {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-left: 4px solid #22c55e;
+}
+
+::ng-deep .p-card.bg-orange-50 {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-left: 4px solid #f97316;
+}
+
+/* Cards con colores - modo oscuro */
+:host-context(.dark-theme) ::ng-deep .p-card.bg-blue-50 {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+  border-left: 4px solid #60a5fa;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-card.bg-purple-50 {
+  background: linear-gradient(135deg, #3b1f5f 0%, #6b21a8 100%);
+  border-left: 4px solid #c084fc;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-card.bg-green-50 {
+  background: linear-gradient(135deg, #1e4620 0%, #15803d 100%);
+  border-left: 4px solid #4ade80;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-card.bg-orange-50 {
+  background: linear-gradient(135deg, #5a2e0e 0%, #c2410c 100%);
+  border-left: 4px solid #fb923c;
+}
+
+/* Texto en cards */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+/* Colores de texto - modo claro */
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-blue-700 {
+  color: #1d4ed8;
+}
+
+.text-purple-600 {
+  color: #9333ea;
+}
+
+.text-purple-700 {
+  color: #7e22ce;
+}
+
+.text-green-600 {
+  color: #16a34a;
+}
+
+.text-green-700 {
+  color: #15803d;
+}
+
+.text-orange-600 {
+  color: #ea580c;
+}
+
+.text-yellow-600 {
+  color: #ca8a04;
+}
+
+/* Colores de texto - modo oscuro */
+:host-context(.dark-theme) .text-gray-600 {
+  color: #9ca3af;
+}
+
+:host-context(.dark-theme) .text-gray-800 {
+  color: #e5e7eb;
+}
+
+:host-context(.dark-theme) .text-blue-600,
+:host-context(.dark-theme) .text-blue-700 {
+  color: #60a5fa;
+}
+
+:host-context(.dark-theme) .text-purple-600,
+:host-context(.dark-theme) .text-purple-700 {
+  color: #c084fc;
+}
+
+:host-context(.dark-theme) .text-green-600,
+:host-context(.dark-theme) .text-green-700 {
+  color: #4ade80;
+}
+
+:host-context(.dark-theme) .text-orange-600 {
+  color: #fb923c;
+}
+
+:host-context(.dark-theme) .text-yellow-600 {
+  color: #fbbf24;
+}
+
+/* Iconos en cards */
+.pi {
+  display: inline-block;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+:host-context(.dark-theme) .text-gray-500 {
+  color: #9ca3af;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+:host-context(.dark-theme) .text-gray-400 {
+  color: #6b7280;
+}
+
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+/* ===================================== */
+/* TABLA */
+/* ===================================== */
+::ng-deep .p-datatable {
+  font-size: 0.875rem;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  font-weight: 600;
+  padding: 1rem;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.875rem 1rem;
+  vertical-align: middle;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  transition: background-color 0.2s;
+}
+
+/* ===================================== */
+/* BOTONES Y ACCIONES */
+/* ===================================== */
+.justify-center {
+  justify-content: center;
+}
+
+::ng-deep .p-button.p-button-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text {
+  transition: all 0.2s;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text:hover {
+  transform: scale(1.1);
+}
+
+::ng-deep .p-button.p-button-success {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+::ng-deep .p-button.p-button-success:hover {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+/* ===================================== */
+/* TAGS Y ESTADOS */
+/* ===================================== */
+::ng-deep .p-tag {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===================================== */
+/* DROPDOWNS */
+/* ===================================== */
+::ng-deep .p-dropdown {
+  min-width: 120px;
+}
+
+/* ===================================== */
+/* MENSAJE SIN DATOS */
+/* ===================================== */
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* ===================================== */
+/* SKELETON LOADING */
+/* ===================================== */
+::ng-deep .p-skeleton {
+  border-radius: 0.5rem;
+}
+
+/* ===================================== */
+/* SCROLLBAR PERSONALIZADO */
+/* ===================================== */
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
+  background: var(--surface-ground);
+  border-radius: 4px;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
+  background: var(--text-color-secondary);
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+  opacity: 0.8;
+}
+
+/* ===================================== */
+/* RESPONSIVE */
+/* ===================================== */
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  .gap-3 {
+    gap: 0.5rem;
+  }
+
+  ::ng-deep .p-button.p-button-rounded {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .grid-cols-1 {
+    gap: 0.75rem;
+  }
+}

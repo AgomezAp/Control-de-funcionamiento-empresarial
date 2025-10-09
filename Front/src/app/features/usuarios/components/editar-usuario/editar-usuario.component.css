@@ -1,0 +1,797 @@
+/* ===================================== */
+/* CONTENEDOR PRINCIPAL */
+/* ===================================== */
+.container {
+  max-width: 800px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+/* ===================================== */
+/* CARD */
+/* ===================================== */
+::ng-deep .p-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 2rem;
+}
+
+::ng-deep .p-card .p-card-header {
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* ===================================== */
+/* UTILITIES */
+/* ===================================== */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.block {
+  display: block;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ===================================== */
+/* HEADER */
+/* ===================================== */
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0;
+  color: var(--text-color);
+}
+
+/* ===================================== */
+/* SKELETON LOADING */
+/* ===================================== */
+::ng-deep .p-skeleton {
+  border-radius: 8px;
+  background: var(--surface-ground);
+}
+
+/* ===================================== */
+/* FORMULARIO */
+/* ===================================== */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+:host-context(.dark-theme) .text-red-500 {
+  color: #f87171;
+}
+
+/* Mensajes de error */
+small.text-red-500 {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ===================================== */
+/* INPUTS */
+/* ===================================== */
+::ng-deep .p-inputtext {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+::ng-deep .p-inputtext:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+::ng-deep .p-inputtext.ng-invalid.ng-touched {
+  border-color: #ef4444;
+}
+
+::ng-deep .p-inputtext.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* ===================================== */
+/* DROPDOWNS */
+/* ===================================== */
+::ng-deep .p-dropdown {
+  width: 100%;
+  border-radius: 8px;
+}
+
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  width: 2.5rem;
+}
+
+::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+::ng-deep .p-dropdown-panel {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===================================== */
+/* PASSWORD */
+/* ===================================== */
+.password-section {
+  background: var(--surface-50);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+:host-context(.dark-theme) .password-section {
+  background: var(--surface-800);
+}
+
+::ng-deep .p-password {
+  width: 100%;
+}
+
+::ng-deep .p-password input {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+::ng-deep .p-password-panel {
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .p-password .p-password-meter {
+  margin-top: 0.5rem;
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* ===================================== */
+/* CHECKBOX */
+/* ===================================== */
+::ng-deep .p-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+::ng-deep .p-checkbox .p-checkbox-box {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ===================================== */
+/* INPUT SWITCH */
+/* ===================================== */
+::ng-deep .p-inputswitch {
+  width: 3rem;
+  height: 1.75rem;
+}
+
+::ng-deep .p-inputswitch .p-inputswitch-slider {
+  border-radius: 1rem;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: #22c55e;
+}
+
+.text-green-600 {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+:host-context(.dark-theme) .text-green-600 {
+  color: #4ade80;
+}
+
+:host-context(.dark-theme) .text-red-600 {
+  color: #f87171;
+}
+
+/* ===================================== */
+/* BOTONES */
+/* ===================================== */
+.form-actions {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+::ng-deep .p-button {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .p-button:active {
+  transform: translateY(0);
+}
+
+::ng-deep .p-button.p-button-text {
+  padding: 0.5rem 1rem;
+}
+
+::ng-deep .p-button.p-button-text:hover {
+  background: var(--surface-hover);
+  transform: none;
+  box-shadow: none;
+}
+
+::ng-deep .p-button[severity="secondary"] {
+  background: var(--surface-200);
+  border-color: var(--surface-200);
+  color: var(--text-color);
+}
+
+::ng-deep .p-button[severity="secondary"]:hover {
+  background: var(--surface-300);
+  border-color: var(--surface-300);
+}
+
+:host-context(.dark-theme) ::ng-deep .p-button[severity="secondary"] {
+  background: var(--surface-700);
+  border-color: var(--surface-700);
+}
+
+:host-context(.dark-theme) ::ng-deep .p-button[severity="secondary"]:hover {
+  background: var(--surface-600);
+  border-color: var(--surface-600);
+}
+
+::ng-deep .p-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+::ng-deep .p-button .p-button-icon {
+  margin-right: 0.5rem;
+}
+
+/* ===================================== */
+/* RESPONSIVE */
+/* ===================================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  ::ng-deep .p-card .p-card-body {
+    padding: 1rem;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .field {
+    margin-bottom: 1rem;
+  }
+
+  .password-section {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .gap-2 {
+    gap: 0.75rem;
+  }
+
+  ::ng-deep .p-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0.25rem;
+  }
+
+  ::ng-deep .p-card .p-card-body {
+    padding: 0.75rem;
+  }
+
+  label {
+    font-size: 0.875rem;
+  }
+
+  ::ng-deep .p-inputtext,
+  ::ng-deep .p-password input {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .flex.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .flex.justify-between h2 {
+    font-size: 1.125rem;
+  }
+
+  ::ng-deep .p-button.p-button-text {
+    padding: 0.5rem;
+  }
+}
+
+/* ===================================== */
+/* ANIMACIONES */
+/* ===================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.password-section {
+  animation: slideDown 0.3s ease-in-out;
+}
+
+/* ===================================== */
+/* ESTADOS DE VALIDACIÓN */
+/* ===================================== */
+::ng-deep .ng-invalid.ng-touched .p-inputtext,
+::ng-deep .ng-invalid.ng-touched .p-dropdown,
+::ng-deep .ng-invalid.ng-touched .p-password input {
+  border-color: #ef4444;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ===================================== */
+/* ACCESIBILIDAD */
+/* ===================================== */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+label {
+  user-select: none;
+}
+
+/* Mejorar contraste en modo oscuro */
+:host-context(.dark-theme) label {
+  color: var(--text-color);
+}
+
+:host-context(.dark-theme) small {
+  color: var(--text-color-secondary);
+}
+
+/* ===================================== */
+/* MEJORAS VISUALES */
+/* ===================================== */
+::ng-deep .p-card .p-card-header .flex {
+  padding: 1.5rem;
+}
+
+.field:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Separador visual antes de los botones */
+.form-actions::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--surface-border);
+  margin-bottom: 1.5rem;
+}
+
+/* Hover suave en labels con checkbox */
+.flex.items-center label:hover {
+  color: var(--primary-color);
+  transition: color 0.2s;
+}
+
+/* ===================================== */
+/* LOADING STATES */
+/* ===================================== */
+::ng-deep .p-button .p-button-loading-icon {
+  margin-right: 0.5rem;
+}
+
+form:has(.p-button[loading="true"]) {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ===================================== */
+/* TOOLTIPS Y HINTS */
+/* ===================================== */
+::ng-deep .p-tooltip {
+  border-radius: 6px;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .p-tooltip .p-tooltip-text {
+  padding: 0;
+}
+
+/* ===================================== */
+/* FOCUS STATES MEJORADOS */
+/* ===================================== */
+::ng-deep .p-inputtext:focus,
+::ng-deep .p-password input:focus,
+::ng-deep .p-dropdown:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-inputtext:focus,
+:host-context(.dark-theme) ::ng-deep .p-password input:focus,
+:host-context(.dark-theme) ::ng-deep .p-dropdown:focus {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+/* ===================================== */
+/* PLACEHOLDER */
+/* ===================================== */
+::ng-deep .p-inputtext::placeholder,
+::ng-deep .p-password input::placeholder {
+  color: var(--text-color-secondary);
+  opacity: 0.6;
+}
+
+/* ===================================== */
+/* ESTADOS DISABLED */
+/* ===================================== */
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-password input:disabled,
+::ng-deep .p-dropdown.p-disabled {
+  background: var(--surface-100);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-inputtext:disabled,
+:host-context(.dark-theme) ::ng-deep .p-password input:disabled,
+:host-context(.dark-theme) ::ng-deep .p-dropdown.p-disabled {
+  background: var(--surface-800);
+}
+
+/* ===================================== */
+/* TRANSICIONES SUAVES */
+/* ===================================== */
+::ng-deep .p-inputtext,
+::ng-deep .p-password input,
+::ng-deep .p-dropdown,
+::ng-deep .p-button,
+::ng-deep .p-checkbox .p-checkbox-box,
+::ng-deep .p-inputswitch .p-inputswitch-slider {
+  transition: all 0.2s ease-in-out;
+}
+
+/* ===================================== */
+/* MEJORAS DE CONTRASTE */
+/* ===================================== */
+:host-context(.dark-theme) .text-red-600 {
+  color: #f87171;
+}
+
+:host-context(.dark-theme) .text-green-600 {
+  color: #4ade80;
+}
+
+:host-context(.dark-theme) small.text-red-500 {
+  color: #fca5a5;
+}
+
+/* ===================================== */
+/* RESPONSIVE UTILITIES ADICIONALES */
+/* ===================================== */
+@media (max-width: 480px) {
+  .container {
+    max-width: 100%;
+  }
+
+  ::ng-deep .p-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .password-section {
+    padding: 0.75rem;
+  }
+
+  ::ng-deep .p-dropdown .p-dropdown-label {
+    font-size: 0.875rem;
+  }
+
+  ::ng-deep .p-button {
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+}
+
+/* ===================================== */
+/* PRINT STYLES */
+/* ===================================== */
+@media print {
+  .form-actions,
+  ::ng-deep .p-button,
+  ::ng-deep .p-inputswitch {
+    display: none;
+  }
+
+  ::ng-deep .p-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .password-section {
+    display: none;
+  }
+
+  ::ng-deep .p-inputtext,
+  ::ng-deep .p-dropdown {
+    border: 1px solid #333;
+  }
+}
+
+/* ===================================== */
+/* ESTILOS ADICIONALES PARA DROPDOWNS */
+/* ===================================== */
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  padding: 0.5rem 0;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin: 0.25rem 0.5rem;
+  transition: background-color 0.2s;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item:hover {
+  background: var(--surface-hover);
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+}
+
+/* ===================================== */
+/* MEJORAS PARA CHECKBOX */
+/* ===================================== */
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  color: white;
+}
+
+/* ===================================== */
+/* SKELETON ESPECÍFICO */
+/* ===================================== */
+::ng-deep .p-skeleton.p-skeleton-text {
+  height: 1.5rem;
+}
+
+/* ===================================== */
+/* ESPACIADO PARA LABELS CON ASTERISCO */
+/* ===================================== */
+label .text-red-500 {
+  font-size: 1.1em;
+  margin-left: 0.125rem;
+}
+
+/* ===================================== */
+/* HOVER EN CAMPOS DE FORMULARIO */
+/* ===================================== */
+::ng-deep .p-inputtext:not(:disabled):hover,
+::ng-deep .p-password input:not(:disabled):hover {
+  border-color: var(--primary-color);
+}
+
+/* ===================================== */
+/* OPTIMIZACIÓN PARA TOUCH DEVICES */
+/* ===================================== */
+@media (hover: none) and (pointer: coarse) {
+  ::ng-deep .p-button {
+    padding: 0.875rem 1.5rem;
+  }
+
+  ::ng-deep .p-inputtext,
+  ::ng-deep .p-password input {
+    padding: 0.875rem;
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+
+  ::ng-deep .p-dropdown {
+    min-height: 3rem;
+  }
+
+  ::ng-deep .p-checkbox .p-checkbox-box {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  ::ng-deep .p-inputswitch {
+    width: 3.5rem;
+    height: 2rem;
+  }
+}
+
+/* ===================================== */
+/* ESTADOS HOVER PARA BOTONES */
+/* ===================================== */
+::ng-deep .p-button:not(:disabled):hover {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+}
+
+::ng-deep .p-button[severity="secondary"]:not(:disabled):hover {
+  background: var(--surface-300);
+  border-color: var(--surface-300);
+}
+
+:host-context(.dark-theme)
+  ::ng-deep
+  .p-button[severity="secondary"]:not(:disabled):hover {
+  background: var(--surface-600);
+  border-color: var(--surface-600);
+}
+
+/* ===================================== */
+/* REDUCCIÓN DE MOVIMIENTO */
+/* ===================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::ng-deep * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

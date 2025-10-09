@@ -1,0 +1,249 @@
+<div class="container mx-auto p-4">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center p-4">
+        <h2 class="text-2xl font-bold">
+          {{ cargando ? "Cargando..." : "Perfil de Usuario" }}
+        </h2>
+        <div class="flex gap-2">
+          <p-button
+            icon="pi pi-pencil"
+            label="Editar"
+            severity="warn"
+            [outlined]="true"
+            (onClick)="editar()"
+            *ngIf="!cargando && usuario"
+          />
+          <p-button
+            icon="pi pi-arrow-left"
+            label="Volver"
+            [text]="true"
+            (onClick)="volver()"
+          />
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Skeleton mientras carga -->
+    <div *ngIf="cargando" class="flex flex-col gap-4">
+      <p-skeleton height="2rem" width="50%" />
+      <p-skeleton height="1.5rem" />
+      <p-skeleton height="1.5rem" />
+    </div>
+
+    <!-- Contenido del usuario -->
+    <div *ngIf="!cargando && usuario">
+      <p-tabView>
+        <!-- Tab: Información Personal -->
+        <p-tabPanel header="Información Personal">
+          <div class="flex flex-col gap-4 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >Nombre Completo</label
+                >
+                <p class="text-lg">{{ usuario.nombre_completo }}</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >Correo Electrónico</label
+                >
+                <p class="text-lg">{{ usuario.correo }}</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >Estado</label
+                >
+                <p-tag
+                  [value]="usuario.status ? 'Activo' : 'Inactivo'"
+                  [severity]="usuario.status ? 'success' : 'danger'"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >ID de Usuario</label
+                >
+                <p class="text-sm font-mono">{{ usuario.uid }}</p>
+              </div>
+            </div>
+
+            <p-divider />
+
+            <!-- Rol y Área -->
+            <h3 class="text-xl font-bold">Asignaciones</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="info-box rol-box">
+                <label class="block text-sm font-semibold text-gray-600 mb-2">
+                  <i class="pi pi-shield mr-2"></i>Rol
+                </label>
+                <p class="text-lg font-medium" *ngIf="usuario.rol">
+                  {{ usuario.rol.nombre }}
+                </p>
+                <p
+                  class="text-sm text-gray-600"
+                  *ngIf="usuario.rol && usuario.rol.descripcion"
+                >
+                  {{ usuario.rol.descripcion }}
+                </p>
+              </div>
+
+              <div class="info-box area-box">
+                <label class="block text-sm font-semibold text-gray-600 mb-2">
+                  <i class="pi pi-building mr-2"></i>Área
+                </label>
+                <p class="text-lg font-medium" *ngIf="usuario.area">
+                  {{ usuario.area.nombre }}
+                </p>
+                <p
+                  class="text-sm text-gray-600"
+                  *ngIf="usuario.area && usuario.area.descripcion"
+                >
+                  {{ usuario.area.descripcion }}
+                </p>
+              </div>
+            </div>
+
+            <p-divider />
+
+            <!-- Fechas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >Fecha de Creación</label
+                >
+                <p class="text-sm">
+                  {{ usuario.fecha_creacion | date : "dd/MM/yyyy HH:mm" }}
+                  <span class="text-gray-500 ml-2"
+                    >({{ usuario.fecha_creacion | timeAgo }})</span
+                  >
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                  >Última Actualización</label
+                >
+                <p class="text-sm">
+                  {{ usuario.fecha_actualizacion | date : "dd/MM/yyyy HH:mm" }}
+                  <span class="text-gray-500 ml-2"
+                    >({{ usuario.fecha_actualizacion | timeAgo }})</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab: Estadísticas -->
+        <p-tabPanel header="Estadísticas" (onClick)="cargarEstadisticas()">
+          <div class="flex flex-col gap-4 p-4">
+            <div *ngIf="cargandoEstadisticas" class="flex flex-col gap-3">
+              <p-skeleton height="4rem" />
+              <p-skeleton height="4rem" />
+              <p-skeleton height="4rem" />
+            </div>
+
+            <div
+              *ngIf="!cargandoEstadisticas && estadisticas"
+              class="grid grid-cols-1 md:grid-cols-3 gap-4"
+            >
+              <!-- Peticiones Totales -->
+              <div class="stat-card stat-blue">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Total Peticiones</p>
+                    <p class="stat-value">
+                      {{ estadisticas.totalPeticiones || 0 }}
+                    </p>
+                  </div>
+                  <i class="pi pi-list stat-icon"></i>
+                </div>
+              </div>
+
+              <!-- Peticiones Resueltas -->
+              <div class="stat-card stat-green">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Resueltas</p>
+                    <p class="stat-value">
+                      {{ estadisticas.peticionesResueltas || 0 }}
+                    </p>
+                  </div>
+                  <i class="pi pi-check-circle stat-icon"></i>
+                </div>
+              </div>
+
+              <!-- Peticiones Pendientes -->
+              <div class="stat-card stat-orange">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Pendientes</p>
+                    <p class="stat-value">
+                      {{ estadisticas.peticionesPendientes || 0 }}
+                    </p>
+                  </div>
+                  <i class="pi pi-clock stat-icon"></i>
+                </div>
+              </div>
+
+              <!-- Peticiones Vencidas -->
+              <div class="stat-card stat-red">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Vencidas</p>
+                    <p class="stat-value">
+                      {{ estadisticas.peticionesVencidas || 0 }}
+                    </p>
+                  </div>
+                  <i class="pi pi-exclamation-triangle stat-icon"></i>
+                </div>
+              </div>
+
+              <!-- Tasa de Resolución -->
+              <div class="stat-card stat-purple">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Tasa de Resolución</p>
+                    <p class="stat-value">{{ tasaResolucion }}%</p>
+                  </div>
+                  <i class="pi pi-chart-line stat-icon"></i>
+                </div>
+              </div>
+
+              <!-- Tiempo Promedio -->
+              <div class="stat-card stat-indigo">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="stat-label">Tiempo Promedio</p>
+                    <p class="stat-value-small">
+                      {{ estadisticas.tiempoPromedioResolucion || 0 }}h
+                    </p>
+                  </div>
+                  <i class="pi pi-stopwatch stat-icon"></i>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="!cargandoEstadisticas && !estadisticas"
+              class="empty-state"
+            >
+              <i class="pi pi-info-circle empty-icon"></i>
+              <p class="empty-text">No hay estadísticas disponibles</p>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+
+    <!-- Mensaje si no se encuentra el usuario -->
+    <div *ngIf="!cargando && !usuario" class="error-state">
+      <i class="pi pi-exclamation-triangle error-icon"></i>
+      <p class="error-text">Usuario no encontrado</p>
+      <p-button label="Volver a Usuarios" class="mt-4" (onClick)="volver()" />
+    </div>
+  </p-card>
+</div>

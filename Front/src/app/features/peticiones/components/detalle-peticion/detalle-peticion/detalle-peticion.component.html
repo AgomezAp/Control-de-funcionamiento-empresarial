@@ -1,0 +1,223 @@
+<div class="detalle-peticion-page">
+  <!-- Loader -->
+  <app-loader *ngIf="loading"></app-loader>
+
+  <!-- Contenido Principal -->
+  <div *ngIf="!loading && peticion" class="peticion-container">
+    <!-- Header Compacto -->
+    <div class="page-header">
+      <button class="btn-back" (click)="volver()">
+        <i class="pi pi-arrow-left"></i>
+        Volver
+      </button>
+      <h1 class="page-title">Petición #{{ peticion.id }}</h1>
+      <span
+        [class]="
+          'status-badge status-' +
+          peticion.estado.toLowerCase().replace(' ', '-')
+        "
+      >
+        <i [class]="'pi ' + getStatusIcon(peticion.estado)"></i>
+        {{ peticion.estado }}
+      </span>
+      <div class="header-spacer"></div>
+      <button
+        *ngIf="peticion.estado === 'Pendiente'"
+        class="btn btn-success"
+        [routerLink]="['/peticiones', peticion.id, 'aceptar']"
+      >
+        <i class="pi pi-check"></i>
+        Aceptar
+      </button>
+      <button
+        *ngIf="peticion.estado === 'En Progreso'"
+        class="btn btn-success"
+        (click)="marcarResuelta()"
+      >
+        <i class="pi pi-check-circle"></i>
+        Marcar Resuelta
+      </button>
+    </div>
+
+    <!-- Timer -->
+    <app-timer
+      *ngIf="peticion.estado === 'En Progreso' && peticion.fecha_limite"
+      [fechaLimite]="peticion.fecha_limite"
+      class="timer-container"
+    ></app-timer>
+
+    <!-- Información General -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="pi pi-info-circle"></i>
+        <h3>Información General</h3>
+      </div>
+
+      <!-- Grid 4x2 - Información Principal -->
+      <div class="compact-grid">
+        <!-- FILA 1: Cliente, País, Categoría, Costo -->
+        <div class="info-item">
+          <i class="pi pi-building icon"></i>
+          <div class="info-content">
+            <label>Cliente</label>
+            <span>{{ peticion.cliente?.nombre }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="pi pi-globe icon"></i>
+          <div class="info-content">
+            <label>País</label>
+            <span>{{ peticion.cliente?.pais }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="pi pi-tag icon"></i>
+          <div class="info-content">
+            <label>Categoría</label>
+            <span>{{ peticion.categoria?.nombre }}</span>
+            <small class="area-badge">
+              <i class="pi pi-briefcase"></i>
+              {{ peticion.categoria?.area_tipo }}
+            </small>
+          </div>
+        </div>
+
+        <div class="info-item cost-item">
+          <i class="pi pi-money-bill icon"></i>
+          <div class="info-content">
+            <label>Costo</label>
+            <span class="cost-value">{{ peticion.costo | currencyCop }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seguimiento -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="pi pi-clock"></i>
+        <h3>Seguimiento</h3>
+      </div>
+
+      <!-- Grid 4 columnas - Tracking -->
+      <div class="compact-grid">
+        <!-- Creado por -->
+        <div class="info-item">
+          <i class="pi pi-user icon"></i>
+          <div class="info-content">
+            <label>Creado por</label>
+            <span>{{ peticion.creador?.nombre_completo }}</span>
+            <small>{{ peticion.fecha_creacion | timeAgo }}</small>
+          </div>
+        </div>
+
+        <!-- Asignado a -->
+        <div *ngIf="peticion.asignado_a" class="info-item">
+          <i class="pi pi-user-plus icon"></i>
+          <div class="info-content">
+            <label>Asignado a</label>
+            <span>{{ peticion.asignado?.nombre_completo }}</span>
+            <small>{{ peticion.fecha_aceptacion | timeAgo }}</small>
+          </div>
+        </div>
+
+        <!-- Placeholder si no hay asignado -->
+        <div *ngIf="!peticion.asignado_a" class="info-item info-item-empty">
+          <i class="pi pi-user-plus icon"></i>
+          <div class="info-content">
+            <label>Asignado a</label>
+            <span class="empty-text">Sin asignar</span>
+          </div>
+        </div>
+
+        <!-- Fecha Límite -->
+        <div *ngIf="peticion.fecha_limite" class="info-item">
+          <i class="pi pi-calendar icon"></i>
+          <div class="info-content">
+            <label>Fecha Límite</label>
+            <span>{{ peticion.fecha_limite | date : "dd/MM/yyyy HH:mm" }}</span>
+            <small>{{ peticion.tiempo_limite_horas }} horas</small>
+          </div>
+        </div>
+
+        <!-- Placeholder si no hay fecha límite -->
+        <div *ngIf="!peticion.fecha_limite" class="info-item info-item-empty">
+          <i class="pi pi-calendar icon"></i>
+          <div class="info-content">
+            <label>Fecha Límite</label>
+            <span class="empty-text">Sin fecha límite</span>
+          </div>
+        </div>
+
+        <!-- Fecha Resolución -->
+        <div *ngIf="peticion.fecha_resolucion" class="info-item">
+          <i class="pi pi-check-circle icon"></i>
+          <div class="info-content">
+            <label>Fecha Resolución</label>
+            <span>{{
+              peticion.fecha_resolucion | date : "dd/MM/yyyy HH:mm"
+            }}</span>
+            <small>{{ peticion.fecha_resolucion | timeAgo }}</small>
+          </div>
+        </div>
+
+        <!-- Placeholder si no hay fecha resolución -->
+        <div
+          *ngIf="!peticion.fecha_resolucion"
+          class="info-item info-item-empty"
+        >
+          <i class="pi pi-check-circle icon"></i>
+          <div class="info-content">
+            <label>Fecha Resolución</label>
+            <span class="empty-text">Pendiente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Descripciones -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="pi pi-file-edit"></i>
+        <h3>Descripción</h3>
+      </div>
+
+      <div class="descriptions-grid">
+        <!-- Descripción -->
+        <div class="description-box">
+          <label>
+            <i class="pi pi-file-edit"></i>
+            Descripción Principal
+          </label>
+          <p class="description-text">{{ peticion.descripcion }}</p>
+        </div>
+
+        <!-- Descripción Extra -->
+        <div *ngIf="peticion.descripcion_extra" class="description-box">
+          <label>
+            <i class="pi pi-align-left"></i>
+            Descripción Extra
+          </label>
+          <p class="description-text">{{ peticion.descripcion_extra }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Petición No Encontrada -->
+  <div *ngIf="!loading && !peticion" class="empty-state">
+    <i class="pi pi-exclamation-triangle empty-icon"></i>
+    <h3 class="empty-title">Petición no encontrada</h3>
+    <p class="empty-message">
+      La petición que buscas no existe o ha sido eliminada
+    </p>
+    <button class="btn btn-primary" [routerLink]="['/peticiones']">
+      <i class="pi pi-arrow-left"></i>
+      Volver a Peticiones
+    </button>
+  </div>
+
+  <p-toast></p-toast>
+</div>

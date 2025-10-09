@@ -6,6 +6,7 @@ import Usuario from "../models/Usuario";
 import Area from "../models/Area";
 import { NotFoundError, ValidationError, ForbiddenError } from "../utils/error.util";
 import { AuditoriaService } from "./auditoria.service";
+import { webSocketService } from "./webSocket.service";
 import { Op } from "sequelize";
 
 export class PeticionService {
@@ -77,7 +78,13 @@ export class PeticionService {
       descripcion: "Creación de nueva petición",
     });
 
-    return await this.obtenerPorId(peticion.id);
+    // Obtener petición completa con relaciones
+    const peticionCompleta = await this.obtenerPorId(peticion.id);
+
+    // Emitir evento WebSocket de nueva petición
+    webSocketService.emitNuevaPeticion(peticionCompleta);
+
+    return peticionCompleta;
   }
 
   async obtenerTodos(usuarioActual: any, filtros?: any) {
@@ -274,7 +281,24 @@ export class PeticionService {
       descripcion: `Petición aceptada con ${tiempo_limite_horas} horas de límite`,
     });
 
-    return await this.obtenerPorId(id);
+    // Obtener petición actualizada con relaciones
+    const peticionActualizada = await this.obtenerPorId(id);
+
+    // Emitir evento WebSocket de petición aceptada
+    webSocketService.emitPeticionAceptada(
+      id,
+      usuarioActual.uid,
+      {
+        uid: usuarioActual.uid,
+        nombre_completo: usuarioActual.nombre_completo,
+        email: usuarioActual.email,
+      },
+      fecha_aceptacion,
+      fecha_limite,
+      tiempo_limite_horas
+    );
+
+    return peticionActualizada;
   }
 
   async cambiarEstado(id: number, nuevoEstado: string, usuarioActual: any) {
@@ -319,6 +343,13 @@ export class PeticionService {
       usuario_id: usuarioActual.uid,
       descripcion: `Cambio de estado de ${estadoAnterior} a ${nuevoEstado}`,
     });
+
+    // Emitir evento WebSocket de cambio de estado
+    webSocketService.emitCambioEstado(
+      id,
+      nuevoEstado,
+      nuevoEstado === "Resuelta" ? updateData.fecha_resolucion : undefined
+    );
 
     // Si se marca como Resuelta o Cancelada, mover al histórico
     if (nuevoEstado === "Resuelta" || nuevoEstado === "Cancelada") {
@@ -441,8 +472,18 @@ export class PeticionService {
     console.log(`✅ Petición ${peticion.id} movida al histórico`);
   }
 
-  async obtenerHistorico(filtros?: any) {
+  async obtenerHistorico(filtros?: any, usuarioActual?: any) {
     const whereClause: any = {};
+
+    // Si el usuario no es Admin, solo puede ver:
+    // - Peticiones que él creó (creador_id)
+    // - Peticiones que le fueron asignadas (asignado_a)
+    if (usuarioActual && usuarioActual.role !== "Admin") {
+      whereClause[Op.or] = [
+        { creador_id: usuarioActual.uid },
+        { asignado_a: usuarioActual.uid },
+      ];
+    }
 
     if (filtros?.cliente_id) {
       whereClause.cliente_id = filtros.cliente_id;

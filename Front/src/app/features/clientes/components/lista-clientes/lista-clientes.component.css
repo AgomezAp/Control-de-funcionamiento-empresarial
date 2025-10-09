@@ -1,0 +1,1054 @@
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
+}
+
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+.clientes-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-gray-medium);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-icon {
+  font-size: 2rem;
+  color: var(--color-black);
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Modo Oscuro - Header */
+:host-context(.dark-mode) .page-header {
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) .header-icon,
+:host-context(.dark-mode) .page-title {
+  color: var(--color-white);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+}
+
+.btn-primary {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-yellow-dark);
+  border-color: var(--color-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn i {
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   TABLE CONTAINER
+   ============================================ */
+.clientes-table-container {
+  background-color: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .clientes-table-container {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+/* ============================================
+   TABLE HEADER - BUSCADOR
+   ============================================ */
+.table-header {
+  padding: 0.75rem 1rem; /* Reducido de 1.5rem a 0.75rem */
+  background-color: transparent; /* Sin fondo */
+  border-bottom: none; /* Sin borde inferior */
+}
+
+.search-container {
+  max-width: 300px; /* Reducido de 400px a 300px */
+}
+
+.search-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem; /* Reducido */
+  color: var(--color-gray-dark);
+  font-size: 1rem; /* Reducido de 1.1rem */
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 2.5rem; /* Reducido padding */
+  font-size: 0.95rem; /* Reducido de 1rem */
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.search-input::placeholder {
+  color: var(--color-gray-dark);
+  opacity: 0.7;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--color-gray-dark);
+  cursor: pointer;
+  padding: 0.4rem; /* Reducido */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+.clear-search-btn i {
+  font-size: 0.9rem; /* Añadido para hacer el icono más pequeño */
+}
+.clear-search-btn:hover {
+  background-color: var(--color-gray-light);
+  color: var(--color-error);
+}
+
+/* Modo Oscuro - Search */
+:host-context(.dark-mode) .table-header {
+  background-color: var(--color-gray-dark);
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) .search-input {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .search-input:focus {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .search-input::placeholder {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .search-icon {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .clear-search-btn {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .clear-search-btn:hover {
+  background-color: #3a3a3a;
+  color: var(--color-error);
+}
+
+/* ============================================
+   TABLE STYLING
+   ============================================ */
+:host ::ng-deep .clientes-table {
+  border: none;
+}
+
+:host ::ng-deep .clientes-table .p-datatable-wrapper {
+  border-radius: 0;
+}
+
+:host ::ng-deep .clientes-table .p-datatable-thead > tr > th {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 1rem;
+  border-bottom: 2px solid var(--color-gray-medium);
+  border-top: none;
+  text-align: left;
+}
+
+:host ::ng-deep .clientes-table .p-datatable-tbody > tr {
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .clientes-table .p-datatable-tbody > tr:hover {
+  background-color: var(--color-gray-light);
+}
+
+:host ::ng-deep .clientes-table .p-datatable-tbody > tr > td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-gray-medium);
+  color: var(--color-black);
+}
+
+/* Modo Oscuro - Table */
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-datatable-thead
+  > tr
+  > th {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .clientes-table .p-datatable-tbody > tr {
+  background-color: var(--color-gray-dark);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-datatable-tbody
+  > tr:hover {
+  background-color: #2a2a2a;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-datatable-tbody
+  > tr
+  > td {
+  border-bottom-color: #555555;
+  color: var(--color-white);
+}
+
+/* ============================================
+   TABLE COLUMNS
+   ============================================ */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.col-id {
+  width: 80px;
+}
+
+.col-nombre {
+  width: auto;
+  min-width: 250px;
+}
+
+.col-pais {
+  width: 150px;
+}
+
+.col-area {
+  width: 150px;
+}
+
+.col-acciones {
+  width: 180px;
+  text-align: center;
+}
+
+/* ============================================
+   TABLE CELL CONTENT
+   ============================================ */
+.id-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-gray-light);
+  color: var(--color-gray-dark);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cliente-nombre {
+  color: var(--color-black);
+  font-size: 1rem;
+}
+
+.pais-badge {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.area-text {
+  color: var(--color-gray-dark);
+}
+
+/* Modo Oscuro - Cell Content */
+:host-context(.dark-mode) .id-badge {
+  background-color: #2a2a2a;
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .cliente-nombre {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .area-text {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   ACTIONS BUTTONS
+   ============================================ */
+.actions-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+}
+
+.action-btn i {
+  font-size: 1.1rem;
+}
+
+.view-btn {
+  color: var(--color-info);
+  border-color: var(--color-info);
+}
+
+.view-btn:hover {
+  background-color: var(--color-info);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.edit-btn {
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.edit-btn:hover {
+  background-color: var(--color-warning);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.delete-btn:hover {
+  background-color: var(--color-error);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   PAGINATOR
+   ============================================ */
+:host ::ng-deep .clientes-table .p-paginator {
+  background-color: var(--color-white);
+  border-top: 2px solid var(--color-gray-medium);
+  padding: 1rem;
+}
+
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-current {
+  color: var(--color-black);
+  font-weight: 500;
+}
+
+:host ::ng-deep .clientes-table .p-paginator .p-dropdown {
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+}
+
+:host
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-pages
+  .p-paginator-page {
+  color: var(--color-black);
+  min-width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+  transition: all 0.3s ease;
+}
+
+:host
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-pages
+  .p-paginator-page.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+  font-weight: 700;
+}
+
+:host
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-pages
+  .p-paginator-page:not(.p-highlight):hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-first,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-prev,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-next,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-last {
+  color: var(--color-black);
+  min-width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-first:hover,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-prev:hover,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-next:hover,
+:host ::ng-deep .clientes-table .p-paginator .p-paginator-last:hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+/* Modo Oscuro - Paginator */
+:host-context(.dark-mode) ::ng-deep .clientes-table .p-paginator {
+  background-color: var(--color-gray-dark);
+  border-top-color: #555555;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-current {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .clientes-table .p-paginator .p-dropdown {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-pages
+  .p-paginator-page {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-pages
+  .p-paginator-page:not(.p-highlight):hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-first,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-prev,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-next,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-last {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-first:hover,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-prev:hover,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-next:hover,
+:host-context(.dark-mode)
+  ::ng-deep
+  .clientes-table
+  .p-paginator
+  .p-paginator-last:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-cell {
+  text-align: center;
+  padding: 3rem 1rem !important;
+}
+
+/* ============================================
+   SORT ICONS
+   ============================================ */
+:host ::ng-deep .clientes-table .p-sortable-column-icon {
+  color: var(--color-gray-dark);
+  margin-left: 0.5rem;
+}
+
+:host-context(.dark-mode) ::ng-deep .clientes-table .p-sortable-column-icon {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .clientes-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .header-icon {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .clientes-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .col-id,
+  .col-area {
+    display: none;
+  }
+
+  .actions-container {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 1rem;
+  }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+:host ::ng-deep .p-datatable-loading-overlay {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable-loading-overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+:host ::ng-deep .p-datatable-loading-icon {
+  color: var(--color-yellow);
+  font-size: 2rem;
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+:host ::ng-deep .p-tooltip {
+  max-width: 250px;
+}
+
+:host ::ng-deep .p-tooltip .p-tooltip-text {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+:host ::ng-deep .p-tooltip .p-tooltip-arrow {
+  border-top-color: var(--color-black);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-tooltip .p-tooltip-text {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-tooltip .p-tooltip-arrow {
+  border-top-color: var(--color-white);
+}
+
+/* ============================================
+   CONFIRM DIALOG
+   ============================================ */
+:host ::ng-deep .p-confirm-dialog {
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-header {
+  background-color: var(--color-white);
+  border-bottom: 2px solid var(--color-gray-medium);
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-title {
+  color: var(--color-black);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-content {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-footer {
+  background-color: var(--color-white);
+  border-top: 2px solid var(--color-gray-medium);
+  padding: 1rem 1.5rem;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-confirm-dialog-icon {
+  color: var(--color-warning);
+  font-size: 2rem;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button {
+  padding: 0.65rem 1.25rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button-danger {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-white);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button-danger:hover {
+  background-color: #c82333;
+  border-color: #c82333;
+  transform: translateY(-2px);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button-secondary {
+  background-color: var(--color-white);
+  border: 2px solid var(--color-gray-dark);
+  color: var(--color-gray-dark);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button-secondary:hover {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+}
+
+/* Modo Oscuro - Confirm Dialog */
+:host-context(.dark-mode) ::ng-deep .p-confirm-dialog .p-dialog-header {
+  background-color: var(--color-gray-dark);
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-confirm-dialog .p-dialog-title {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-confirm-dialog .p-dialog-content {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-confirm-dialog .p-dialog-footer {
+  background-color: var(--color-gray-dark);
+  border-top-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-confirm-dialog .p-button-secondary {
+  background-color: transparent;
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-confirm-dialog
+  .p-button-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* ============================================
+   TOAST MESSAGES
+   ============================================ */
+:host ::ng-deep .p-toast {
+  opacity: 0.98;
+}
+
+:host ::ng-deep .p-toast .p-toast-message {
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success {
+  background-color: var(--color-white);
+  border-left-color: var(--color-success);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-message-icon {
+  color: var(--color-success);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error {
+  background-color: var(--color-white);
+  border-left-color: var(--color-error);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-message-icon {
+  color: var(--color-error);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn {
+  background-color: var(--color-white);
+  border-left-color: var(--color-warning);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-message-icon {
+  color: var(--color-warning);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-info {
+  background-color: var(--color-white);
+  border-left-color: var(--color-info);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-info .p-toast-message-icon {
+  color: var(--color-info);
+}
+
+:host ::ng-deep .p-toast .p-toast-summary {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+:host ::ng-deep .p-toast .p-toast-detail {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Modo Oscuro - Toast */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-success,
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-error,
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-warn,
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-info {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+}
+
+/* ============================================
+   DROPDOWN PANEL (para paginación)
+   ============================================ */
+:host ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.75rem 1rem;
+  color: var(--color-black);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+:host
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+/* Modo Oscuro - Dropdown Panel */
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+:host ::ng-deep .p-datatable-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+:host ::ng-deep .p-datatable-wrapper::-webkit-scrollbar-track {
+  background-color: var(--color-gray-light);
+  border-radius: 4px;
+}
+
+:host ::ng-deep .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--color-yellow);
+  border-radius: 4px;
+}
+
+:host ::ng-deep .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datatable-wrapper::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clientes-table-container {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.action-btn:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+:host-context(.dark-mode) .action-btn:focus-visible,
+:host-context(.dark-mode) .btn:focus-visible {
+  outline-color: var(--color-yellow-light);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .page-header .header-right,
+  .table-header,
+  .col-acciones,
+  .actions-container {
+    display: none !important;
+  }
+
+  .clientes-page {
+    padding: 0;
+  }
+
+  .clientes-table-container {
+    border: none;
+    box-shadow: none;
+  }
+
+  :host ::ng-deep .p-paginator {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* ============================================
+   SEARCH SECTION (FUERA DE LA TABLA)
+   ============================================ */
+.search-section {
+  margin-bottom: 1.5rem;
+}
+
+.search-section .search-container {
+  max-width: 400px;
+}
+
+/* Eliminar el padding del table-header ya que no se usa */
+.table-header {
+  display: none;
+}

@@ -1,0 +1,518 @@
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+}
+
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+.crear-cliente-page {
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header {
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-title i {
+  font-size: 1.5rem;
+}
+
+:host-context(.dark-mode) .page-title {
+  color: var(--color-white);
+}
+
+/* ============================================
+   BACK LINK
+   ============================================ */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--color-black);
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.back-link:hover {
+  color: var(--color-yellow-dark);
+  transform: translateX(-5px);
+}
+
+.back-link i {
+  font-size: 1.1rem;
+}
+
+:host-context(.dark-mode) .back-link {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .back-link:hover {
+  color: var(--color-yellow);
+}
+
+/* ============================================
+   FORM
+   ============================================ */
+.cliente-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ============================================
+   FORM GRID - 2 COLUMNAS
+   ============================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Scrollbar personalizado */
+.form-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-grid::-webkit-scrollbar-track {
+  background: var(--color-gray-light);
+  border-radius: 3px;
+}
+
+.form-grid::-webkit-scrollbar-thumb {
+  background: var(--color-yellow);
+  border-radius: 3px;
+}
+
+.form-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode) .form-grid::-webkit-scrollbar-track {
+  background: var(--color-gray-dark);
+}
+
+/* ============================================
+   FORM GROUPS
+   ============================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: fit-content;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0;
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.optional {
+  color: var(--color-gray-dark);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--color-gray-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+:host-context(.dark-mode) .form-label {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .form-hint {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .optional {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+:host ::ng-deep .form-input,
+:host ::ng-deep .p-inputtext {
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .form-input:hover,
+:host ::ng-deep .p-inputtext:hover {
+  border-color: var(--color-yellow-dark);
+}
+
+:host ::ng-deep .form-input:focus,
+:host ::ng-deep .p-inputtext:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .form-input.ng-invalid.ng-touched,
+:host ::ng-deep .p-inputtext.ng-invalid.ng-touched {
+  border-color: var(--color-error);
+}
+
+:host-context(.dark-mode) ::ng-deep .form-input,
+:host-context(.dark-mode) ::ng-deep .p-inputtext {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .form-input:hover,
+:host-context(.dark-mode) ::ng-deep .p-inputtext:hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .form-input::placeholder,
+:host-context(.dark-mode) ::ng-deep .p-inputtext::placeholder {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   DROPDOWNS
+   ============================================ */
+:host ::ng-deep .p-dropdown {
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+}
+
+:host ::ng-deep .p-dropdown:hover {
+  border-color: var(--color-yellow-dark);
+}
+
+:host ::ng-deep .p-dropdown.p-focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .p-dropdown.ng-invalid.ng-touched {
+  border-color: var(--color-error);
+}
+
+:host ::ng-deep .p-dropdown-label {
+  padding: 0.65rem 0.85rem;
+  color: var(--color-black);
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .p-dropdown-trigger {
+  color: var(--color-black);
+  width: 2.5rem;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-label {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-trigger {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-item {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-item:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-item.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+/* ============================================
+   DROPDOWN USER CONTENT
+   ============================================ */
+.dropdown-user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.user-email {
+  font-size: 0.8rem;
+  color: var(--color-gray-dark);
+}
+
+:host-context(.dark-mode) .user-email {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   CALENDAR
+   ============================================ */
+:host ::ng-deep .p-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  padding: 0.65rem 0.85rem;
+}
+
+:host ::ng-deep .p-datepicker-trigger {
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker-trigger {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker-header {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datepicker table td > span.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+/* ============================================
+   ERROR MESSAGES
+   ============================================ */
+.form-error {
+  color: var(--color-error);
+  font-size: 0.8rem;
+  display: block;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-gray-medium);
+  flex-shrink: 0;
+}
+
+:host-context(.dark-mode) .form-actions {
+  border-top-color: #555555;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.btn-primary {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+  font-weight: 700;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-yellow-dark);
+  border-color: var(--color-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-mode) .btn-secondary {
+  background-color: transparent;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+:host-context(.dark-mode) .btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   RESPONSIVE - TABLETS
+   ============================================ */
+@media (max-width: 1024px) {
+  .crear-cliente-page {
+    padding: 1rem 1.5rem;
+  }
+
+  .form-grid {
+    gap: 0.85rem 1.25rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MÓVILES
+   ============================================ */
+@media (max-width: 768px) {
+  .crear-cliente-page {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    overflow-y: visible;
+    gap: 1rem;
+  }
+
+  .form-group.full-width {
+    grid-column: 1;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

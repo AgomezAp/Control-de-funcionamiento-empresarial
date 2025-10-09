@@ -1,16 +1,970 @@
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
 }
 
-.text-muted {
-  color: #6c757d;
-  font-size: 0.875rem;
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+.crear-peticion-page {
+  padding: 0.5rem;
+  max-width: 100%;
+  margin: 0;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .page-header {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  color: var(--color-yellow);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .page-title {
+  color: var(--color-white);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.btn-primary {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-yellow-dark);
+  border-color: var(--color-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-gray-dark);
+  border-color: var(--color-gray-dark);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background-color: var(--color-success);
+  color: var(--color-white);
+  border-color: var(--color-success);
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #218838;
+  border-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-error);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+:host-context(.dark-mode) .btn-secondary {
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+:host-context(.dark-mode) .btn-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* ============================================
+   STEPS CONTAINER
+   ============================================ */
+.steps-container {
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .steps-container {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+/* ============================================
+   PRIMENG STEPS CUSTOMIZATION
+   ============================================ */
+:host ::ng-deep .custom-steps .p-steps {
+  padding: 0;
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item {
+  flex: 1;
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item .p-menuitem-link {
+  background-color: transparent;
+  padding: 0.75rem 0.5rem;
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-number {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.95rem;
+  background-color: var(--color-gray-medium);
+  color: var(--color-gray-dark);
+  border: 2px solid var(--color-gray-medium);
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-number {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-title {
+  font-size: 0.85rem;
+  color: var(--color-gray-dark);
+  margin-top: 0.35rem;
+}
+
+:host ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-title {
+  color: var(--color-black);
+  font-weight: 600;
+}
+
+/* Modo Oscuro - Steps */
+:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-number {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-number {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-title {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-title {
+  color: var(--color-white);
+}
+
+/* ============================================
+   CONTENT CONTAINER
+   ============================================ */
+.peticion-content {
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-height: 300px;
+}
+
+:host-context(.dark-mode) .peticion-content {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.step-content {
+  animation: slideIn 0.3s ease;
+}
+
+.step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============================================
+   FORM FIELDS
+   ============================================ */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode) .form-label {
+  color: var(--color-white);
+}
+
+.form-label i {
+  font-size: 0.9rem;
+  color: var(--color-yellow);
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.field-help {
+  font-size: 0.8rem;
+  color: var(--color-gray-dark);
+  font-style: italic;
+}
+
+:host-context(.dark-mode) .field-help {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   FORM TEXTAREA
+   ============================================ */
+.form-textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.form-textarea::placeholder {
+  color: var(--color-gray-dark);
+  opacity: 0.7;
+}
+
+:host-context(.dark-mode) .form-textarea {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .form-textarea:focus {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .form-textarea::placeholder {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   INFO BOX
+   ============================================ */
+.info-box {
+  background-color: rgba(255, 215, 0, 0.1);
+  border: 2px solid var(--color-yellow);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+}
+
+:host-context(.dark-mode) .info-box {
+  background-color: rgba(255, 215, 0, 0.15);
+}
+
+.info-box-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-yellow);
+  border-bottom: 2px solid var(--color-yellow-dark);
+}
+
+.info-box-header i {
+  font-size: 1.1rem;
+  color: var(--color-black);
+}
+
+.info-box-header h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.info-box-content {
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-dark);
+  min-width: 80px;
+}
+
+:host-context(.dark-mode) .info-label {
+  color: var(--color-gray-medium);
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color: var(--color-black);
   font-weight: 500;
-  display: block;
-  margin-bottom: 0.25rem;
 }
 
-.white-space-pre-wrap {
+:host-context(.dark-mode) .info-value {
+  color: var(--color-white);
+}
+
+.info-value.highlight {
+  color: var(--color-success);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   SUMMARY
+   ============================================ */
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0 0 1rem 0;
+}
+
+:host-context(.dark-mode) .summary-title {
+  color: var(--color-white);
+}
+
+.summary-title i {
+  font-size: 1.3rem;
+  color: var(--color-success);
+}
+
+.summary-box {
+  background-color: rgba(255, 215, 0, 0.1);
+  border: 2px solid var(--color-yellow);
+  border-radius: 6px;
+  padding: 1.25rem;
+}
+
+:host-context(.dark-mode) .summary-box {
+  background-color: rgba(255, 215, 0, 0.15);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.summary-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.summary-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gray-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+:host-context(.dark-mode) .summary-label {
+  color: var(--color-gray-medium);
+}
+
+.summary-label i {
+  font-size: 0.85rem;
+  color: var(--color-yellow);
+}
+
+.summary-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .summary-value {
+  color: var(--color-white);
+}
+
+.summary-value.description {
+  font-weight: 400;
+  line-height: 1.5;
   white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cost-item {
+  background-color: var(--color-white);
+  border: 2px solid var(--color-yellow);
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+:host-context(.dark-mode) .cost-item {
+  background-color: #2a2a2a;
+}
+
+.summary-cost {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-success);
+  margin: 0.5rem 0 0 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   NAVIGATION BUTTONS
+   ============================================ */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .navigation-buttons {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+/* ============================================
+   PRIMENG DROPDOWN
+   ============================================ */
+:host ::ng-deep .form-dropdown,
+:host ::ng-deep .p-dropdown {
+  width: 100%;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--color-yellow);
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+/* Modo Oscuro - Dropdown */
+:host-context(.dark-mode) ::ng-deep .p-dropdown {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown .p-dropdown-label {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown .p-dropdown-trigger {
+  color: var(--color-white);
+}
+
+/* ============================================
+   PRIMENG DROPDOWN PANEL
+   ============================================ */
+:host ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-header {
+  background-color: var(--color-gray-light);
+  border-bottom: 1px solid var(--color-gray-medium);
+  padding: 0.5rem 0.75rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-filter {
+  padding: 0.4rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.6rem 0.85rem;
+  color: var(--color-black);
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: var(--color-yellow-light);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-empty-message {
+  padding: 0.75rem;
+  color: var(--color-gray-dark);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* Modo Oscuro - Dropdown Panel */
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-header {
+  background-color: #2a2a2a;
+  border-bottom-color: #555555;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-filter {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-empty-message {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   PRIMENG INPUT NUMBER
+   ============================================ */
+:host ::ng-deep .form-input-number,
+:host ::ng-deep .p-inputnumber {
+  width: 100%;
+}
+
+:host ::ng-deep .p-inputnumber .p-inputtext {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-inputnumber .p-inputtext:enabled:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+/* Modo Oscuro - Input Number */
+:host-context(.dark-mode) ::ng-deep .p-inputnumber .p-inputtext {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-inputnumber .p-inputtext:enabled:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-inputnumber .p-inputtext::placeholder {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   PRIMENG TOAST
+   ============================================ */
+:host ::ng-deep .p-toast {
+  opacity: 0.98;
+}
+
+:host ::ng-deep .p-toast .p-toast-message {
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success {
+  background-color: var(--color-white);
+  border-left-color: var(--color-success);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-message-icon {
+  color: var(--color-success);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error {
+  background-color: var(--color-white);
+  border-left-color: var(--color-error);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-message-icon {
+  color: var(--color-error);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn {
+  background-color: var(--color-white);
+  border-left-color: var(--color-warning);
+  color: var(--color-black);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-message-icon {
+  color: var(--color-warning);
+}
+
+:host ::ng-deep .p-toast .p-toast-summary {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+:host ::ng-deep .p-toast .p-toast-detail {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Modo Oscuro - Toast */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-success,
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-error,
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-warn {
+  background-color: var(--color-gray-dark);
+  color: var(--color-white);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .crear-peticion-page {
+    padding: 0.25rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .header-icon {
+    font-size: 1.25rem;
+  }
+
+  .btn-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .steps-container {
+    padding: 0.75rem;
+  }
+
+  :host ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-title {
+    font-size: 0.7rem;
+  }
+
+  .peticion-content {
+    padding: 0.85rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .summary-cost {
+    font-size: 1.75rem;
+  }
+
+  .navigation-buttons {
+    flex-direction: column;
+    padding: 0.75rem;
+  }
+
+  .navigation-buttons .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .crear-peticion-page {
+    padding: 0.15rem;
+  }
+
+  .page-header {
+    padding: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .steps-container {
+    padding: 0.5rem;
+  }
+
+  :host ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-number {
+    width: 1.75rem;
+    height: 1.75rem;
+    line-height: 1.75rem;
+    font-size: 0.85rem;
+  }
+
+  :host ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-title {
+    font-size: 0.65rem;
+  }
+
+  .peticion-content {
+    padding: 0.65rem;
+  }
+
+  .info-box-header,
+  .info-box-content {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .summary-title {
+    font-size: 1.1rem;
+  }
+
+  .summary-cost {
+    font-size: 1.5rem;
+  }
+
+  .navigation-buttons {
+    padding: 0.5rem;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.btn:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+:host-context(.dark-mode) .btn:focus-visible {
+  outline-color: var(--color-yellow-light);
+}
+
+.form-textarea:focus-visible {
+  outline: none;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .page-header .btn-cancel,
+  .navigation-buttons,
+  .steps-container {
+    display: none !important;
+  }
+
+  .crear-peticion-page {
+    padding: 0;
+  }
+
+  .peticion-content {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,0 +1,953 @@
+/* ===================================== */
+/* CONTENEDOR PRINCIPAL */
+/* ===================================== */
+.container {
+  max-width: 1200px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+/* ===================================== */
+/* CARD */
+/* ===================================== */
+::ng-deep .p-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .p-card .p-card-header {
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* ===================================== */
+/* UTILITIES */
+/* ===================================== */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.block {
+  display: block;
+}
+
+/* ===================================== */
+/* GRID */
+/* ===================================== */
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+/* ===================================== */
+/* TYPOGRAPHY */
+/* ===================================== */
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-mono {
+  font-family: ui-monospace, monospace;
+}
+
+h2 {
+  margin: 0;
+  color: var(--text-color);
+}
+
+h3 {
+  color: var(--text-color);
+  margin: 0 0 1rem 0;
+}
+
+/* ===================================== */
+/* LABELS Y TEXTOS */
+/* ===================================== */
+label {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+p {
+  color: var(--text-color);
+  margin: 0;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+:host-context(.dark-theme) .text-gray-600 {
+  color: #9ca3af;
+}
+
+:host-context(.dark-theme) .text-gray-500 {
+  color: #6b7280;
+}
+
+/* ===================================== */
+/* SKELETON LOADING */
+/* ===================================== */
+::ng-deep .p-skeleton {
+  border-radius: 8px;
+  background: var(--surface-ground);
+}
+
+/* ===================================== */
+/* TABS */
+/* ===================================== */
+::ng-deep .p-tabview {
+  border-radius: 8px;
+}
+
+::ng-deep .p-tabview .p-tabview-nav {
+  background: var(--surface-card);
+  border-bottom: 2px solid var(--surface-border);
+}
+
+::ng-deep .p-tabview .p-tabview-nav li {
+  margin-right: 0;
+}
+
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link:hover {
+  background: var(--surface-hover);
+}
+
+::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-tabview .p-tabview-panels {
+  background: var(--surface-card);
+  padding: 0;
+}
+
+/* ===================================== */
+/* INFO BOXES */
+/* ===================================== */
+.info-box {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid;
+  transition: all 0.3s;
+}
+
+.info-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.rol-box {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.area-box {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+:host-context(.dark-theme) .rol-box {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+}
+
+:host-context(.dark-theme) .area-box {
+  background: linear-gradient(135deg, #1e4620 0%, #15803d 100%);
+}
+
+/* ===================================== */
+/* STAT CARDS */
+/* ===================================== */
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid;
+  transition: all 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-value-small {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  opacity: 0.3;
+}
+
+/* Stat Blue */
+.stat-blue {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.stat-blue .stat-label {
+  color: #1e40af;
+}
+
+.stat-blue .stat-value {
+  color: #2563eb;
+}
+
+.stat-blue .stat-icon {
+  color: #60a5fa;
+}
+
+/* Stat Green */
+.stat-green {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.stat-green .stat-label {
+  color: #15803d;
+}
+
+.stat-green .stat-value {
+  color: #16a34a;
+}
+
+.stat-green .stat-icon {
+  color: #4ade80;
+}
+
+/* Stat Orange */
+.stat-orange {
+  border-color: #f97316;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+}
+
+.stat-orange .stat-label {
+  color: #c2410c;
+}
+
+.stat-orange .stat-value {
+  color: #ea580c;
+}
+
+.stat-orange .stat-icon {
+  color: #fb923c;
+}
+
+/* Stat Red */
+.stat-red {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.stat-red .stat-label {
+  color: #991b1b;
+}
+
+.stat-red .stat-value {
+  color: #dc2626;
+}
+
+.stat-red .stat-icon {
+  color: #f87171;
+}
+
+/* Stat Purple */
+.stat-purple {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+}
+
+.stat-purple .stat-label {
+  color: #6b21a8;
+}
+
+.stat-purple .stat-value {
+  color: #9333ea;
+}
+
+.stat-purple .stat-icon {
+  color: #c084fc;
+}
+
+/* Stat Indigo */
+.stat-indigo {
+  border-color: #6366f1;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+}
+
+.stat-indigo .stat-label {
+  color: #3730a3;
+}
+
+.stat-indigo .stat-value-small {
+  color: #4f46e5;
+}
+
+.stat-indigo .stat-icon {
+  color: #818cf8;
+}
+
+/* ===================================== */
+/* MODO OSCURO - STAT CARDS */
+/* ===================================== */
+:host-context(.dark-theme) .stat-blue {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+}
+
+:host-context(.dark-theme) .stat-blue .stat-label,
+:host-context(.dark-theme) .stat-blue .stat-value {
+  color: #60a5fa;
+}
+
+:host-context(.dark-theme) .stat-green {
+  background: linear-gradient(135deg, #1e4620 0%, #15803d 100%);
+}
+
+:host-context(.dark-theme) .stat-green .stat-label,
+:host-context(.dark-theme) .stat-green .stat-value {
+  color: #4ade80;
+}
+
+:host-context(.dark-theme) .stat-orange {
+  background: linear-gradient(135deg, #5a2e0e 0%, #c2410c 100%);
+}
+
+:host-context(.dark-theme) .stat-orange .stat-label,
+:host-context(.dark-theme) .stat-orange .stat-value {
+  color: #fb923c;
+}
+
+:host-context(.dark-theme) .stat-red {
+  background: linear-gradient(135deg, #5a1a1a 0%, #991b1b 100%);
+}
+
+:host-context(.dark-theme) .stat-red .stat-label,
+:host-context(.dark-theme) .stat-red .stat-value {
+  color: #f87171;
+}
+
+:host-context(.dark-theme) .stat-purple {
+  background: linear-gradient(135deg, #3b1f5f 0%, #6b21a8 100%);
+}
+
+:host-context(.dark-theme) .stat-purple .stat-label,
+:host-context(.dark-theme) .stat-purple .stat-value {
+  color: #c084fc;
+}
+
+:host-context(.dark-theme) .stat-indigo {
+  background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%);
+}
+
+:host-context(.dark-theme) .stat-indigo .stat-label,
+:host-context(.dark-theme) .stat-indigo .stat-value-small {
+  color: #818cf8;
+}
+
+/* ===================================== */
+/* TAGS */
+/* ===================================== */
+::ng-deep .p-tag {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+::ng-deep .p-tag.p-tag-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+::ng-deep .p-tag.p-tag-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-success {
+  background-color: #1e4620;
+  color: #a3d9a5;
+}
+
+:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-danger {
+  background-color: #5a1a1a;
+  color: #f1aeb5;
+}
+
+/* ===================================== */
+/* DIVIDER */
+/* ===================================== */
+::ng-deep .p-divider {
+  margin: 1.5rem 0;
+}
+
+::ng-deep .p-divider.p-divider-horizontal {
+  border-top: 1px solid var(--surface-border);
+}
+
+/* ===================================== */
+/* BOTONES */
+/* ===================================== */
+::ng-deep .p-button {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s;
+}
+
+::ng-deep .p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .p-button:active {
+  transform: translateY(0);
+}
+
+::ng-deep .p-button.p-button-text {
+  padding: 0.5rem 1rem;
+}
+
+::ng-deep .p-button.p-button-text:hover {
+  background: var(--surface-hover);
+  transform: none;
+  box-shadow: none;
+}
+
+::ng-deep .p-button[severity="warn"] {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: white;
+}
+
+::ng-deep .p-button[severity="warn"]:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+::ng-deep .p-button[severity="warn"][outlined="true"] {
+  background: transparent;
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+::ng-deep .p-button[severity="warn"][outlined="true"]:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+/* ===================================== */
+/* EMPTY STATE */
+/* ===================================== */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.empty-text {
+  color: var(--text-color-secondary);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+:host-context(.dark-theme) .empty-icon {
+  color: #6b7280;
+}
+
+/* ===================================== */
+/* ERROR STATE */
+/* ===================================== */
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error-icon {
+  font-size: 5rem;
+  color: #f97316;
+  margin-bottom: 1rem;
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+.error-text {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ===================================== */
+/* RESPONSIVE - TABLET */
+/* ===================================== */
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-xl {
+    font-size: 1.125rem;
+  }
+
+  ::ng-deep .p-card .p-card-body {
+    padding: 1rem;
+  }
+
+  .flex.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .flex.justify-between .flex {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  ::ng-deep .p-button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .info-box,
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .stat-value-small {
+    font-size: 1.25rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ===================================== */
+/* RESPONSIVE - MOBILE */
+/* ===================================== */
+@media (max-width: 576px) {
+  .container {
+    padding: 0.25rem;
+  }
+
+  ::ng-deep .p-card {
+    border-radius: 0;
+  }
+
+  ::ng-deep .p-card .p-card-body {
+    padding: 0.75rem;
+  }
+
+  .text-2xl {
+    font-size: 1.125rem;
+  }
+
+  .text-xl {
+    font-size: 1rem;
+  }
+
+  .text-lg {
+    font-size: 1rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+  }
+
+  .gap-4 {
+    gap: 0.75rem;
+  }
+
+  .info-box,
+  .stat-card {
+    padding: 0.875rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-value-small {
+    font-size: 1.125rem;
+  }
+
+  .stat-icon {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  ::ng-deep .p-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  ::ng-deep .p-button-label {
+    display: inline;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav {
+    flex-wrap: wrap;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav li {
+    flex: 1;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .empty-state,
+  .error-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .error-icon {
+    font-size: 4rem;
+  }
+
+  .error-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* ===================================== */
+/* RESPONSIVE - EXTRA SMALL */
+/* ===================================== */
+@media (max-width: 480px) {
+  .stat-card .flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .stat-icon {
+    align-self: flex-end;
+    opacity: 0.2;
+  }
+
+  ::ng-deep .p-button-icon {
+    margin-right: 0.25rem;
+  }
+
+  .font-mono {
+    font-size: 0.75rem;
+  }
+}
+
+/* ===================================== */
+/* ANIMACIONES */
+/* ===================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.info-box,
+.stat-card {
+  animation: slideIn 0.4s ease-in-out;
+}
+
+.stat-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stat-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stat-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stat-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.stat-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.stat-card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* ===================================== */
+/* ACCESIBILIDAD */
+/* ===================================== */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===================================== */
+/* PRINT STYLES */
+/* ===================================== */
+@media print {
+  ::ng-deep .p-button,
+  .flex.gap-2 {
+    display: none;
+  }
+
+  ::ng-deep .p-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .stat-card,
+  .info-box {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav {
+    display: none;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-panels {
+    border: none;
+  }
+}
+
+/* ===================================== */
+/* REDUCCIÓN DE MOVIMIENTO */
+/* ===================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::ng-deep * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .stat-card:hover,
+  .info-box:hover,
+  ::ng-deep .p-button:hover {
+    transform: none;
+  }
+}
+
+/* ===================================== */
+/* MEJORAS VISUALES */
+/* ===================================== */
+::ng-deep .p-card .p-card-header .flex {
+  padding: 1.5rem;
+}
+
+.grid > * {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Sombras suaves en hover */
+.info-box:hover,
+.stat-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+:host-context(.dark-theme) .info-box:hover,
+:host-context(.dark-theme) .stat-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* ===================================== */
+/* OPTIMIZACIÓN TOUCH */
+/* ===================================== */
+@media (hover: none) and (pointer: coarse) {
+  ::ng-deep .p-button {
+    padding: 0.875rem 1.5rem;
+    min-height: 44px;
+  }
+
+  .stat-card,
+  .info-box {
+    min-height: 120px;
+  }
+}

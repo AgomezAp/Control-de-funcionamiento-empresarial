@@ -1,0 +1,166 @@
+<div class="detalle-cliente-page">
+  
+  <!-- Header Compacto -->
+  <div class="page-header">
+    <div class="header-left">
+      <i class="pi pi-eye header-icon"></i>
+      <h2 class="page-title">
+        {{ cargando ? 'Cargando...' : 'Detalle del Cliente' }}
+      </h2>
+    </div>
+    <div class="header-actions">
+      <button 
+        *ngIf="!cargando && cliente"
+        class="btn btn-edit" 
+        (click)="editar()"
+      >
+        <i class="pi pi-pencil"></i>
+        Editar
+      </button>
+      <button class="btn btn-back" (click)="volver()">
+        <i class="pi pi-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <div class="detail-grid">
+      <p-skeleton height="4rem"></p-skeleton>
+      <p-skeleton height="4rem"></p-skeleton>
+      <p-skeleton height="4rem"></p-skeleton>
+      <p-skeleton height="4rem"></p-skeleton>
+      <p-skeleton height="6rem" styleClass="col-span-2"></p-skeleton>
+      <p-skeleton height="6rem" styleClass="col-span-2"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Contenido del Cliente -->
+  <div *ngIf="!cargando && cliente" class="detail-content">
+    
+    <!-- Grid Principal de Información -->
+    <div class="detail-grid">
+      
+      <!-- Nombre -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-building"></i>
+          Nombre
+        </label>
+        <p class="info-value">{{ cliente.nombre }}</p>
+      </div>
+
+      <!-- País -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-globe"></i>
+          País
+        </label>
+        <p class="info-value">{{ cliente.pais }}</p>
+      </div>
+
+      <!-- Estado -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-circle"></i>
+          Estado
+        </label>
+        <div class="info-value">
+          <span [class]="cliente.status ? 'status-badge active' : 'status-badge inactive'">
+            <i [class]="cliente.status ? 'pi pi-check-circle' : 'pi pi-times-circle'"></i>
+            {{ cliente.status ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Fecha de Inicio -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-calendar"></i>
+          Fecha de Inicio
+        </label>
+        <p class="info-value">{{ cliente.fecha_inicio | date:'dd/MM/yyyy' }}</p>
+      </div>
+
+      <!-- Pautador -->
+      <div class="info-card user-card">
+        <label class="info-label">
+          <i class="pi pi-user"></i>
+          Pautador
+        </label>
+        <div *ngIf="cliente.pautador" class="user-info">
+          <p class="user-name">{{ cliente.pautador.nombre_completo }}</p>
+          <p class="user-email">{{ cliente.pautador.correo }}</p>
+          <p class="user-area" *ngIf="cliente.pautador.area">
+            <i class="pi pi-briefcase"></i>
+            {{ cliente.pautador.area.nombre }}
+          </p>
+        </div>
+        <p *ngIf="!cliente.pautador" class="no-data">No asignado</p>
+      </div>
+
+      <!-- Diseñador -->
+      <div class="info-card user-card">
+        <label class="info-label">
+          <i class="pi pi-palette"></i>
+          Diseñador
+        </label>
+        <div *ngIf="cliente.disenador" class="user-info">
+          <p class="user-name">{{ cliente.disenador.nombre_completo }}</p>
+          <p class="user-email">{{ cliente.disenador.correo }}</p>
+          <p class="user-area" *ngIf="cliente.disenador.area">
+            <i class="pi pi-briefcase"></i>
+            {{ cliente.disenador.area.nombre }}
+          </p>
+        </div>
+        <p *ngIf="!cliente.disenador" class="no-data">No asignado</p>
+      </div>
+
+      <!-- Fecha de Creación -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-clock"></i>
+          Fecha de Creación
+        </label>
+        <p class="info-value">{{ cliente.fecha_creacion | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p class="info-meta">{{ cliente.fecha_creacion | timeAgo }}</p>
+      </div>
+
+      <!-- ID del Cliente -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-hashtag"></i>
+          ID del Cliente
+        </label>
+        <p class="info-value mono">{{ cliente.id }}</p>
+      </div>
+
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="action-buttons">
+      <button class="btn btn-secondary" (click)="verPeticiones()">
+        <i class="pi pi-list"></i>
+        Ver Peticiones
+      </button>
+      <button class="btn btn-primary" (click)="editar()">
+        <i class="pi pi-pencil"></i>
+        Editar Cliente
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Cliente No Encontrado -->
+  <div *ngIf="!cargando && !cliente" class="empty-state">
+    <i class="pi pi-exclamation-triangle empty-icon"></i>
+    <h3 class="empty-title">Cliente no encontrado</h3>
+    <p class="empty-message">El cliente que buscas no existe o ha sido eliminado</p>
+    <button class="btn btn-primary" (click)="volver()">
+      <i class="pi pi-arrow-left"></i>
+      Volver a Clientes
+    </button>
+  </div>
+
+</div>

@@ -54,7 +54,7 @@ export class SidebarComponent implements OnInit {
           {
             label: 'Crear Nueva',
             icon: 'pi pi-plus',
-            routerLink: ['/peticiones/crear']
+            routerLink: ['/peticiones/crear-nueva']
           },
           {
             label: 'Pendientes',
@@ -143,7 +143,7 @@ export class SidebarComponent implements OnInit {
           {
             label: 'Resumen',
             icon: 'pi pi-list',
-            routerLink: ['/facturacion']
+            routerLink: ['/facturacion/resumen']
           },
           {
             label: 'Generar',

@@ -4,6 +4,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { RoleEnum } from './core/models/role.model';
 import { roleGuard } from './core/guards/role.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout/main-layout.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -11,7 +12,7 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
 
-  // Rutas públicas
+  // Rutas públicas (Login, Registro)
   {
     path: 'auth',
     canActivate: [noAuthGuard],
@@ -20,6 +21,7 @@ export const routes: Routes = [
     data: { breadcrumb: 'Autenticación' },
   },
 
+  // Rutas protegidas con MainLayout
   {
     path: '',
     canActivate: [authGuard],
@@ -28,6 +30,7 @@ export const routes: Routes = [
         (m) => m.MainLayoutComponent
       ),
     children: [
+      // Dashboard
       {
         path: 'dashboard',
         loadChildren: () =>
@@ -36,6 +39,8 @@ export const routes: Routes = [
           ),
         data: { breadcrumb: 'Dashboard' },
       },
+
+      // Peticiones
       {
         path: 'peticiones',
         loadChildren: () =>
@@ -43,6 +48,67 @@ export const routes: Routes = [
             (m) => m.PETICIONES_ROUTES
           ),
         data: { breadcrumb: 'Peticiones' },
+      },
+
+      // Clientes
+      {
+        path: 'clientes',
+        loadChildren: () =>
+          import('./features/clientes/clientes.routes').then(
+            (m) => m.CLIENTES_ROUTES
+          ),
+        data: { breadcrumb: 'Clientes' },
+      },
+
+      // Usuarios (Admin, Directivo, Líder)
+      {
+        path: 'usuarios',
+        canActivate: [roleGuard],
+        data: { 
+          roles: [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER]
+        },
+        loadChildren: () =>
+          import('./features/usuarios/usuarios.routes').then(
+            (m) => m.USUARIOS_ROUTES
+          ),
+      },
+
+      // Estadísticas
+      {
+        path: 'estadisticas',
+        loadChildren: () =>
+          import('./features/estadisticas/estadisticas.routes').then(
+            (m) => m.ESTADISTICAS_ROUTES
+          ),
+        data: { breadcrumb: 'Estadísticas' }
+      },
+
+      // Facturación (Admin, Directivo)
+      {
+        path: 'facturacion',
+        canActivate: [roleGuard],
+        data: { 
+          breadcrumb: 'Facturación',
+          roles: [RoleEnum.ADMIN, RoleEnum.DIRECTIVO]
+        },
+        loadChildren: () =>
+          import('./features/facturacion/facturacion.routes').then(
+            (m) => m.FACTURACION_ROUTES
+          )
+      },
+
+      // Configuración (Solo Admin)
+      {
+        path: 'configuracion',
+        canActivate: [roleGuard],
+        data: { 
+          breadcrumb: 'Configuración',
+          roles: [RoleEnum.ADMIN]
+        },
+        loadChildren: () =>
+          import('./features/dashboard/dashboard.routes').then(
+            (m) => m.DASHBOARD_ROUTES
+          ),
       },
     ],
   },

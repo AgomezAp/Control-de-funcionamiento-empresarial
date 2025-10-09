@@ -1,4 +1,4 @@
-import { environment } from "../../../environments/environments";
+import { environment } from '../../../environments/environments';
 
 export const API_ENDPOINTS = {
   // Auth
@@ -13,7 +13,8 @@ export const API_ENDPOINTS = {
     BASE: `${environment.apiUrl}/usuarios`,
     BY_ID: (uid: number) => `${environment.apiUrl}/usuarios/${uid}`,
     BY_AREA: (area: string) => `${environment.apiUrl}/usuarios/area/${area}`,
-    CAMBIAR_STATUS: (uid: number) => `${environment.apiUrl}/usuarios/${uid}/status`,
+    CAMBIAR_STATUS: (uid: number) =>
+      `${environment.apiUrl}/usuarios/${uid}/status`,
   },
 
   // Clientes
@@ -30,7 +31,8 @@ export const API_ENDPOINTS = {
     HISTORICO: `${environment.apiUrl}/peticiones/historico`,
     CLIENTE_MES: `${environment.apiUrl}/peticiones/cliente-mes`,
     ACEPTAR: (id: number) => `${environment.apiUrl}/peticiones/${id}/aceptar`,
-    CAMBIAR_ESTADO: (id: number) => `${environment.apiUrl}/peticiones/${id}/estado`,
+    CAMBIAR_ESTADO: (id: number) =>
+      `${environment.apiUrl}/peticiones/${id}/estado`,
   },
 
   // Estadísticas
@@ -39,8 +41,10 @@ export const API_ENDPOINTS = {
     CALCULAR: `${environment.apiUrl}/estadisticas/calcular`,
     RECALCULAR: `${environment.apiUrl}/estadisticas/recalcular`,
     GLOBALES: `${environment.apiUrl}/estadisticas/globales`,
-    POR_AREA: (area: string) => `${environment.apiUrl}/estadisticas/area/${area}`,
-    POR_USUARIO: (uid: number) => `${environment.apiUrl}/estadisticas/usuario/${uid}`,
+    POR_AREA: (area: string) =>
+      `${environment.apiUrl}/estadisticas/area/${area}`,
+    POR_USUARIO: (uid: number) =>
+      `${environment.apiUrl}/estadisticas/usuario/${uid}`,
   },
 
   // Facturación
@@ -52,8 +56,10 @@ export const API_ENDPOINTS = {
     DETALLE: `${environment.apiUrl}/facturacion/detalle`,
     BY_ID: (id: number) => `${environment.apiUrl}/facturacion/${id}`,
     CERRAR: (id: number) => `${environment.apiUrl}/facturacion/${id}/cerrar`,
-    FACTURAR: (id: number) => `${environment.apiUrl}/facturacion/${id}/facturar`,
-    POR_CLIENTE: (clienteId: number) => `${environment.apiUrl}/facturacion/cliente/${clienteId}`,
+    FACTURAR: (id: number) =>
+      `${environment.apiUrl}/facturacion/${id}/facturar`,
+    POR_CLIENTE: (clienteId: number) =>
+      `${environment.apiUrl}/facturacion/cliente/${clienteId}`,
   },
 };
 

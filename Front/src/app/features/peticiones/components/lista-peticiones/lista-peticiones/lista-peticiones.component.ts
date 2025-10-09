@@ -28,7 +28,10 @@ import { ClienteService } from '../../../../../core/services/cliente.service';
 import { WebsocketService } from '../../../../../core/services/websocket.service';
 
 // Models
-import { Peticion, EstadoPeticion } from '../../../../../core/models/peticion.model';
+import {
+  Peticion,
+  EstadoPeticion,
+} from '../../../../../core/models/peticion.model';
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { UsuarioAuth } from '../../../../../core/models/auth.model';
 import { RoleEnum } from '../../../../../core/models/role.model';
@@ -48,6 +51,7 @@ import { HasRoleDirective } from '../../../../../shared/directives/has-role.dire
 import { EmptyStateComponent } from '../../../../../shared/components/empty-state/empty-state/empty-state.component';
 import { LoaderComponent } from '../../../../../shared/components/loader/loader/loader.component';
 import { TimerComponent } from '../../../../../shared/components/timer/timer/timer.component';
+import { ExportService, PeticionParaPDF } from '../../../../../core/services/export.service';
 
 @Component({
   selector: 'app-lista-peticiones',
@@ -75,19 +79,19 @@ import { TimerComponent } from '../../../../../shared/components/timer/timer/tim
     TimeAgoPipe,
     CurrencycopPipe,
     TruncatePipe,
-    HighlightPipe,
+    HighlightPipe, // Usado en: cliente, categoría, descripción (tabla y cards)
     InitialsPipe,
     // Directives
-    TooltipDirective,
+    TooltipDirective, // Usado con [appTooltip] en: ID, avatar, área (tabla y cards)
     HasRoleDirective,
     // Components
     EmptyStateComponent,
     LoaderComponent,
-    TimerComponent
+    TimerComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './lista-peticiones.component.html',
-  styleUrl: './lista-peticiones.component.css'
+  styleUrl: './lista-peticiones.component.css',
 })
 export class ListaPeticionesComponent implements OnInit, OnDestroy {
   // Data
@@ -106,13 +110,13 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
   filtroFechaInicio: Date | null = null;
   filtroFechaFin: Date | null = null;
   filtroRangoCosto: [number, number] = [0, 1000000];
-  
+
   // Opciones para dropdowns
   estadosOptions = [
     { label: 'Pendiente', value: 'Pendiente' },
     { label: 'En Progreso', value: 'En Progreso' },
     { label: 'Resuelta', value: 'Resuelta' },
-    { label: 'Cancelada', value: 'Cancelada' }
+    { label: 'Cancelada', value: 'Cancelada' },
   ];
 
   // UI State
@@ -122,7 +126,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
 
   // Roles
   RoleEnum = RoleEnum;
-  
+
   // Subscriptions
   private destroy$ = new Subject<void>();
 
@@ -131,6 +135,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private clienteService: ClienteService,
     private websocketService: WebsocketService,
+    private exportService: ExportService,
     private route: ActivatedRoute,
     private router: Router,
     private confirmationService: ConfirmationService,
@@ -139,7 +144,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    
+
     // Obtener estado desde la ruta (si viene de navegación)
     const estadoRuta = this.route.snapshot.data['estado'];
     if (estadoRuta) {
@@ -154,22 +159,25 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    
+
     // Desconectar WebSocket al destruir el componente
     // this.websocketService.disconnect();
   }
 
   loadClientes(): void {
-    this.clienteService.getAll().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.clientes = response.data;
-        }
-      },
-      error: (error) => {
-        console.error('Error al cargar clientes:', error);
-      }
-    });
+    this.clienteService
+      .getAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.clientes = response.data;
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar clientes:', error);
+        },
+      });
   }
 
   loadPeticiones(): void {
@@ -183,23 +191,26 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
       filtros.cliente_id = this.filtroCliente;
     }
 
-    this.peticionService.getAll(filtros).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.peticiones = response.data;
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error al cargar peticiones:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudieron cargar las peticiones'
-        });
-        this.loading = false;
-      }
-    });
+    this.peticionService
+      .getAll(filtros)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.peticiones = response.data;
+          }
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error al cargar peticiones:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar las peticiones',
+          });
+          this.loading = false;
+        },
+      });
   }
 
   setupWebSocketListeners(): void {
@@ -207,121 +218,169 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     this.websocketService.connect();
 
     // Escuchar nuevas peticiones
-    this.websocketService.onNuevaPeticion().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (peticion: Peticion) => {
-        console.log('📥 Nueva petición recibida:', peticion);
-        
-        // Agregar al inicio de la lista
-        this.peticiones = [peticion, ...this.peticiones];
-        
-        // Mostrar notificación
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Nueva petición',
-          detail: `Petición #${peticion.id} creada por ${peticion.creador?.nombre_completo}`,
-          life: 5000
-        });
-      }
-    });
+    this.websocketService
+      .onNuevaPeticion()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (peticion: Peticion) => {
+          console.log('📥 Nueva petición recibida:', peticion);
+
+          // Agregar al inicio de la lista
+          this.peticiones = [peticion, ...this.peticiones];
+
+          // Mostrar notificación
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Nueva petición',
+            detail: `Petición #${peticion.id} creada por ${peticion.creador?.nombre_completo}`,
+            life: 5000,
+          });
+        },
+      });
 
     // Escuchar cambios de estado
-    this.websocketService.onCambioEstado().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data: any) => {
-        console.log('🔄 Cambio de estado:', data);
-        
-        const index = this.peticiones.findIndex(p => p.id === data.peticionId);
-        if (index !== -1) {
-          // Actualizar estado
-          this.peticiones[index].estado = data.nuevoEstado;
-          
-          // Actualizar fecha de resolución si está resuelta o cancelada
-          if (data.nuevoEstado === 'Resuelta' || data.nuevoEstado === 'Cancelada') {
-            this.peticiones[index].fecha_resolucion = data.fecha_resolucion || new Date();
-            
-            // Remover de la lista si estamos filtrando por otro estado
-            if (this.filtroEstado.length > 0 && !this.filtroEstado.includes(data.nuevoEstado)) {
-              this.peticiones.splice(index, 1);
+    this.websocketService
+      .onCambioEstado()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          console.log('🔄 Cambio de estado:', data);
+
+          const index = this.peticiones.findIndex(
+            (p) => p.id === data.peticionId
+          );
+          if (index !== -1) {
+            // Actualizar estado
+            this.peticiones[index].estado = data.nuevoEstado;
+
+            // Actualizar fecha de resolución si está resuelta o cancelada
+            if (
+              data.nuevoEstado === 'Resuelta' ||
+              data.nuevoEstado === 'Cancelada'
+            ) {
+              this.peticiones[index].fecha_resolucion =
+                data.fecha_resolucion || new Date();
+
+              // Remover de la lista si estamos filtrando por otro estado
+              if (
+                this.filtroEstado.length > 0 &&
+                !this.filtroEstado.includes(data.nuevoEstado)
+              ) {
+                this.peticiones.splice(index, 1);
+              }
             }
+
+            // Trigger change detection
+            this.peticiones = [...this.peticiones];
+
+            // Mostrar notificación
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Estado actualizado',
+              detail: `Petición #${data.peticionId} cambió a ${data.nuevoEstado}`,
+              life: 4000,
+            });
           }
-          
-          // Trigger change detection
-          this.peticiones = [...this.peticiones];
-          
-          // Mostrar notificación
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Estado actualizado',
-            detail: `Petición #${data.peticionId} cambió a ${data.nuevoEstado}`,
-            life: 4000
-          });
-        }
-      }
-    });
+        },
+      });
 
     // Escuchar cuando una petición es aceptada
-    this.websocketService.onPeticionAceptada().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data: any) => {
-        console.log('✅ Petición aceptada:', data);
-        
-        const index = this.peticiones.findIndex(p => p.id === data.peticionId);
-        if (index !== -1) {
-          // Actualizar datos de aceptación
-          this.peticiones[index].estado = EstadoPeticion.EN_PROGRESO;
-          this.peticiones[index].asignado_a = data.usuarioId;
-          this.peticiones[index].asignado = data.usuario;
-          this.peticiones[index].fecha_aceptacion = data.fecha_aceptacion;
-          this.peticiones[index].fecha_limite = data.fecha_limite;
-          this.peticiones[index].tiempo_limite_horas = data.tiempo_limite_horas;
-          
-          // Trigger change detection
-          this.peticiones = [...this.peticiones];
-          
-          // Mostrar notificación
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Petición aceptada',
-            detail: `${data.usuario?.nombre_completo} aceptó la petición #${data.peticionId}`,
-            life: 5000
-          });
-        }
-      }
-    });
+    this.websocketService
+      .onPeticionAceptada()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          console.log('✅ Petición aceptada:', data);
+
+          const index = this.peticiones.findIndex(
+            (p) => p.id === data.peticionId
+          );
+          if (index !== -1) {
+            // Actualizar datos de aceptación
+            this.peticiones[index].estado = EstadoPeticion.EN_PROGRESO;
+            this.peticiones[index].asignado_a = data.usuarioId;
+            this.peticiones[index].asignado = data.usuario;
+            this.peticiones[index].fecha_aceptacion = data.fecha_aceptacion;
+            this.peticiones[index].fecha_limite = data.fecha_limite;
+            this.peticiones[index].tiempo_limite_horas =
+              data.tiempo_limite_horas;
+
+            // Trigger change detection
+            this.peticiones = [...this.peticiones];
+
+            // Mostrar notificación
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Petición aceptada',
+              detail: `${data.usuario?.nombre_completo} aceptó la petición #${data.peticionId}`,
+              life: 5000,
+            });
+          }
+        },
+      });
 
     // Escuchar peticiones vencidas
-    this.websocketService.onPeticionVencida().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data: any) => {
-        console.log('⚠️ Petición vencida:', data);
-        
-        const index = this.peticiones.findIndex(p => p.id === data.peticionId);
-        if (index !== -1) {
-          // Trigger change detection para actualizar el timer
-          this.peticiones = [...this.peticiones];
-          
-          // Mostrar notificación de alerta
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Petición Vencida',
-            detail: `La petición #${data.peticionId} ha excedido el tiempo límite`,
-            sticky: true // Mantener hasta que el usuario la cierre
-          });
-        }
-      }
-    });
+    this.websocketService
+      .onPeticionVencida()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          console.log('⚠️ Petición vencida:', data);
+
+          const index = this.peticiones.findIndex(
+            (p) => p.id === data.peticionId
+          );
+          if (index !== -1) {
+            // Trigger change detection para actualizar el timer
+            this.peticiones = [...this.peticiones];
+
+            // Mostrar notificación de alerta
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Petición Vencida',
+              detail: `La petición #${data.peticionId} ha excedido el tiempo límite`,
+              sticky: true, // Mantener hasta que el usuario la cierre
+            });
+          }
+        },
+      });
 
     // Escuchar usuarios online/offline (opcional, para futuro)
-    this.websocketService.onUsuarioOnline().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data: any) => {
-        console.log('👤 Usuario conectado:', data.usuario?.nombre_completo);
-      }
-    });
+    this.websocketService
+      .onUsuarioOnline()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          console.log('👤 Usuario conectado:', data.usuario?.nombre_completo);
+        },
+      });
 
-    this.websocketService.onUsuarioOffline().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data: any) => {
-        console.log('👤 Usuario desconectado:', data.usuario?.nombre_completo);
-      }
-    });
+    this.websocketService
+      .onUsuarioOffline()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          console.log(
+            '👤 Usuario desconectado:',
+            data.usuario?.nombre_completo
+          );
+        },
+      });
   }
-
+  getStatusIcon(estado: string): string {
+    switch (estado) {
+      case 'Pendiente':
+        return 'pi-clock';
+      case 'En Progreso':
+        return 'pi-spin pi-spinner';
+      case 'Resuelta':
+        return 'pi-check-circle';
+      case 'Cancelada':
+        return 'pi-times-circle';
+      default:
+        return 'pi-circle';
+    }
+  }
   // Navegación
   verDetalle(id: number): void {
     this.router.navigate(['/peticiones', id]);
@@ -343,7 +402,8 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.loadingAccion = true;
-        this.peticionService.changeStatus(peticion.id, { estado: 'Cancelada' as any })
+        this.peticionService
+          .changeStatus(peticion.id, { estado: 'Cancelada' as any })
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (response: any) => {
@@ -351,7 +411,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Éxito',
-                  detail: 'Petición cancelada correctamente'
+                  detail: 'Petición cancelada correctamente',
                 });
                 this.loadPeticiones();
               }
@@ -362,12 +422,12 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'No se pudo cancelar la petición'
+                detail: 'No se pudo cancelar la petición',
               });
               this.loadingAccion = false;
-            }
+            },
           });
-      }
+      },
     });
   }
 
@@ -394,15 +454,18 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     }
 
     const term = this.searchTerm.toLowerCase();
-    return this.peticiones.filter(p =>
-      p.id.toString().includes(term) ||
-      p.descripcion?.toLowerCase().includes(term) ||
-      p.cliente?.nombre?.toLowerCase().includes(term) ||
-      p.categoria?.nombre?.toLowerCase().includes(term)
+    return this.peticiones.filter(
+      (p) =>
+        p.id.toString().includes(term) ||
+        p.descripcion?.toLowerCase().includes(term) ||
+        p.cliente?.nombre?.toLowerCase().includes(term) ||
+        p.categoria?.nombre?.toLowerCase().includes(term)
     );
   }
 
-  getSeverity(estado: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' {
+  getSeverity(
+    estado: string
+  ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' {
     switch (estado) {
       case 'Pendiente':
         return 'info';
@@ -419,7 +482,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
 
   canAcceptPeticion(peticion: Peticion): boolean {
     if (!this.currentUser) return false;
-    
+
     // Solo usuarios de Pautas o Diseño pueden aceptar peticiones pendientes
     const areasPermitidas = ['Pautas', 'Diseño'];
     return (
@@ -431,13 +494,18 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
 
   canCancelPeticion(peticion: Peticion): boolean {
     if (!this.currentUser) return false;
-    
+
     // Admin, Directivo y Líder pueden cancelar
     // El creador puede cancelar su propia petición si está pendiente
-    const rolesPermitidos = [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER];
+    const rolesPermitidos = [
+      RoleEnum.ADMIN,
+      RoleEnum.DIRECTIVO,
+      RoleEnum.LIDER,
+    ];
     return (
       rolesPermitidos.includes(this.currentUser.rol) ||
-      (peticion.creador_id === this.currentUser.uid && peticion.estado === 'Pendiente')
+      (peticion.creador_id === this.currentUser.uid &&
+        peticion.estado === 'Pendiente')
     );
   }
 
@@ -445,21 +513,170 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     this.vistaActual = vista;
   }
 
-  exportarExcel(): void {
-    // TODO: Implementar exportación
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Exportar',
-      detail: 'Funcionalidad en desarrollo'
-    });
+  // ============================================
+  // EXPORTACIÓN E IMPRESIÓN
+  // ============================================
+
+  /**
+   * Exporta la lista completa de peticiones filtradas a PDF
+   */
+  exportarPDF(): void {
+    const peticionesFiltradas = this.peticionesFiltradas;
+    
+    if (peticionesFiltradas.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Sin datos',
+        detail: 'No hay peticiones para exportar',
+      });
+      return;
+    }
+
+    try {
+      const peticionesParaPDF: PeticionParaPDF[] = peticionesFiltradas.map(p => ({
+        id: p.id,
+        cliente: p.cliente?.nombre || 'Sin cliente',
+        categoria: p.categoria?.nombre || 'Sin categoría',
+        descripcion: p.descripcion,
+        descripcion_extra: p.descripcion_extra || undefined,
+        costo: p.costo,
+        estado: p.estado,
+        fecha_creacion: new Date(p.fecha_creacion).toLocaleString('es-CO'),
+        creador: p.creador?.nombre_completo || 'Desconocido',
+        asignado: p.asignado?.nombre_completo,
+        fecha_limite: p.fecha_limite ? new Date(p.fecha_limite).toLocaleString('es-CO') : undefined,
+      }));
+
+      this.exportService.exportarListaPeticionesAPDF(peticionesParaPDF, 'Lista de Peticiones');
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'PDF Generado',
+        detail: `Se exportaron ${peticionesFiltradas.length} peticiones`,
+      });
+    } catch (error) {
+      console.error('Error al exportar PDF:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo generar el PDF',
+      });
+    }
   }
 
-  exportarPDF(): void {
-    // TODO: Implementar exportación
+  /**
+   * Exporta una petición individual a PDF
+   */
+  exportarPeticionPDF(peticion: Peticion): void {
+    try {
+      const peticionParaPDF: PeticionParaPDF = {
+        id: peticion.id,
+        cliente: peticion.cliente?.nombre || 'Sin cliente',
+        categoria: peticion.categoria?.nombre || 'Sin categoría',
+        descripcion: peticion.descripcion,
+        descripcion_extra: peticion.descripcion_extra || undefined,
+        costo: peticion.costo,
+        estado: peticion.estado,
+        fecha_creacion: new Date(peticion.fecha_creacion).toLocaleString('es-CO'),
+        creador: peticion.creador?.nombre_completo || 'Desconocido',
+        asignado: peticion.asignado?.nombre_completo,
+        fecha_limite: peticion.fecha_limite ? new Date(peticion.fecha_limite).toLocaleString('es-CO') : undefined,
+      };
+
+      this.exportService.exportarPeticionAPDF(peticionParaPDF);
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'PDF Generado',
+        detail: `Petición #${peticion.id} exportada correctamente`,
+      });
+    } catch (error) {
+      console.error('Error al exportar PDF:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo generar el PDF',
+      });
+    }
+  }
+
+  /**
+   * Imprime la lista completa de peticiones filtradas
+   */
+  imprimirLista(): void {
+    const peticionesFiltradas = this.peticionesFiltradas;
+    
+    if (peticionesFiltradas.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Sin datos',
+        detail: 'No hay peticiones para imprimir',
+      });
+      return;
+    }
+
+    try {
+      const peticionesParaImprimir: PeticionParaPDF[] = peticionesFiltradas.map(p => ({
+        id: p.id,
+        cliente: p.cliente?.nombre || 'Sin cliente',
+        categoria: p.categoria?.nombre || 'Sin categoría',
+        descripcion: p.descripcion,
+        descripcion_extra: p.descripcion_extra || undefined,
+        costo: p.costo,
+        estado: p.estado,
+        fecha_creacion: new Date(p.fecha_creacion).toLocaleString('es-CO'),
+        creador: p.creador?.nombre_completo || 'Desconocido',
+        asignado: p.asignado?.nombre_completo,
+        fecha_limite: p.fecha_limite ? new Date(p.fecha_limite).toLocaleString('es-CO') : undefined,
+      }));
+
+      this.exportService.imprimirListaPeticiones(peticionesParaImprimir, 'Lista de Peticiones');
+    } catch (error) {
+      console.error('Error al imprimir:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo imprimir la lista',
+      });
+    }
+  }
+
+  /**
+   * Imprime una petición individual
+   */
+  imprimirPeticion(peticion: Peticion): void {
+    try {
+      const peticionParaImprimir: PeticionParaPDF = {
+        id: peticion.id,
+        cliente: peticion.cliente?.nombre || 'Sin cliente',
+        categoria: peticion.categoria?.nombre || 'Sin categoría',
+        descripcion: peticion.descripcion,
+        descripcion_extra: peticion.descripcion_extra || undefined,
+        costo: peticion.costo,
+        estado: peticion.estado,
+        fecha_creacion: new Date(peticion.fecha_creacion).toLocaleString('es-CO'),
+        creador: peticion.creador?.nombre_completo || 'Desconocido',
+        asignado: peticion.asignado?.nombre_completo,
+        fecha_limite: peticion.fecha_limite ? new Date(peticion.fecha_limite).toLocaleString('es-CO') : undefined,
+      };
+
+      this.exportService.imprimirPeticion(peticionParaImprimir);
+    } catch (error) {
+      console.error('Error al imprimir:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo imprimir la petición',
+      });
+    }
+  }
+
+  exportarExcel(): void {
+    // TODO: Implementar exportación a Excel
     this.messageService.add({
       severity: 'info',
       summary: 'Exportar',
-      detail: 'Funcionalidad en desarrollo'
+      detail: 'Funcionalidad en desarrollo',
     });
   }
 }

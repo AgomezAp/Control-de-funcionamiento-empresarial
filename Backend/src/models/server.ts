@@ -1,14 +1,17 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { createServer, Server as HttpServer } from "http";
 import sequelize from "../database/connection";
-import routes from "../routes/index"; // ⬅️ AQUÍ ESTÁ LA CORRECCIÓN
+import routes from "../routes/index";
 import { iniciarCronJobs } from "../jobs/peticion.cron";
+import { webSocketService } from "../services/webSocket.service";
 import "../models/Relaciones";
 dotenv.config();
 
 class Server {
   private app: Application;
+  private httpServer: HttpServer;
   private port: string;
   private apiPaths = {
     base: "/api",
@@ -16,12 +19,14 @@ class Server {
 
   constructor() {
     this.app = express();
+    this.httpServer = createServer(this.app);
     this.port = process.env.PORT || "3010";
 
     // Métodos iniciales
     this.conectarDB();
     this.middlewares();
     this.routes();
+    this.initializeWebSocket();
     this.iniciarCrons();
     this.listen();
   }
@@ -112,13 +117,24 @@ class Server {
     }
   }
 
+  initializeWebSocket() {
+    try {
+      webSocketService.initialize(this.httpServer);
+      console.log("✅ WebSocket inicializado correctamente");
+      console.log(`   🔌 Socket.IO escuchando en puerto: ${this.port}`);
+    } catch (error) {
+      console.error("❌ Error al inicializar WebSocket:", error);
+    }
+  }
+
   listen() {
-    this.app.listen(this.port, () => {
+    this.httpServer.listen(this.port, () => {
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       console.log(`🚀 Servidor corriendo en puerto: ${this.port}`);
       console.log(`📍 Ambiente: ${process.env.NODE_ENV || "development"}`);
       console.log(`🔗 URL: http://localhost:${this.port}`);
       console.log(`📚 API: http://localhost:${this.port}/api`);
+      console.log(`🔌 WebSocket: ws://localhost:${this.port}`);
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     });
   }

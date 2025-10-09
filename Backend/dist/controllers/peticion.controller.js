@@ -137,7 +137,7 @@ class PeticionController {
                     filtros.año = Number(año);
                 if (mes)
                     filtros.mes = Number(mes);
-                const historico = yield peticionService.obtenerHistorico(filtros);
+                const historico = yield peticionService.obtenerHistorico(filtros, req.usuario);
                 return response_util_1.ApiResponse.success(res, historico, "Histórico de peticiones obtenido exitosamente");
             }
             catch (error) {

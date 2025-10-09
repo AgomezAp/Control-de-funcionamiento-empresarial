@@ -1,0 +1,152 @@
+<div class="clientes-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <i class="pi pi-users header-icon"></i>
+      <h1 class="page-title">Clientes</h1>
+    </div>
+    <div class="header-right">
+      <button
+        *appHasRole="[RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER]"
+        class="btn btn-primary"
+        (click)="crearCliente()"
+      >
+        <i class="pi pi-plus"></i>
+        Crear Cliente
+      </button>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <app-loader *ngIf="loading"></app-loader>
+
+  <!-- BUSCADOR FUERA DE LA TABLA -->
+  <div class="search-section" *ngIf="!loading">
+    <div class="search-container">
+      <span class="search-icon-wrapper">
+        <i class="pi pi-search search-icon"></i>
+        <input
+          pInputText
+          type="text"
+          class="search-input"
+          [(ngModel)]="globalFilterValue"
+          (input)="onGlobalFilter($event)"
+          placeholder="Buscar cliente..."
+        />
+        <button
+          *ngIf="globalFilterValue"
+          class="clear-search-btn"
+          (click)="clearFilter()"
+          pTooltip="Limpiar búsqueda"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Tabla SIN CAPTION -->
+  <div class="clientes-table-container" *ngIf="!loading">
+    <p-table
+      #dt
+      [value]="clientes"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [globalFilterFields]="['nombre', 'pais', 'area']"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
+      responsiveLayout="scroll"
+      styleClass="clientes-table"
+    >
+      <!-- Empty state -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="empty-cell">
+            <app-empty-state
+              icon="pi-users"
+              title="No hay clientes"
+              message="No se encontraron clientes registrados"
+            ></app-empty-state>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id" class="col-id">
+            <div class="header-content">
+              ID
+              <p-sortIcon field="id"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="nombre" class="col-nombre">
+            <div class="header-content">
+              Nombre
+              <p-sortIcon field="nombre"></p-sortIcon>
+            </div>
+          </th>
+          <th class="col-pais">País</th>
+          <th class="col-area">Área</th>
+          <th class="col-acciones">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-cliente>
+        <tr class="table-row">
+          <td class="col-id">
+            <span class="id-badge">{{ cliente.id }}</span>
+          </td>
+          <td class="col-nombre">
+            <strong class="cliente-nombre">{{ cliente.nombre }}</strong>
+          </td>
+          <td class="col-pais">
+            <span class="pais-badge">{{ cliente.pais }}</span>
+          </td>
+          <td class="col-area">
+            <span class="area-text">{{ cliente.area || "N/A" }}</span>
+          </td>
+          <td class="col-acciones">
+            <div class="actions-container">
+              <button
+                class="action-btn view-btn"
+                (click)="verDetalle(cliente.id)"
+                pTooltip="Ver detalle"
+                tooltipPosition="top"
+              >
+                <i class="pi pi-eye"></i>
+              </button>
+              <button
+                *appHasRole="[
+                  RoleEnum.ADMIN,
+                  RoleEnum.DIRECTIVO,
+                  RoleEnum.LIDER
+                ]"
+                class="action-btn edit-btn"
+                (click)="editarCliente(cliente.id)"
+                pTooltip="Editar"
+                tooltipPosition="top"
+              >
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button
+                *appHasRole="[RoleEnum.ADMIN]"
+                class="action-btn delete-btn"
+                (click)="eliminarCliente(cliente)"
+                pTooltip="Eliminar"
+                tooltipPosition="top"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast position="top-right"></p-toast>

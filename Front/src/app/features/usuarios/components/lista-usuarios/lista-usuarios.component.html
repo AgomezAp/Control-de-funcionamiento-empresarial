@@ -1,0 +1,110 @@
+<div class="usuarios-container p-4">
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <h2 class="m-0">
+        <i class="pi pi-user mr-2"></i>
+        Usuarios
+      </h2>
+    </ng-template>
+    <ng-template pTemplate="right">
+      <button
+        *appHasRole="[RoleEnum.ADMIN]"
+        pButton
+        label="Crear Usuario"
+        icon="pi pi-user-plus"
+        class="p-button-success"
+        (click)="crearUsuario()"
+      ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <p-card *ngIf="!loading">
+    <p-table
+      [value]="usuarios"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar usuario..."
+            />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <app-empty-state
+              icon="pi-user"
+              title="No hay usuarios"
+              message="No se encontraron usuarios registrados"
+            ></app-empty-state>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Área</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-usuario>
+        <tr>
+          <td>{{ usuario.nombre_completo }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.area?.nombre || 'N/A' }}</td>
+          <td>
+            <p-tag 
+              [value]="usuario.rol?.nombre" 
+              [severity]="getRoleSeverity(usuario.rol?.nombre)"
+            ></p-tag>
+          </td>
+          <td>
+            <p-tag 
+              [value]="usuario.activo ? 'Activo' : 'Inactivo'" 
+              [severity]="usuario.activo ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <button
+                pButton
+                icon="pi pi-eye"
+                class="p-button-rounded p-button-text p-button-info"
+                pTooltip="Ver perfil"
+                (click)="verPerfil(usuario.uid)"
+              ></button>
+              <button
+                *appHasRole="[RoleEnum.ADMIN, RoleEnum.DIRECTIVO]"
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text p-button-warning"
+                pTooltip="Editar"
+                (click)="editarUsuario(usuario.uid)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import { PeticionService } from "../services/peticion.service";
 import { EstadisticaService } from "../services/estadistica.service";
 import { FacturacionService } from "../services/facturacion.service";
+import { webSocketService } from "../services/webSocket.service";
 
 const peticionService = new PeticionService();
 const estadisticaService = new EstadisticaService();
@@ -40,7 +41,9 @@ export const verificarPeticionesVencidas = cron.schedule("*/30 * * * *", async (
       for (const peticion of peticionesVencidas) {
         console.log(`❌ Petición ${peticion.id} vencida - Límite: ${peticion.fecha_limite}`);
         
-        // TODO: Implementar notificaciones (email, websockets, etc.)
+        // Emitir evento WebSocket de petición vencida
+        const peticionCompleta = await peticionService.obtenerPorId(peticion.id);
+        webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
       }
     } else {
       console.log("✅ No hay peticiones vencidas");

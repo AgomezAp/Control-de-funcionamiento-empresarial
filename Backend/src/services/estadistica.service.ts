@@ -15,8 +15,8 @@ export class EstadisticaService {
     const fechaInicio = new Date(año, mes - 1, 1);
     const fechaFin = new Date(año, mes, 0, 23, 59, 59);
 
-    // Peticiones creadas
-    const peticiones_creadas = await Peticion.count({
+    // Peticiones creadas (activas + históricas)
+    const peticiones_creadas_activas = await Peticion.count({
       where: {
         creador_id: usuario_id,
         fecha_creacion: {
@@ -25,7 +25,18 @@ export class EstadisticaService {
       },
     });
 
-    // Peticiones resueltas
+    const peticiones_creadas_historico = await PeticionHistorico.count({
+      where: {
+        creador_id: usuario_id,
+        fecha_creacion: {
+          [Op.between]: [fechaInicio, fechaFin],
+        },
+      },
+    });
+
+    const peticiones_creadas = peticiones_creadas_activas + peticiones_creadas_historico;
+
+    // Peticiones resueltas (solo históricas porque las resueltas se mueven ahí)
     const peticiones_resueltas = await PeticionHistorico.count({
       where: {
         asignado_a: usuario_id,
@@ -36,7 +47,7 @@ export class EstadisticaService {
       },
     });
 
-    // Peticiones canceladas
+    // Peticiones canceladas (solo históricas porque las canceladas se mueven ahí)
     const peticiones_canceladas = await PeticionHistorico.count({
       where: {
         asignado_a: usuario_id,

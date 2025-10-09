@@ -1,0 +1,215 @@
+<div class="container mx-auto p-4">
+  <p-toast></p-toast>
+
+  <!-- Header con filtros -->
+  <div class="mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-3xl font-bold text-gray-800">
+        <i class="pi pi-building text-green-600 mr-2"></i>
+        Estadísticas por Área: {{ areaUsuario }}
+      </h2>
+
+      <div class="flex gap-3">
+        <p-dropdown
+          [options]="meses"
+          [(ngModel)]="selectedMes"
+          placeholder="Mes"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onFiltroChange()"
+          [style]="{ width: '150px' }"
+        ></p-dropdown>
+
+        <p-dropdown
+          [options]="anios"
+          [(ngModel)]="selectedAnio"
+          placeholder="Año"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onFiltroChange()"
+          [style]="{ width: '120px' }"
+        ></p-dropdown>
+
+        <button
+          pButton
+          icon="pi pi-refresh"
+          label="Actualizar"
+          (click)="loadEstadisticas()"
+          [loading]="loading"
+          class="p-button-outlined"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen del Área -->
+  <div *ngIf="!loading && estadisticas.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+    <p-card class="bg-blue-50">
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Total Creadas</p>
+        <p class="text-3xl font-bold text-blue-600">{{ resumenArea.totalCreadas }}</p>
+      </div>
+    </p-card>
+
+    <p-card class="bg-green-50">
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Total Resueltas</p>
+        <p class="text-3xl font-bold text-green-600">{{ resumenArea.totalResueltas }}</p>
+        <p class="text-xs text-gray-500">
+          {{ calcularPorcentaje(resumenArea.totalResueltas, resumenArea.totalCreadas) }}%
+        </p>
+      </div>
+    </p-card>
+
+    <p-card class="bg-red-50">
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Total Canceladas</p>
+        <p class="text-3xl font-bold text-red-600">{{ resumenArea.totalCanceladas }}</p>
+      </div>
+    </p-card>
+
+    <p-card class="bg-purple-50">
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Tiempo Promedio</p>
+        <p class="text-3xl font-bold text-purple-600">{{ resumenArea.promedioTiempo | number: '1.1-1' }}</p>
+        <p class="text-xs text-gray-500">horas</p>
+      </div>
+    </p-card>
+
+    <p-card class="bg-yellow-50">
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Costo Total</p>
+        <p class="text-2xl font-bold text-yellow-700">${{ resumenArea.costoTotal | number: '1.2-2' }}</p>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading">
+    <p-card>
+      <p-skeleton width="100%" height="300px"></p-skeleton>
+    </p-card>
+    <p-card class="mt-4">
+      <p-skeleton width="100%" height="400px"></p-skeleton>
+    </p-card>
+  </div>
+
+  <!-- Mensaje sin datos -->
+  <div *ngIf="!loading && estadisticas.length === 0" class="text-center py-12">
+    <p-card>
+      <i class="pi pi-info-circle text-6xl text-blue-500 mb-4"></i>
+      <h3 class="text-2xl font-bold mb-2">Sin datos disponibles</h3>
+      <p class="text-gray-600">
+        No hay estadísticas para este área en el período seleccionado
+      </p>
+    </p-card>
+  </div>
+
+  <!-- Gráfico comparativo -->
+  <div *ngIf="!loading && estadisticas.length > 0" class="mb-6">
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Comparación de Usuarios del Área</h3>
+        </div>
+      </ng-template>
+      <div style="height: 400px">
+        <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Tabla detallada -->
+  <div *ngIf="!loading && estadisticas.length > 0">
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Detalle por Usuario</h3>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="estadisticas"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="usuario.nombre_completo">
+              Usuario
+              <p-sortIcon field="usuario.nombre_completo"></p-sortIcon>
+            </th>
+            <th pSortableColumn="peticiones_creadas" class="text-center">
+              Creadas
+              <p-sortIcon field="peticiones_creadas"></p-sortIcon>
+            </th>
+            <th pSortableColumn="peticiones_resueltas" class="text-center">
+              Resueltas
+              <p-sortIcon field="peticiones_resueltas"></p-sortIcon>
+            </th>
+            <th class="text-center">% Efectividad</th>
+            <th pSortableColumn="peticiones_canceladas" class="text-center">
+              Canceladas
+              <p-sortIcon field="peticiones_canceladas"></p-sortIcon>
+            </th>
+            <th pSortableColumn="tiempo_promedio_resolucion_horas" class="text-center">
+              Tiempo Prom.
+              <p-sortIcon field="tiempo_promedio_resolucion_horas"></p-sortIcon>
+            </th>
+            <th pSortableColumn="costo_total_generado" class="text-right">
+              Costo Total
+              <p-sortIcon field="costo_total_generado"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-est>
+          <tr>
+            <td>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-user text-gray-500"></i>
+                <span class="font-semibold">{{ est.usuario?.nombre_completo || 'Usuario ' + est.usuario_id }}</span>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="font-semibold">{{ est.peticiones_creadas }}</span>
+            </td>
+            <td class="text-center">
+              <span class="font-semibold text-green-600">{{ est.peticiones_resueltas }}</span>
+            </td>
+            <td class="text-center">
+              <p-tag
+                [value]="calcularPorcentaje(est.peticiones_resueltas, est.peticiones_creadas) + '%'"
+                [severity]="getSeverity(calcularPorcentaje(est.peticiones_resueltas, est.peticiones_creadas))"
+              ></p-tag>
+            </td>
+            <td class="text-center">
+              <span class="font-semibold text-red-600">{{ est.peticiones_canceladas }}</span>
+            </td>
+            <td class="text-center">
+              <span class="text-purple-600">
+                {{ est.tiempo_promedio_resolucion_horas || 0 | number: '1.1-1' }} hrs
+              </span>
+            </td>
+            <td class="text-right">
+              <span class="font-semibold text-gray-700">
+                ${{ est.costo_total_generado | number: '1.2-2' }}
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center py-4">No hay datos disponibles</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>

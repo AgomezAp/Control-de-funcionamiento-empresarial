@@ -1,0 +1,213 @@
+<div class="container mx-auto p-4">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center p-4">
+        <h2 class="text-2xl font-bold">
+          {{ cargando ? "Cargando..." : "Editar Usuario" }}
+        </h2>
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Volver"
+          [text]="true"
+          (onClick)="volver()"
+        />
+      </div>
+    </ng-template>
+
+    <!-- Skeleton mientras carga -->
+    <div *ngIf="cargando" class="flex flex-col gap-4">
+      <p-skeleton height="3rem" />
+      <p-skeleton height="3rem" />
+      <p-skeleton height="3rem" />
+    </div>
+
+    <!-- Formulario -->
+    <form
+      *ngIf="!cargando && usuarioForm"
+      [formGroup]="usuarioForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col gap-4"
+    >
+      <!-- Nombre Completo -->
+      <div class="field">
+        <label for="nombre" class="block mb-2 font-semibold">
+          Nombre Completo <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="nombre"
+          formControlName="nombre_completo"
+          class="w-full"
+          placeholder="Ingrese el nombre completo"
+        />
+        <small
+          *ngIf="
+            usuarioForm.get('nombre_completo')?.invalid &&
+            usuarioForm.get('nombre_completo')?.touched
+          "
+          class="text-red-500"
+        >
+          El nombre es requerido (mínimo 3 caracteres)
+        </small>
+      </div>
+
+      <!-- Correo Electrónico -->
+      <div class="field">
+        <label for="correo" class="block mb-2 font-semibold">
+          Correo Electrónico <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="correo"
+          type="email"
+          formControlName="correo"
+          class="w-full"
+          placeholder="usuario@ejemplo.com"
+        />
+        <small
+          *ngIf="
+            usuarioForm.get('correo')?.invalid &&
+            usuarioForm.get('correo')?.touched
+          "
+          class="text-red-500"
+        >
+          Ingrese un correo válido
+        </small>
+      </div>
+
+      <!-- Cambiar Contraseña -->
+      <div class="field">
+        <div class="flex items-center gap-2 mb-2">
+          <p-checkbox
+            formControlName="cambiar_contrasena"
+            [binary]="true"
+            inputId="cambiarPass"
+          />
+          <label for="cambiarPass" class="font-semibold cursor-pointer">
+            Cambiar Contraseña
+          </label>
+        </div>
+
+        <div
+          *ngIf="usuarioForm.get('cambiar_contrasena')?.value"
+          class="flex flex-col gap-3 mt-3 password-section"
+        >
+          <div>
+            <label for="nueva_contrasena" class="block mb-2"
+              >Nueva Contraseña</label
+            >
+            <p-password
+              id="nueva_contrasena"
+              formControlName="nueva_contrasena"
+              [toggleMask]="true"
+              [feedback]="true"
+              placeholder="Nueva contraseña"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            <small
+              *ngIf="
+                usuarioForm.get('nueva_contrasena')?.invalid &&
+                usuarioForm.get('nueva_contrasena')?.touched
+              "
+              class="text-red-500"
+            >
+              La contraseña debe tener al menos 6 caracteres
+            </small>
+          </div>
+
+          <div>
+            <label for="confirmar_nueva" class="block mb-2"
+              >Confirmar Nueva Contraseña</label
+            >
+            <p-password
+              id="confirmar_nueva"
+              formControlName="confirmar_nueva_contrasena"
+              [toggleMask]="true"
+              [feedback]="false"
+              placeholder="Confirme la contraseña"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            <small
+              *ngIf="
+                usuarioForm.get('confirmar_nueva_contrasena')?.invalid &&
+                usuarioForm.get('confirmar_nueva_contrasena')?.touched
+              "
+              class="text-red-500"
+            >
+              Las contraseñas no coinciden
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rol -->
+      <div class="field">
+        <label for="rol" class="block mb-2 font-semibold">
+          Rol <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          id="rol"
+          formControlName="rol_id"
+          [options]="roles"
+          placeholder="Seleccione un rol"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Área -->
+      <div class="field">
+        <label for="area" class="block mb-2 font-semibold">
+          Área <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          id="area"
+          formControlName="area_id"
+          [options]="areas"
+          placeholder="Seleccione un área"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Estado (Solo Admin) -->
+      <div class="field">
+        <label for="status" class="block mb-2 font-semibold">Estado</label>
+        <div class="flex items-center gap-2">
+          <p-inputSwitch id="status" formControlName="status" />
+          <span
+            [class]="
+              usuarioForm.get('status')?.value
+                ? 'text-green-600'
+                : 'text-red-600'
+            "
+          >
+            {{ usuarioForm.get("status")?.value ? "Activo" : "Inactivo" }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-2 mt-4 form-actions">
+        <p-button
+          label="Cancelar"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="volver()"
+          type="button"
+        />
+        <p-button
+          label="Guardar Cambios"
+          icon="pi pi-save"
+          [disabled]="usuarioForm.invalid || guardando"
+          [loading]="guardando"
+          type="submit"
+        />
+      </div>
+    </form>
+  </p-card>
+</div>

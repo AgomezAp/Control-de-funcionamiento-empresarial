@@ -1,0 +1,170 @@
+<div class="container mx-auto p-4">
+  <p-toast></p-toast>
+  
+  <!-- Header con filtros -->
+  <div class="mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-3xl font-bold text-gray-800">
+        <i class="pi pi-chart-line text-blue-600 mr-2"></i>
+        Mis Estadísticas
+      </h2>
+      
+      <div class="flex gap-3">
+        <p-dropdown
+          [options]="meses"
+          [(ngModel)]="selectedMes"
+          placeholder="Mes"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onFiltroChange()"
+          [style]="{ width: '150px' }"
+        ></p-dropdown>
+        
+        <p-dropdown
+          [options]="anios"
+          [(ngModel)]="selectedAnio"
+          placeholder="Año"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onFiltroChange()"
+          [style]="{ width: '120px' }"
+        ></p-dropdown>
+
+        <button
+          pButton
+          icon="pi pi-refresh"
+          label="Actualizar"
+          (click)="loadEstadisticas()"
+          [loading]="loading"
+          class="p-button-outlined"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <p-card *ngFor="let i of [1, 2, 3, 4]">
+      <p-skeleton width="100%" height="100px"></p-skeleton>
+    </p-card>
+  </div>
+
+  <!-- Mensaje de sin datos -->
+  <div *ngIf="!loading && !estadisticaActual" class="text-center py-12">
+    <p-card>
+      <i class="pi pi-info-circle text-6xl text-blue-500 mb-4"></i>
+      <h3 class="text-2xl font-bold mb-2">Sin datos disponibles</h3>
+      <p class="text-gray-600">
+        No hay estadísticas para el período seleccionado
+      </p>
+    </p-card>
+  </div>
+
+  <!-- Cards de estadísticas -->
+  <div *ngIf="!loading && estadisticaActual" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <!-- Total Peticiones -->
+    <p-card [ngClass]="getSeverityClass('total')" class="stat-card">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-semibold opacity-80 mb-1">Total Peticiones</p>
+          <p class="text-3xl font-bold">{{ estadisticaActual.peticiones_creadas }}</p>
+        </div>
+        <i class="pi pi-file text-3xl opacity-50"></i>
+      </div>
+    </p-card>
+
+    <!-- Peticiones Resueltas -->
+    <p-card [ngClass]="getSeverityClass('resueltas')" class="stat-card">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-semibold opacity-80 mb-1">Resueltas</p>
+          <p class="text-3xl font-bold">{{ estadisticaActual.peticiones_resueltas }}</p>
+          <p class="text-xs mt-1">
+            {{ calcularPorcentaje(estadisticaActual.peticiones_resueltas, estadisticaActual.peticiones_creadas) }}% del total
+          </p>
+        </div>
+        <i class="pi pi-check-circle text-3xl opacity-50"></i>
+      </div>
+    </p-card>
+
+    <!-- Peticiones Pendientes -->
+    <p-card [ngClass]="getSeverityClass('pendientes')" class="stat-card">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-semibold opacity-80 mb-1">Pendientes</p>
+          <p class="text-3xl font-bold">
+            {{ estadisticaActual.peticiones_creadas - estadisticaActual.peticiones_resueltas - estadisticaActual.peticiones_canceladas }}
+          </p>
+        </div>
+        <i class="pi pi-clock text-3xl opacity-50"></i>
+      </div>
+    </p-card>
+
+    <!-- Peticiones Canceladas -->
+    <p-card [ngClass]="getSeverityClass('vencidas')" class="stat-card">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-semibold opacity-80 mb-1">Canceladas</p>
+          <p class="text-3xl font-bold">{{ estadisticaActual.peticiones_canceladas }}</p>
+        </div>
+        <i class="pi pi-times-circle text-3xl opacity-50"></i>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Métricas adicionales -->
+  <div *ngIf="!loading && estadisticaActual" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <p-card>
+      <div class="flex items-center gap-4">
+        <div class="bg-purple-100 p-4 rounded-lg">
+          <i class="pi pi-clock text-3xl text-purple-600"></i>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Tiempo Promedio</p>
+          <p class="text-2xl font-bold text-gray-800">
+            {{ estadisticaActual.tiempo_promedio_resolucion_horas || 0 | number: '1.1-1' }} hrs
+          </p>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="flex items-center gap-4">
+        <div class="bg-green-100 p-4 rounded-lg">
+          <i class="pi pi-dollar text-3xl text-green-600"></i>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Costo Total Generado</p>
+          <p class="text-2xl font-bold text-gray-800">
+            ${{ estadisticaActual.costo_total_generado | number: '1.2-2' }}
+          </p>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Gráficos -->
+  <div *ngIf="!loading && estadisticaActual" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Distribución de Peticiones</h3>
+        </div>
+      </ng-template>
+      <div style="height: 300px">
+        <p-chart type="bar" [data]="chartDataPeticiones" [options]="chartOptions"></p-chart>
+      </div>
+    </p-card>
+
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Estado de Peticiones</h3>
+        </div>
+      </ng-template>
+      <div style="height: 300px">
+        <p-chart type="doughnut" [data]="chartDataEstados" [options]="chartOptions"></p-chart>
+      </div>
+    </p-card>
+  </div>
+</div>

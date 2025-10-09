@@ -1,0 +1,717 @@
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
+}
+
+/* ============================================
+   PAGE CONTAINER - ULTRA COMPACTO
+   ============================================ */
+.detalle-cliente-page {
+  padding: 0.5rem;
+  max-width: 100%;
+  margin: 0;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .page-header {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  color: var(--color-yellow);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .page-title {
+  color: var(--color-white);
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+}
+
+.btn-primary {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-yellow-dark);
+  border-color: var(--color-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-info);
+  border-color: var(--color-info);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-info);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn-edit {
+  background-color: transparent;
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.btn-edit:hover {
+  background-color: var(--color-warning);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn-back {
+  background-color: transparent;
+  color: var(--color-gray-dark);
+  border-color: var(--color-gray-medium);
+}
+
+.btn-back:hover {
+  background-color: var(--color-gray-light);
+  border-color: var(--color-gray-dark);
+}
+
+:host-context(.dark-mode) .btn-back {
+  color: var(--color-white);
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) .btn-back:hover {
+  background-color: #2a2a2a;
+  border-color: var(--color-white);
+}
+
+:host-context(.dark-mode) .btn-secondary {
+  color: var(--color-info);
+  border-color: var(--color-info);
+}
+
+:host-context(.dark-mode) .btn-edit {
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+/* ============================================
+   SKELETON
+   ============================================ */
+.skeleton-container {
+  padding: 0.5rem;
+}
+
+/* ============================================
+   DETAIL CONTENT - GRID COMPACTO
+   ============================================ */
+.detail-content {
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+:host-context(.dark-mode) .detail-content {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+/* ============================================
+   INFO CARDS
+   ============================================ */
+.info-card {
+  background-color: var(--color-gray-light);
+  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: var(--color-yellow);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) .info-card {
+  background-color: #2a2a2a;
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) .info-card:hover {
+  border-color: var(--color-yellow);
+}
+
+.user-card {
+  grid-column: span 2;
+}
+
+.info-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gray-dark);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+:host-context(.dark-mode) .info-label {
+  color: var(--color-gray-medium);
+}
+
+.info-label i {
+  font-size: 0.85rem;
+  color: var(--color-yellow);
+}
+
+.info-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin: 0;
+  word-break: break-word;
+}
+
+:host-context(.dark-mode) .info-value {
+  color: var(--color-white);
+}
+
+.info-value.mono {
+  font-family: 'Courier New', monospace;
+  color: var(--color-info);
+}
+
+.info-meta {
+  font-size: 0.75rem;
+  color: var(--color-gray-dark);
+  margin: 0.25rem 0 0 0;
+}
+
+:host-context(.dark-mode) .info-meta {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   STATUS BADGE
+   ============================================ */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.status-badge.inactive {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.status-badge i {
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   USER INFO
+   ============================================ */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .user-name {
+  color: var(--color-white);
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: var(--color-gray-dark);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .user-email {
+  color: var(--color-gray-medium);
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--color-info);
+  margin: 0.25rem 0 0 0;
+}
+
+.user-area i {
+  font-size: 0.7rem;
+}
+
+.no-data {
+  font-size: 0.9rem;
+  color: var(--color-gray-dark);
+  font-style: italic;
+  margin: 0;
+}
+
+:host-context(.dark-mode) .no-data {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .action-buttons {
+  border-top-color: #555555;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+  background-color: var(--color-white);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-medium);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+:host-context(.dark-mode) .empty-state {
+  background-color: var(--color-gray-dark);
+  border-color: #555555;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: var(--color-warning);
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0 0 0.5rem 0;
+}
+
+:host-context(.dark-mode) .empty-title {
+  color: var(--color-white);
+}
+
+.empty-message {
+  font-size: 1rem;
+  color: var(--color-gray-dark);
+  margin: 0 0 1.5rem 0;
+}
+
+:host-context(.dark-mode) .empty-message {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+  .detail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .detalle-cliente-page {
+    padding: 0.25rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .header-icon {
+    font-size: 1.25rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+  }
+
+  .detail-content {
+    padding: 0.75rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .user-card {
+    grid-column: span 1;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .detalle-cliente-page {
+    padding: 0.15rem;
+  }
+
+  .page-header {
+    padding: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .detail-content {
+    padding: 0.5rem;
+  }
+
+  .detail-grid {
+    gap: 0.65rem;
+  }
+
+  .info-card {
+    padding: 0.6rem;
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   SKELETON RESPONSIVE
+   ============================================ */
+:host ::ng-deep .skeleton-container .detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+}
+
+:host ::ng-deep .skeleton-container .col-span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 1200px) {
+  :host ::ng-deep .skeleton-container .detail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  :host ::ng-deep .skeleton-container .detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .skeleton-container .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .skeleton-container .col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* ============================================
+   DARK MODE - SKELETON
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-skeleton {
+  background-color: #2a2a2a;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-skeleton:after {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.btn:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+:host-context(.dark-mode) .btn:focus-visible {
+  outline-color: var(--color-yellow-light);
+}
+
+.info-card:focus-within {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .page-header .header-actions,
+  .action-buttons {
+    display: none !important;
+  }
+
+  .detalle-cliente-page {
+    padding: 0;
+  }
+
+  .detail-content {
+    border: none;
+    box-shadow: none;
+  }
+
+  .detail-grid {
+    gap: 0.5rem;
+  }
+
+  .info-card {
+    break-inside: avoid;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+.info-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.info-card:hover::before {
+  left: 100%;
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+.detail-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.detail-content::-webkit-scrollbar-track {
+  background-color: var(--color-gray-light);
+  border-radius: 3px;
+}
+
+.detail-content::-webkit-scrollbar-thumb {
+  background-color: var(--color-yellow);
+  border-radius: 3px;
+}
+
+.detail-content::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode) .detail-content::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
+}
+
+/* ============================================
+   UTILIDADES ADICIONALES
+   ============================================ */
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.word-break {
+  word-break: break-word;
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+:host-context(.dark-mode) .loading-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+}

@@ -15,9 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const http_1 = require("http");
 const connection_1 = __importDefault(require("../database/connection"));
-const index_1 = __importDefault(require("../routes/index")); // ⬅️ AQUÍ ESTÁ LA CORRECCIÓN
+const index_1 = __importDefault(require("../routes/index"));
 const peticion_cron_1 = require("../jobs/peticion.cron");
+const webSocket_service_1 = require("../services/webSocket.service");
 require("../models/Relaciones");
 dotenv_1.default.config();
 class Server {
@@ -26,11 +28,13 @@ class Server {
             base: "/api",
         };
         this.app = (0, express_1.default)();
+        this.httpServer = (0, http_1.createServer)(this.app);
         this.port = process.env.PORT || "3010";
         // Métodos iniciales
         this.conectarDB();
         this.middlewares();
         this.routes();
+        this.initializeWebSocket();
         this.iniciarCrons();
         this.listen();
     }
@@ -107,13 +111,24 @@ class Server {
             console.error("❌ Error al iniciar cron jobs:", error);
         }
     }
+    initializeWebSocket() {
+        try {
+            webSocket_service_1.webSocketService.initialize(this.httpServer);
+            console.log("✅ WebSocket inicializado correctamente");
+            console.log(`   🔌 Socket.IO escuchando en puerto: ${this.port}`);
+        }
+        catch (error) {
+            console.error("❌ Error al inicializar WebSocket:", error);
+        }
+    }
     listen() {
-        this.app.listen(this.port, () => {
+        this.httpServer.listen(this.port, () => {
             console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             console.log(`🚀 Servidor corriendo en puerto: ${this.port}`);
             console.log(`📍 Ambiente: ${process.env.NODE_ENV || "development"}`);
             console.log(`🔗 URL: http://localhost:${this.port}`);
             console.log(`📚 API: http://localhost:${this.port}/api`);
+            console.log(`🔌 WebSocket: ws://localhost:${this.port}`);
             console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         });
     }
