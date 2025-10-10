@@ -13,6 +13,7 @@ import { EstadisticaService } from '../../../core/services/estadistica.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state/empty-state.component';
+import { EstadoPeticion } from '../../../core/models/peticion.model';
 @Component({
   selector: 'app-dashboard-usuario',
   standalone: true,
@@ -61,8 +62,8 @@ export class DashboardUsuarioComponent implements OnInit {
         },
       });
 
-    // Cargar peticiones asignadas - FIX: usar 'en_progreso' o el valor correcto del enum
-    this.peticionService.getAll({ estado: 'en_progreso' as any }).subscribe({
+    // Cargar peticiones asignadas (En Progreso)
+    this.peticionService.getAll({ estado: EstadoPeticion.EN_PROGRESO }).subscribe({
       next: (response: any) => {
         if (response.success && response.data) {
           this.peticionesAsignadas = response.data;

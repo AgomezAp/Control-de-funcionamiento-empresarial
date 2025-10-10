@@ -1,69 +1,80 @@
 <nav class="navbar">
-  <div class="navbar-content">
-    <!-- Logo -->
+  <div class="navbar-container">
+    <!-- Logo Section -->
     <div class="navbar-brand">
-      <a routerLink="/dashboard" class="logo-link">
-        <i class="pi pi-box text-3xl"></i>
-        <span class="logo-text">Gestión Peticiones</span>
+      <a routerLink="/dashboard" class="brand-link">
+        <div class="brand-icon">
+          <i class="pi pi-box"></i>
+        </div>
+        <span class="brand-text">Gestión Peticiones</span>
       </a>
     </div>
 
-    <!-- Search (opcional) -->
+    <!-- Search Section -->
     <div class="navbar-search">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input 
-          type="text" 
-          pInputText 
+      <div class="search-wrapper">
+        <i class="pi pi-search search-icon"></i>
+        <input
+          type="text"
           placeholder="Buscar... (Ctrl+K)"
           class="search-input"
         />
-      </span>
+        <span class="search-shortcut">Ctrl+K</span>
+      </div>
     </div>
 
-    <!-- Actions -->
+    <!-- Actions Section -->
     <div class="navbar-actions">
-      <!-- Toggle Theme -->
-      <button 
-        pButton 
-        type="button" 
+      <!-- Theme Toggle -->
+      <button
+        pButton
+        type="button"
         [icon]="(isDarkMode$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
-        class="p-button-rounded p-button-text"
+        class="action-btn theme-btn"
         (click)="toggleTheme()"
-        pTooltip="Cambiar tema"
+        [pTooltip]="(isDarkMode$ | async) ? 'Modo Claro' : 'Modo Oscuro'"
         tooltipPosition="bottom"
       ></button>
 
       <!-- Notifications -->
-      <button 
-        pButton 
-        type="button" 
-        icon="pi pi-bell"
-        class="p-button-rounded p-button-text"
-        (click)="openNotifications()"
-        pTooltip="Notificaciones"
-        tooltipPosition="bottom"
-        pBadge
-        [value]="(unreadCount$ | async)?.toString() || '0'"
-        [severity]="(unreadCount$ | async) && (unreadCount$ | async)! > 0 ? 'danger' : 'secondary'"
-      ></button>
+      <div class="notification-wrapper">
+        <button
+          pButton
+          type="button"
+          icon="pi pi-bell"
+          class="action-btn notification-btn"
+          (click)="openNotifications()"
+          pTooltip="Notificaciones"
+          tooltipPosition="bottom"
+        ></button>
+        <span
+          *ngIf="(unreadCount$ | async) && (unreadCount$ | async)! > 0"
+          class="notification-badge"
+        >
+          {{ (unreadCount$ | async)! > 99 ? "99+" : (unreadCount$ | async) }}
+        </span>
+      </div>
 
       <!-- User Menu -->
-      <div class="user-menu">
-        <p-avatar 
-          [label]="currentUser?.nombre_completo | initials"
-          size="large"
-          shape="circle"
-          [style]="{ 'background-color': 'var(--color-accent)', 'color': '#000' }"
-          (click)="menu.toggle($event)"
-        ></p-avatar>
-        
-        <p-menu 
-          #menu 
-          [model]="userMenuItems" 
-          [popup]="true"
-        ></p-menu>
+      <div class="user-menu" (click)="menu.toggle($event)">
+        <div class="user-avatar">
+          <span class="avatar-text">{{
+            currentUser?.nombre_completo | initials
+          }}</span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ currentUser?.nombre_completo }}</span>
+          <span class="user-role">{{ currentUser?.rol || "Usuario" }}</span>
+        </div>
+        <i class="pi pi-chevron-down dropdown-icon"></i>
       </div>
+
+      <p-menu
+        #menu
+        [model]="userMenuItems"
+        [popup]="true"
+        styleClass="user-dropdown-menu"
+      ></p-menu>
     </div>
   </div>
 </nav>

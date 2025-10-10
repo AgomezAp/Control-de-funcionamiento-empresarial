@@ -1,104 +1,473 @@
+/* ===================================== */
+/* VARIABLES */
+/* ===================================== */
+:host {
+  --brand-yellow: #fbbf24;
+  --brand-yellow-light: #fcd34d;
+  --brand-yellow-dark: #f59e0b;
+  --brand-black: #0f0f0f;
+  --brand-white: #ffffff;
+  --brand-gray: #9ca3af;
+}
+
+/* ===================================== */
+/* CONTENEDOR - SIN SCROLL */
+/* ===================================== */
 .auth-container {
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-  padding: var(--spacing-lg);
+  padding: 1rem;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
 }
 
+.auth-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 50%,
+      rgba(251, 191, 36, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(251, 191, 36, 0.05) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+:host-context(.light-theme) .auth-container {
+  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+}
+
+/* ===================================== */
+/* TARJETA - COMPACTA */
+/* ===================================== */
 .auth-card {
   width: 100%;
-  max-width: 450px;
+  max-width: 420px;
+  position: relative;
+  z-index: 1;
 }
 
+/* ===================================== */
+/* HEADER - COMPACTO */
+/* ===================================== */
 .auth-header {
   text-align: center;
-  margin-bottom: var(--spacing-2xl);
-
-  .logo-icon {
-    font-size: 4rem;
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-md);
-  }
-
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: white;
-    margin: 0 0 var(--spacing-sm) 0;
-  }
-
-  p {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-  }
+  margin-bottom: 1.25rem;
 }
 
+.logo-icon {
+  font-size: 2.5rem;
+  color: var(--brand-yellow);
+  display: block;
+  margin: 0 auto 0.75rem;
+  filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.3));
+}
+
+.auth-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brand-white);
+  margin: 0;
+  line-height: 1.3;
+}
+
+:host-context(.light-theme) .auth-header h1 {
+  color: var(--brand-black);
+}
+
+/* ===================================== */
+/* CARD */
+/* ===================================== */
+::ng-deep .auth-card .p-card {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(251, 191, 36, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.05);
+}
+
+::ng-deep .auth-card .p-card .p-card-body {
+  padding: 1.75rem;
+}
+
+::ng-deep .auth-card .p-card .p-card-content {
+  padding: 0;
+}
+
+:host-context(.light-theme) ::ng-deep .auth-card .p-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 15, 15, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================== */
+/* FORMULARIO - COMPACTO */
+/* ===================================== */
 .form-group {
-  margin-bottom: var(--spacing-lg);
-
-  label {
-    display: block;
-    margin-bottom: var(--spacing-sm);
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  small.p-error {
-    display: block;
-    margin-top: var(--spacing-xs);
-  }
+  margin-bottom: 1.25rem;
 }
 
+.form-group:last-of-type {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--brand-white);
+  margin-bottom: 0.4rem;
+}
+
+:host-context(.light-theme) .form-group label {
+  color: var(--brand-black);
+}
+
+/* ===================================== */
+/* INPUT EMAIL */
+/* ===================================== */
+::ng-deep .p-input-icon-left {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+::ng-deep .p-input-icon-left > i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0.875rem;
+  color: var(--brand-yellow);
+  font-size: 1rem;
+  z-index: 1;
+}
+
+::ng-deep .p-inputtext {
+  width: 100%;
+  padding: 0.75rem 0.875rem 0.75rem 2.5rem;
+  background: rgba(15, 15, 15, 0.4);
+  border: 2px solid rgba(251, 191, 36, 0.2);
+  border-radius: 10px;
+  color: var(--brand-white);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-inputtext::placeholder {
+  color: rgba(156, 163, 175, 0.6);
+}
+
+::ng-deep .p-inputtext:focus {
+  outline: none;
+  border-color: var(--brand-yellow);
+  background: rgba(15, 15, 15, 0.7);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+}
+
+:host-context(.light-theme) ::ng-deep .p-inputtext {
+  background: #ffffff;
+  border-color: rgba(15, 15, 15, 0.15);
+  color: var(--brand-black);
+}
+
+/* ===================================== */
+/* PASSWORD - ESTRUCTURA CORREGIDA */
+/* ===================================== */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-icon-left {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0.875rem;
+  color: var(--brand-yellow);
+  font-size: 1rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+::ng-deep .p-password {
+  width: 100%;
+  display: block;
+}
+
+::ng-deep .p-password .p-password-input,
+::ng-deep .p-password input.password-input-custom {
+  width: 100%;
+  padding: 0.75rem 2.75rem 0.75rem 2.5rem !important;
+  background: rgba(15, 15, 15, 0.4);
+  border: 2px solid rgba(251, 191, 36, 0.2);
+  border-radius: 10px;
+  color: var(--brand-white);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-password .p-password-input:focus,
+::ng-deep .p-password input.password-input-custom:focus {
+  outline: none;
+  border-color: var(--brand-yellow);
+  background: rgba(15, 15, 15, 0.7);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+}
+
+/* Botón de toggle (ojo) centrado */
+::ng-deep .p-password-toggle-icon,
+::ng-deep .p-password .p-icon {
+  position: absolute !important;
+  top: 50% !important;
+  right: 0.875rem !important;
+  transform: translateY(-50%) !important;
+  color: var(--brand-yellow) !important;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+:host-context(.light-theme) ::ng-deep .p-password .p-password-input,
+:host-context(.light-theme) ::ng-deep .p-password input.password-input-custom {
+  background: #ffffff;
+  border-color: rgba(15, 15, 15, 0.15);
+  color: var(--brand-black);
+}
+
+/* ===================================== */
+/* ERRORES - COMPACTOS */
+/* ===================================== */
+.p-error {
+  display: block;
+  color: #fca5a5;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
+:host-context(.light-theme) .p-error {
+  color: #dc2626;
+}
+
+::ng-deep .ng-invalid.ng-touched .p-inputtext,
+::ng-deep .ng-invalid.ng-touched .p-password input {
+  border-color: #ef4444;
+}
+
+/* ===================================== */
+/* OPCIONES - EN LÍNEA */
+/* ===================================== */
 .form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-lg);
-
-  .forgot-link {
-    font-size: 0.875rem;
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-
-    &:hover {
-      color: var(--color-accent-hover);
-      text-decoration: underline;
-    }
-  }
+  margin-bottom: 1.25rem;
+  gap: 0.5rem;
 }
 
+::ng-deep .p-checkbox {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+::ng-deep .p-checkbox .p-checkbox-box {
+  width: 1.125rem;
+  height: 1.125rem;
+  background: rgba(15, 15, 15, 0.4);
+  border: 2px solid rgba(251, 191, 36, 0.3);
+  border-radius: 5px;
+}
+
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--brand-yellow);
+  border-color: var(--brand-yellow);
+}
+
+::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  color: var(--brand-black);
+}
+
+::ng-deep .p-checkbox-label {
+  color: var(--brand-white);
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+}
+
+:host-context(.light-theme) ::ng-deep .p-checkbox-label {
+  color: var(--brand-black);
+}
+
+:host-context(.light-theme) ::ng-deep .p-checkbox .p-checkbox-box {
+  background: #ffffff;
+  border-color: rgba(15, 15, 15, 0.2);
+}
+
+/* ===================================== */
+/* ENLACE OLVIDASTE CONTRASEÑA */
+/* ===================================== */
+.forgot-link {
+  color: var(--brand-yellow);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.forgot-link:hover {
+  color: var(--brand-yellow-light);
+  text-decoration: underline;
+}
+
+/* ===================================== */
+/* BOTÓN */
+/* ===================================== */
+::ng-deep .submit-btn,
+::ng-deep button.p-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--brand-yellow) 0%,
+    var(--brand-yellow-dark) 100%
+  );
+  border: none;
+  border-radius: 10px;
+  color: var(--brand-black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+  cursor: pointer;
+}
+
+::ng-deep button.p-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+}
+
+::ng-deep button.p-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+::ng-deep button.p-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================================== */
+/* ENLACE REGISTRO - COMPACTO */
+/* ===================================== */
 .register-link {
   text-align: center;
-  margin-top: var(--spacing-lg);
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(251, 191, 36, 0.1);
+  color: var(--brand-gray);
+  font-size: 0.875rem;
+}
 
-  p {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+:host-context(.light-theme) .register-link {
+  color: #6b7280;
+}
 
-    a {
-      color: var(--color-accent);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color var(--transition-fast);
+.register-link a {
+  color: var(--brand-yellow);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
 
-      &:hover {
-        color: var(--color-accent-hover);
-        text-decoration: underline;
-      }
-    }
+.register-link a:hover {
+  color: var(--brand-yellow-light);
+  text-decoration: underline;
+}
+
+/* ===================================== */
+/* RESPONSIVE - COMPACTO */
+/* ===================================== */
+@media (max-height: 700px) {
+  .auth-container {
+    padding: 0.5rem;
+  }
+
+  .auth-header {
+    margin-bottom: 1rem;
+  }
+
+  .logo-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-header h1 {
+    font-size: 1.25rem;
+  }
+
+  ::ng-deep .auth-card .p-card .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-options {
+    margin-bottom: 1rem;
+  }
+
+  .register-link {
+    margin-top: 1rem;
+    padding-top: 1rem;
   }
 }
 
-::ng-deep {
-  .p-password {
-    width: 100%;
-
-    input {
-      width: 100%;
-    }
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 0.75rem;
   }
+
+  .logo-icon {
+    font-size: 2.25rem;
+  }
+
+  .auth-header h1 {
+    font-size: 1.35rem;
+  }
+
+  ::ng-deep .auth-card .p-card .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .form-options {
+    gap: 0.25rem;
+  }
+
+  .forgot-link {
+    font-size: 0.8rem;
+  }
+
+  ::ng-deep .p-checkbox-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* ===================================== */
+/* ACCESIBILIDAD */
+/* ===================================== */
+*:focus-visible {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: 2px;
 }

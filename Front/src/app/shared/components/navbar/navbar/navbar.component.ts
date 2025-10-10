@@ -12,6 +12,7 @@ import { NotificacionService } from '../../../../core/services/notificacion.serv
 import { MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -22,6 +23,7 @@ import { AvatarModule } from 'primeng/avatar';
     MenuModule,
     BadgeModule,
     AvatarModule,
+    TooltipModule, // ← AGREGAR ESTA LÍNEA
     InitialsPipe,
   ],
   templateUrl: './navbar.component.html',
@@ -44,7 +46,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       this.setupUserMenu();
     });
@@ -55,21 +57,21 @@ export class NavbarComponent implements OnInit {
       {
         label: 'Mi Perfil',
         icon: 'pi pi-user',
-        command: () => this.router.navigate(['/perfil'])
+        command: () => this.router.navigate(['/perfil']),
       },
       {
         label: 'Configuración',
         icon: 'pi pi-cog',
-        command: () => this.router.navigate(['/configuracion'])
+        command: () => this.router.navigate(['/configuracion']),
       },
       {
-        separator: true
+        separator: true,
       },
       {
         label: 'Cerrar Sesión',
         icon: 'pi pi-sign-out',
-        command: () => this.logout()
-      }
+        command: () => this.logout(),
+      },
     ];
   }
 
