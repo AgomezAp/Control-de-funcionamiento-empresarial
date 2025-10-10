@@ -15,7 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { NotificacionService } from '../../../../core/services/notificacion.service';
-import { ClienteCreate } from '../../../../core/models/cliente.model';
+import { ClienteCreate, TipoCliente } from '../../../../core/models/cliente.model';
 import { Usuario } from '../../../../core/models/usuario.model';
 import { MENSAJES } from '../../../../core/constants/mensajes.constants';
 
@@ -57,6 +57,13 @@ export class CrearClienteComponent implements OnInit {
     { nombre: 'Estados Unidos', codigo: 'US' },
   ];
 
+  tiposCliente = [
+    { label: 'Meta Ads', value: TipoCliente.META_ADS },
+    { label: 'Google Ads', value: TipoCliente.GOOGLE_ADS },
+    { label: 'Externo', value: TipoCliente.EXTERNO },
+    { label: 'Otro', value: TipoCliente.OTRO },
+  ];
+
   ngOnInit(): void {
     this.initForm();
     this.cargarUsuarios();
@@ -66,6 +73,7 @@ export class CrearClienteComponent implements OnInit {
     this.clienteForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       pais: ['', Validators.required],
+      tipo_cliente: ['', Validators.required],
       pautador_id: ['', Validators.required],
       disenador_id: [''],
       fecha_inicio: ['', Validators.required],
@@ -77,8 +85,16 @@ export class CrearClienteComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data) {
           const usuariosActivos = response.data.filter((u) => u.status);
-          this.pautadores = usuariosActivos;
-          this.disenadores = usuariosActivos;
+          
+          // Filtrar solo pautadores (área = "Pautas")
+          this.pautadores = usuariosActivos.filter(
+            (u) => u.area?.nombre === 'Pautas'
+          );
+          
+          // Filtrar solo diseñadores (área = "Diseño")
+          this.disenadores = usuariosActivos.filter(
+            (u) => u.area?.nombre === 'Diseño'
+          );
         }
       },
       error: (error) => {
@@ -91,7 +107,11 @@ export class CrearClienteComponent implements OnInit {
   onSubmit(): void {
     if (this.clienteForm.valid) {
       this.loading = true;
-      const data: ClienteCreate = this.clienteForm.value;
+      const data: ClienteCreate = {
+        ...this.clienteForm.value,
+        // Si disenador_id está vacío, enviarlo como undefined para que no se incluya
+        disenador_id: this.clienteForm.value.disenador_id || undefined,
+      };
 
       this.clienteService.create(data).subscribe({
         next: (response) => {

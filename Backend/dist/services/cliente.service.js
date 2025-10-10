@@ -66,35 +66,9 @@ class ClienteService {
     }
     obtenerTodos(usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
+            // Todos los usuarios pueden ver todos los clientes activos
+            // Las restricciones de edición/eliminación se manejan en otros métodos
             const whereClause = { status: true };
-            // Si es Usuario, solo ver sus clientes
-            if (usuarioActual.rol === "Usuario") {
-                const area = yield Area_1.default.findOne({ where: { nombre: usuarioActual.area } });
-                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Pautas") {
-                    whereClause.pautador_id = usuarioActual.uid;
-                }
-                else if ((area === null || area === void 0 ? void 0 : area.nombre) === "Diseño") {
-                    whereClause.disenador_id = usuarioActual.uid;
-                }
-            }
-            // Si es Líder o Directivo, ver de su área
-            if (["Líder", "Directivo"].includes(usuarioActual.rol)) {
-                const area = yield Area_1.default.findOne({ where: { nombre: usuarioActual.area } });
-                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Pautas") {
-                    const usuariosArea = yield Usuario_1.default.findAll({
-                        where: { area_id: area.id },
-                        attributes: ["uid"],
-                    });
-                    whereClause.pautador_id = usuariosArea.map((u) => u.uid);
-                }
-                else if ((area === null || area === void 0 ? void 0 : area.nombre) === "Diseño") {
-                    const usuariosArea = yield Usuario_1.default.findAll({
-                        where: { area_id: area.id },
-                        attributes: ["uid"],
-                    });
-                    whereClause.disenador_id = usuariosArea.map((u) => u.uid);
-                }
-            }
             return yield Cliente_1.default.findAll({
                 where: whereClause,
                 include: [
@@ -116,16 +90,8 @@ class ClienteService {
             if (!cliente) {
                 throw new error_util_1.NotFoundError("Cliente no encontrado");
             }
-            // Verificar permisos
-            if (usuarioActual.rol === "Usuario") {
-                const area = yield Area_1.default.findOne({ where: { nombre: usuarioActual.area } });
-                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Pautas" && cliente.pautador_id !== usuarioActual.uid) {
-                    throw new error_util_1.ForbiddenError("No tienes permiso para ver este cliente");
-                }
-                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Diseño" && cliente.disenador_id !== usuarioActual.uid) {
-                    throw new error_util_1.ForbiddenError("No tienes permiso para ver este cliente");
-                }
-            }
+            // Todos los usuarios pueden ver todos los clientes
+            // Las restricciones de edición se manejan en el método actualizar()
             return cliente;
         });
     }

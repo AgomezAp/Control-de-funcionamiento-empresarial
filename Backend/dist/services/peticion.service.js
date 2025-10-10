@@ -282,9 +282,9 @@ class PeticionService {
                 !["Admin", "Directivo", "Líder"].includes(usuarioActual.rol)) {
                 throw new error_util_1.ForbiddenError("No tienes permiso para cambiar el estado de esta petición");
             }
-            // Si se marca como resuelta, establecer fecha_resolucion
+            // Si se marca como resuelta o cancelada, establecer fecha_resolucion
             const updateData = { estado: nuevoEstado };
-            if (nuevoEstado === "Resuelta") {
+            if (nuevoEstado === "Resuelta" || nuevoEstado === "Cancelada") {
                 updateData.fecha_resolucion = new Date();
             }
             yield peticion.update(updateData);
@@ -387,6 +387,11 @@ class PeticionService {
     }
     moverAHistorico(peticion) {
         return __awaiter(this, void 0, void 0, function* () {
+            // Asegurar que tenga fecha_resolucion (por si acaso)
+            if (!peticion.fecha_resolucion) {
+                peticion.fecha_resolucion = new Date();
+                yield peticion.save();
+            }
             // Copiar a histórico
             yield PeticionHistorico_1.default.create({
                 peticion_id_original: peticion.id,

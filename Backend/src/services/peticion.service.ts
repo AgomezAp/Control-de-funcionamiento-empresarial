@@ -324,9 +324,9 @@ export class PeticionService {
       throw new ForbiddenError("No tienes permiso para cambiar el estado de esta petición");
     }
 
-    // Si se marca como resuelta, establecer fecha_resolucion
+    // Si se marca como resuelta o cancelada, establecer fecha_resolucion
     const updateData: any = { estado: nuevoEstado };
-    if (nuevoEstado === "Resuelta") {
+    if (nuevoEstado === "Resuelta" || nuevoEstado === "Cancelada") {
       updateData.fecha_resolucion = new Date();
     }
 
@@ -448,6 +448,12 @@ export class PeticionService {
   }
 
   async moverAHistorico(peticion: Peticion) {
+    // Asegurar que tenga fecha_resolucion (por si acaso)
+    if (!peticion.fecha_resolucion) {
+      peticion.fecha_resolucion = new Date();
+      await peticion.save();
+    }
+
     // Copiar a histórico
     await PeticionHistorico.create({
       peticion_id_original: peticion.id,
@@ -462,7 +468,7 @@ export class PeticionService {
       fecha_creacion: peticion.fecha_creacion,
       fecha_aceptacion: peticion.fecha_aceptacion,
       fecha_limite: peticion.fecha_limite,
-      fecha_resolucion: peticion.fecha_resolucion!,
+      fecha_resolucion: peticion.fecha_resolucion,
       tiempo_limite_horas: peticion.tiempo_limite_horas,
     });
 

@@ -1,0 +1,195 @@
+<div class="crear-usuario-container">
+  <p-card styleClass="usuario-card">
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2 class="title">
+          <i class="pi pi-user-plus"></i>
+          <span>Crear Nuevo Usuario</span>
+        </h2>
+        <button
+          pButton
+          icon="pi pi-arrow-left"
+          label="Volver"
+          class="btn-volver"
+          (click)="volver()"
+          type="button"
+        ></button>
+      </div>
+    </ng-template>
+
+    <!-- Formulario -->
+    <form
+      [formGroup]="usuarioForm"
+      (ngSubmit)="onSubmit()"
+      class="usuario-form"
+    >
+      <!-- Nombre Completo -->
+      <div class="form-field">
+        <label for="nombre" class="field-label">
+          Nombre Completo <span class="required">*</span>
+        </label>
+        <input
+          pInputText
+          id="nombre"
+          formControlName="nombre_completo"
+          class="field-input"
+          placeholder="Ingrese el nombre completo"
+        />
+        <small
+          *ngIf="
+            usuarioForm.get('nombre_completo')?.invalid &&
+            usuarioForm.get('nombre_completo')?.touched
+          "
+          class="field-error"
+        >
+          El nombre es requerido (mínimo 3 caracteres)
+        </small>
+      </div>
+
+      <!-- Correo Electrónico -->
+      <div class="form-field">
+        <label for="correo" class="field-label">
+          Correo Electrónico <span class="required">*</span>
+        </label>
+        <input
+          pInputText
+          id="correo"
+          type="email"
+          formControlName="correo"
+          class="field-input"
+          placeholder="usuario@ejemplo.com"
+        />
+        <small
+          *ngIf="
+            usuarioForm.get('correo')?.invalid &&
+            usuarioForm.get('correo')?.touched
+          "
+          class="field-error"
+        >
+          {{ getEmailError() }}
+        </small>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-field">
+        <label for="contrasena" class="field-label">
+          Contraseña <span class="required">*</span>
+        </label>
+        <p-password
+          id="contrasena"
+          formControlName="contrasena"
+          [toggleMask]="true"
+          [feedback]="true"
+          placeholder="Ingrese una contraseña segura"
+          styleClass="field-password"
+          inputStyleClass="field-input"
+        ></p-password>
+        <small
+          *ngIf="
+            usuarioForm.get('contrasena')?.invalid &&
+            usuarioForm.get('contrasena')?.touched
+          "
+          class="field-error"
+        >
+          La contraseña debe tener al menos 6 caracteres
+        </small>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div class="form-field">
+        <label for="confirmar" class="field-label">
+          Confirmar Contraseña <span class="required">*</span>
+        </label>
+        <p-password
+          id="confirmar"
+          formControlName="confirmar_contrasena"
+          [toggleMask]="true"
+          [feedback]="false"
+          placeholder="Confirme la contraseña"
+          styleClass="field-password"
+          inputStyleClass="field-input"
+        ></p-password>
+        <small
+          *ngIf="
+            usuarioForm.get('confirmar_contrasena')?.invalid &&
+            usuarioForm.get('confirmar_contrasena')?.touched
+          "
+          class="field-error"
+        >
+          Las contraseñas no coinciden
+        </small>
+      </div>
+
+      <!-- Rol -->
+      <div class="form-field">
+        <label for="rol" class="field-label">
+          Rol <span class="required">*</span>
+        </label>
+        <p-dropdown
+          id="rol"
+          formControlName="rol_id"
+          [options]="roles"
+          placeholder="Seleccione un rol"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="field-dropdown"
+        ></p-dropdown>
+        <small
+          *ngIf="
+            usuarioForm.get('rol_id')?.invalid &&
+            usuarioForm.get('rol_id')?.touched
+          "
+          class="field-error"
+        >
+          El rol es requerido
+        </small>
+      </div>
+
+      <!-- Área -->
+      <div class="form-field">
+        <label for="area" class="field-label">
+          Área <span class="required">*</span>
+        </label>
+        <p-dropdown
+          id="area"
+          formControlName="area_id"
+          [options]="areas"
+          placeholder="Seleccione un área"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="field-dropdown"
+        ></p-dropdown>
+        <small
+          *ngIf="
+            usuarioForm.get('area_id')?.invalid &&
+            usuarioForm.get('area_id')?.touched
+          "
+          class="field-error"
+        >
+          El área es requerida
+        </small>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button
+          pButton
+          label="Cancelar"
+          class="btn-cancelar"
+          (click)="volver()"
+          type="button"
+        ></button>
+        <button
+          pButton
+          label="Crear Usuario"
+          icon="pi pi-save"
+          class="btn-guardar"
+          [disabled]="usuarioForm.invalid || loading"
+          [loading]="loading"
+          type="submit"
+        ></button>
+      </div>
+    </form>
+  </p-card>
+</div>

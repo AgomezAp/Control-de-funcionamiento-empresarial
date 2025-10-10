@@ -13,6 +13,12 @@ export const crearClienteValidator = [
     .notEmpty()
     .withMessage("El país es requerido"),
 
+  body("tipo_cliente")
+    .notEmpty()
+    .withMessage("El tipo de cliente es requerido")
+    .isIn(["Meta Ads", "Google Ads", "Externo", "Otro"])
+    .withMessage("El tipo de cliente debe ser: Meta Ads, Google Ads, Externo u Otro"),
+
   body("pautador_id")
     .notEmpty()
     .withMessage("El pautador es requerido")
@@ -20,7 +26,7 @@ export const crearClienteValidator = [
     .withMessage("El pautador debe ser un número válido"),
 
   body("disenador_id")
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isInt()
     .withMessage("El diseñador debe ser un número válido"),
 
@@ -42,13 +48,18 @@ export const actualizarClienteValidator = [
 
   body("pais").optional().trim().notEmpty().withMessage("El país no puede estar vacío"),
 
+  body("tipo_cliente")
+    .optional()
+    .isIn(["Meta Ads", "Google Ads", "Externo", "Otro"])
+    .withMessage("El tipo de cliente debe ser: Meta Ads, Google Ads, Externo u Otro"),
+
   body("pautador_id")
     .optional()
     .isInt()
     .withMessage("El pautador debe ser un número válido"),
 
   body("disenador_id")
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isInt()
     .withMessage("El diseñador debe ser un número válido"),
 

@@ -88,7 +88,7 @@
             </div>
           </th>
           <th class="col-pais">País</th>
-          <th class="col-area">Área</th>
+          <th class="col-tipo">Tipo de Cliente</th>
           <th class="col-acciones">Acciones</th>
         </tr>
       </ng-template>
@@ -105,8 +105,15 @@
           <td class="col-pais">
             <span class="pais-badge">{{ cliente.pais }}</span>
           </td>
-          <td class="col-area">
-            <span class="area-text">{{ cliente.area || "N/A" }}</span>
+          <td class="col-tipo">
+            <span class="tipo-badge" [ngClass]="{
+              'tipo-meta': cliente.tipo_cliente === 'Meta Ads',
+              'tipo-google': cliente.tipo_cliente === 'Google Ads',
+              'tipo-externo': cliente.tipo_cliente === 'Externo',
+              'tipo-otro': cliente.tipo_cliente === 'Otro'
+            }">
+              {{ cliente.tipo_cliente }}
+            </span>
           </td>
           <td class="col-acciones">
             <div class="actions-container">

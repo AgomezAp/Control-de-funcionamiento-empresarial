@@ -7,12 +7,13 @@ const clienteService = new ClienteService();
 export class ClienteController {
   async crear(req: Request, res: Response) {
     try {
-      const { nombre, pais, pautador_id, disenador_id, fecha_inicio } = req.body;
+      const { nombre, pais, tipo_cliente, pautador_id, disenador_id, fecha_inicio } = req.body;
 
       const cliente = await clienteService.crear(
         {
           nombre,
           pais,
+          tipo_cliente,
           pautador_id,
           disenador_id,
           fecha_inicio: new Date(fecha_inicio),

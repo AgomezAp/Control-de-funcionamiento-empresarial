@@ -1,10 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/connection";
 
+export enum TipoCliente {
+  META_ADS = "Meta Ads",
+  GOOGLE_ADS = "Google Ads",
+  EXTERNO = "Externo",
+  OTRO = "Otro",
+}
+
 export class Cliente extends Model {
   public id!: number;
   public nombre!: string;
   public pais!: string;
+  public tipo_cliente!: TipoCliente;
   public pautador_id!: number;
   public disenador_id!: number | null;
   public fecha_creacion!: Date;
@@ -26,6 +34,11 @@ Cliente.init(
     pais: {
       type: DataTypes.STRING(100),
       allowNull: false,
+    },
+    tipo_cliente: {
+      type: DataTypes.ENUM("Meta Ads", "Google Ads", "Externo", "Otro"),
+      allowNull: false,
+      defaultValue: "Otro",
     },
     pautador_id: {
       type: DataTypes.INTEGER,

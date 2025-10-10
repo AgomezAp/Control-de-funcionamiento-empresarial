@@ -3,9 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Cliente = void 0;
+exports.Cliente = exports.TipoCliente = void 0;
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../database/connection"));
+var TipoCliente;
+(function (TipoCliente) {
+    TipoCliente["META_ADS"] = "Meta Ads";
+    TipoCliente["GOOGLE_ADS"] = "Google Ads";
+    TipoCliente["EXTERNO"] = "Externo";
+    TipoCliente["OTRO"] = "Otro";
+})(TipoCliente || (exports.TipoCliente = TipoCliente = {}));
 class Cliente extends sequelize_1.Model {
 }
 exports.Cliente = Cliente;
@@ -22,6 +29,11 @@ Cliente.init({
     pais: {
         type: sequelize_1.DataTypes.STRING(100),
         allowNull: false,
+    },
+    tipo_cliente: {
+        type: sequelize_1.DataTypes.ENUM("Meta Ads", "Google Ads", "Externo", "Otro"),
+        allowNull: false,
+        defaultValue: "Otro",
     },
     pautador_id: {
         type: sequelize_1.DataTypes.INTEGER,

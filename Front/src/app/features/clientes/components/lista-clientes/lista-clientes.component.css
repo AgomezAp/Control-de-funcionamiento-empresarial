@@ -357,6 +357,36 @@
   font-size: 0.85rem;
 }
 
+/* Badges de Tipo de Cliente */
+.tipo-badge {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.tipo-meta {
+  background-color: #4267B2;
+  color: white;
+}
+
+.tipo-google {
+  background-color: #4285F4;
+  color: white;
+}
+
+.tipo-externo {
+  background-color: #28a745;
+  color: white;
+}
+
+.tipo-otro {
+  background-color: #6c757d;
+  color: white;
+}
+
 .area-text {
   color: var(--color-gray-dark);
 }

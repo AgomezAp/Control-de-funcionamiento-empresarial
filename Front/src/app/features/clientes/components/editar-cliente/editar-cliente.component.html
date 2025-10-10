@@ -1,55 +1,48 @@
 <div class="editar-cliente-page">
-  <!-- Header Compacto -->
+  <!-- Header -->
   <div class="page-header">
     <div class="header-left">
-      <i class="pi pi-pencil header-icon"></i>
-      <h2 class="page-title">
-        {{ cargando ? "Cargando..." : "Editar Cliente" }}
-      </h2>
+      <i class="pi pi-pencil"></i>
+      <h2>{{ cargando ? "Cargando..." : "Editar Cliente" }}</h2>
     </div>
-    <button class="btn-back" (click)="volver()" type="button">
+    <button class="btn-volver" (click)="volver()" type="button">
       <i class="pi pi-arrow-left"></i>
       Volver
     </button>
   </div>
 
-  <!-- Skeleton Loading -->
-  <div *ngIf="cargando" class="skeleton-container">
-    <div class="form-grid">
-      <p-skeleton height="4.5rem"></p-skeleton>
-      <p-skeleton height="4.5rem"></p-skeleton>
-      <p-skeleton height="4.5rem"></p-skeleton>
-      <p-skeleton height="4.5rem"></p-skeleton>
-      <p-skeleton height="4.5rem"></p-skeleton>
-    </div>
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando datos...</p>
   </div>
 
-  <!-- Formulario Ultra Compacto -->
+  <!-- Formulario -->
   <form
     *ngIf="!cargando && clienteForm"
     [formGroup]="clienteForm"
     (ngSubmit)="onSubmit()"
-    class="cliente-form"
+    class="form-container"
   >
     <div class="form-grid">
-      <!-- Nombre del Cliente -->
-      <div class="form-field full-width">
-        <label for="nombre" class="form-label">
+      <!-- Nombre -->
+      <div class="form-group full">
+        <label for="nombre">
           Nombre del Cliente <span class="required">*</span>
         </label>
         <input
-          pInputText
+          type="text"
           id="nombre"
           formControlName="nombre"
-          class="form-input"
           placeholder="Ingrese el nombre del cliente"
+          class="form-control"
         />
         <small
           *ngIf="
             clienteForm.get('nombre')?.invalid &&
             clienteForm.get('nombre')?.touched
           "
-          class="error-message"
+          class="error"
         >
           <i class="pi pi-exclamation-circle"></i>
           El nombre es requerido (mínimo 3 caracteres)
@@ -57,56 +50,82 @@
       </div>
 
       <!-- País -->
-      <div class="form-field">
-        <label for="pais" class="form-label">
-          País <span class="required">*</span>
-        </label>
-        <p-dropdown
-          id="pais"
-          formControlName="pais"
-          [options]="paises"
-          placeholder="Seleccione un país"
-          optionLabel="nombre"
-          optionValue="codigo"
-          [filter]="true"
-          filterBy="nombre"
-          [showClear]="true"
-          styleClass="form-dropdown"
-        ></p-dropdown>
+      <div class="form-group">
+        <label for="pais"> País <span class="required">*</span> </label>
+        <div class="select-wrapper">
+          <select id="pais" formControlName="pais" class="form-control">
+            <option value="" disabled>Seleccione un país</option>
+            <option *ngFor="let pais of paises" [value]="pais.codigo">
+              {{ pais.nombre }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
         <small
           *ngIf="
             clienteForm.get('pais')?.invalid && clienteForm.get('pais')?.touched
           "
-          class="error-message"
+          class="error"
         >
           <i class="pi pi-exclamation-circle"></i>
           El país es requerido
         </small>
       </div>
 
+      <!-- Tipo de Cliente -->
+      <div class="form-group">
+        <label for="tipo_cliente">
+          Tipo de Cliente <span class="required">*</span>
+        </label>
+        <div class="select-wrapper">
+          <select
+            id="tipo_cliente"
+            formControlName="tipo_cliente"
+            class="form-control"
+          >
+            <option value="" disabled>Seleccione el tipo</option>
+            <option *ngFor="let tipo of tiposCliente" [value]="tipo.value">
+              {{ tipo.label }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
+        <small
+          *ngIf="
+            clienteForm.get('tipo_cliente')?.invalid &&
+            clienteForm.get('tipo_cliente')?.touched
+          "
+          class="error"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          El tipo de cliente es requerido
+        </small>
+      </div>
+
       <!-- Pautador -->
-      <div class="form-field">
-        <label for="pautador" class="form-label">
+      <div class="form-group">
+        <label for="pautador_id">
           Pautador <span class="required">*</span>
         </label>
-        <p-dropdown
-          id="pautador"
-          formControlName="pautador_id"
-          [options]="pautadores"
-          placeholder="Seleccione un pautador"
-          optionLabel="nombre_completo"
-          optionValue="uid"
-          [filter]="true"
-          filterBy="nombre_completo,correo"
-          [showClear]="true"
-          styleClass="form-dropdown"
-        ></p-dropdown>
+        <div class="select-wrapper">
+          <select
+            id="pautador_id"
+            formControlName="pautador_id"
+            class="form-control"
+          >
+            <option value="" disabled>Seleccione un pautador</option>
+            <option *ngFor="let pautador of pautadores" [value]="pautador.uid">
+              {{ pautador.nombre_completo }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
         <small
           *ngIf="
             clienteForm.get('pautador_id')?.invalid &&
             clienteForm.get('pautador_id')?.touched
           "
-          class="error-message"
+          class="error"
         >
           <i class="pi pi-exclamation-circle"></i>
           El pautador es requerido
@@ -114,43 +133,45 @@
       </div>
 
       <!-- Diseñador -->
-      <div class="form-field">
-        <label for="disenador" class="form-label">
+      <div class="form-group">
+        <label for="disenador_id">
           Diseñador <span class="optional">(Opcional)</span>
         </label>
-        <p-dropdown
-          id="disenador"
-          formControlName="disenador_id"
-          [options]="disenadores"
-          placeholder="Seleccione un diseñador"
-          optionLabel="nombre_completo"
-          optionValue="uid"
-          [filter]="true"
-          filterBy="nombre_completo,correo"
-          [showClear]="true"
-          styleClass="form-dropdown"
-        ></p-dropdown>
+        <div class="select-wrapper">
+          <select
+            id="disenador_id"
+            formControlName="disenador_id"
+            class="form-control"
+          >
+            <option value="">Seleccione un diseñador</option>
+            <option
+              *ngFor="let disenador of disenadores"
+              [value]="disenador.uid"
+            >
+              {{ disenador.nombre_completo }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
       </div>
 
       <!-- Fecha de Inicio -->
-      <div class="form-field">
-        <label for="fecha_inicio" class="form-label">
+      <div class="form-group">
+        <label for="fecha_inicio">
           Fecha de Inicio <span class="required">*</span>
         </label>
-        <p-calendar
+        <input
+          type="date"
           id="fecha_inicio"
           formControlName="fecha_inicio"
-          [showIcon]="true"
-          dateFormat="yy-mm-dd"
-          placeholder="Seleccione una fecha"
-          styleClass="form-calendar"
-        ></p-calendar>
+          class="form-control"
+        />
         <small
           *ngIf="
             clienteForm.get('fecha_inicio')?.invalid &&
             clienteForm.get('fecha_inicio')?.touched
           "
-          class="error-message"
+          class="error"
         >
           <i class="pi pi-exclamation-circle"></i>
           La fecha de inicio es requerida
@@ -158,10 +179,13 @@
       </div>
 
       <!-- Estado -->
-      <div class="form-field">
-        <label for="status" class="form-label">Estado</label>
-        <div class="status-toggle">
-          <p-inputSwitch id="status" formControlName="status"></p-inputSwitch>
+      <div class="form-group">
+        <label>Estado</label>
+        <div class="toggle-container">
+          <label class="toggle-switch">
+            <input type="checkbox" formControlName="status" />
+            <span class="toggle-slider"></span>
+          </label>
           <span
             [class]="
               clienteForm.get('status')?.value
@@ -182,19 +206,19 @@
       </div>
     </div>
 
-    <!-- Botones de Acción -->
+    <!-- Botones -->
     <div class="form-actions">
-      <button class="btn btn-secondary" (click)="volver()" type="button">
+      <button type="button" class="btn btn-cancel" (click)="volver()">
         <i class="pi pi-times"></i>
         Cancelar
       </button>
       <button
-        class="btn btn-primary"
-        [disabled]="clienteForm.invalid || guardando"
         type="submit"
+        class="btn btn-save"
+        [disabled]="clienteForm.invalid || guardando"
       >
         <i [class]="guardando ? 'pi pi-spin pi-spinner' : 'pi pi-save'"></i>
-        <span>{{ guardando ? "Guardando..." : "Guardar Cambios" }}</span>
+        {{ guardando ? "Guardando..." : "Guardar Cambios" }}
       </button>
     </div>
   </form>

@@ -10,7 +10,7 @@ async function initData() {
     console.log("✅ Conectado a la base de datos");
 
     // Sincronizar modelos
-    await sequelize.sync({ force: false }); // force: true elimina tablas existentes
+    await sequelize.sync({ alter: false }); // force: true elimina tablas existentes
     console.log("✅ Tablas sincronizadas");
 
     // Crear roles

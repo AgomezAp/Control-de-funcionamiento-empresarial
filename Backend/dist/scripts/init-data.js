@@ -23,7 +23,7 @@ function initData() {
             yield connection_1.default.authenticate();
             console.log("✅ Conectado a la base de datos");
             // Sincronizar modelos
-            yield connection_1.default.sync({ force: false }); // force: true elimina tablas existentes
+            yield connection_1.default.sync({ alter: false }); // force: true elimina tablas existentes
             console.log("✅ Tablas sincronizadas");
             // Crear roles
             console.log("📝 Creando roles...");

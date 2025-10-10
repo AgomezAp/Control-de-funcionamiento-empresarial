@@ -10,6 +10,7 @@ export class ClienteService {
   async crear(data: {
     nombre: string;
     pais: string;
+    tipo_cliente: string;
     pautador_id: number;
     disenador_id?: number;
     fecha_inicio: Date;
@@ -63,37 +64,9 @@ export class ClienteService {
   }
 
   async obtenerTodos(usuarioActual: any) {
+    // Todos los usuarios pueden ver todos los clientes activos
+    // Las restricciones de edición/eliminación se manejan en otros métodos
     const whereClause: any = { status: true };
-
-    // Si es Usuario, solo ver sus clientes
-    if (usuarioActual.rol === "Usuario") {
-      const area = await Area.findOne({ where: { nombre: usuarioActual.area } });
-      
-      if (area?.nombre === "Pautas") {
-        whereClause.pautador_id = usuarioActual.uid;
-      } else if (area?.nombre === "Diseño") {
-        whereClause.disenador_id = usuarioActual.uid;
-      }
-    }
-
-    // Si es Líder o Directivo, ver de su área
-    if (["Líder", "Directivo"].includes(usuarioActual.rol)) {
-      const area = await Area.findOne({ where: { nombre: usuarioActual.area } });
-      
-      if (area?.nombre === "Pautas") {
-        const usuariosArea = await Usuario.findAll({
-          where: { area_id: area.id },
-          attributes: ["uid"],
-        });
-        whereClause.pautador_id = usuariosArea.map((u) => u.uid);
-      } else if (area?.nombre === "Diseño") {
-        const usuariosArea = await Usuario.findAll({
-          where: { area_id: area.id },
-          attributes: ["uid"],
-        });
-        whereClause.disenador_id = usuariosArea.map((u) => u.uid);
-      }
-    }
 
     return await Cliente.findAll({
       where: whereClause,
@@ -117,19 +90,8 @@ export class ClienteService {
       throw new NotFoundError("Cliente no encontrado");
     }
 
-    // Verificar permisos
-    if (usuarioActual.rol === "Usuario") {
-      const area = await Area.findOne({ where: { nombre: usuarioActual.area } });
-      
-      if (area?.nombre === "Pautas" && cliente.pautador_id !== usuarioActual.uid) {
-        throw new ForbiddenError("No tienes permiso para ver este cliente");
-      }
-      
-      if (area?.nombre === "Diseño" && cliente.disenador_id !== usuarioActual.uid) {
-        throw new ForbiddenError("No tienes permiso para ver este cliente");
-      }
-    }
-
+    // Todos los usuarios pueden ver todos los clientes
+    // Las restricciones de edición se manejan en el método actualizar()
     return cliente;
   }
 

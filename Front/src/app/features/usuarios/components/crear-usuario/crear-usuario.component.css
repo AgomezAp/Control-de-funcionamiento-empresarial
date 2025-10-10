@@ -1,0 +1,651 @@
+/* ==========================================
+   VARIABLES DE COLOR - Modo Claro y Oscuro
+   ========================================== */
+:root {
+  /* Modo Claro */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+
+  /* Colores Institucionales */
+  --yellow-primary: #ffd700;
+  --yellow-dark: #ffc700;
+  --yellow-light: #ffe44d;
+  --black: #000000;
+  --white: #ffffff;
+
+  /* Estados */
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --hover-bg: #f5f5f5;
+}
+
+[data-theme="dark"],
+.dark-mode {
+  /* Modo Oscuro */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-card: #252525;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --border-color: #404040;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-hover: rgba(0, 0, 0, 0.5);
+  --hover-bg: #333333;
+
+  /* Ajuste de amarillo para modo oscuro */
+  --yellow-primary: #ffd700;
+  --yellow-dark: #e6c200;
+  --yellow-light: #ffed4e;
+}
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
+.crear-usuario-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   CARD
+   ========================================== */
+::ng-deep .usuario-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .usuario-card .p-card-body {
+  padding: 0;
+}
+
+::ng-deep .usuario-card .p-card-content {
+  padding: 0;
+}
+
+::ng-deep .p-card-header {
+  padding: 0 !important;
+}
+
+/* ==========================================
+   HEADER
+   ========================================== */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--yellow-primary) 0%,
+    var(--yellow-dark) 100%
+  );
+  border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid var(--black);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  color: var(--black);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.title i {
+  font-size: 1.5rem;
+}
+
+.btn-volver {
+  background-color: var(--black) !important;
+  border-color: var(--black) !important;
+  color: var(--white) !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background-color: #333333 !important;
+  transform: translateX(-3px);
+}
+
+/* ==========================================
+   FORMULARIO - LAYOUT EN GRID
+   ========================================== */
+.usuario-form {
+  padding: 1.5rem;
+  background-color: var(--bg-card);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.5rem;
+  grid-template-areas:
+    "nombre nombre"
+    "correo correo"
+    "contrasena confirmar"
+    "rol area"
+    "actions actions";
+}
+
+/* Asignación de áreas del grid */
+.form-field:nth-child(1) {
+  grid-area: nombre;
+}
+.form-field:nth-child(2) {
+  grid-area: correo;
+}
+.form-field:nth-child(3) {
+  grid-area: contrasena;
+}
+.form-field:nth-child(4) {
+  grid-area: confirmar;
+}
+.form-field:nth-child(5) {
+  grid-area: rol;
+}
+.form-field:nth-child(6) {
+  grid-area: area;
+}
+.form-actions {
+  grid-area: actions;
+}
+
+.form-field {
+  margin-bottom: 0;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.required {
+  color: var(--error-color);
+  font-weight: 700;
+}
+
+/* ==========================================
+   INPUTS
+   ========================================== */
+::ng-deep .field-input {
+  width: 100%;
+  padding: 0.65rem;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .field-input:hover {
+  border-color: var(--yellow-dark);
+}
+
+::ng-deep .field-input:focus {
+  outline: none;
+  border-color: var(--yellow-primary);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+  background-color: var(--bg-card);
+}
+
+::ng-deep .field-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   PASSWORD INPUT - AJUSTE COMPLETO
+   ========================================== */
+::ng-deep .field-password {
+  width: 100%;
+}
+
+::ng-deep .field-password .p-password {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+::ng-deep .field-password .p-password-input {
+  width: 100%;
+}
+
+::ng-deep .field-password .p-input-icon-right {
+  width: 100%;
+}
+
+::ng-deep .field-password .p-inputtext {
+  width: 100%;
+  padding: 0.65rem 2.75rem 0.65rem 0.65rem;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+::ng-deep .field-password .p-inputtext:hover {
+  border-color: var(--yellow-dark);
+}
+
+::ng-deep .field-password .p-inputtext:focus {
+  border-color: var(--yellow-primary);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+/* Botón del ojo para mostrar/ocultar contraseña */
+::ng-deep .p-password {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+::ng-deep .p-password .p-password-input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+::ng-deep .p-password > i {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  font-size: 1.1rem;
+}
+
+::ng-deep .p-password > i:hover {
+  color: var(--yellow-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+::ng-deep .p-password-toggle-icon {
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-password .p-icon {
+  color: var(--text-secondary);
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+::ng-deep .p-password-toggle-icon:hover,
+::ng-deep .p-password .p-icon:hover {
+  color: var(--yellow-primary);
+  transform: scale(1.1);
+}
+
+::ng-deep .p-password > .p-input-icon-right > .p-input-icon {
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-password > .p-input-icon-right > .p-input-icon:hover {
+  color: var(--yellow-primary);
+}
+
+/* Panel de fuerza de contraseña */
+::ng-deep .p-password-panel {
+  background-color: var(--bg-card);
+  border: 2px solid var(--yellow-primary);
+  border-radius: 6px;
+  box-shadow: 0 4px 8px var(--shadow);
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+}
+
+::ng-deep .p-password-meter {
+  height: 8px;
+  margin-top: 0.5rem;
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+::ng-deep .p-password-strength {
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+/* Colores de fuerza de contraseña */
+::ng-deep .p-password-strength.weak {
+  background-color: var(--error-color);
+}
+
+::ng-deep .p-password-strength.medium {
+  background-color: #ffc107;
+}
+
+::ng-deep .p-password-strength.strong {
+  background-color: var(--success-color);
+}
+
+::ng-deep .p-password-info {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Ajuste específico para modo oscuro */
+[data-theme="dark"] ::ng-deep .p-password-toggle-icon,
+[data-theme="dark"] ::ng-deep .p-password .p-icon,
+[data-theme="dark"] ::ng-deep .p-password > i {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] ::ng-deep .p-password-toggle-icon:hover,
+[data-theme="dark"] ::ng-deep .p-password .p-icon:hover,
+[data-theme="dark"] ::ng-deep .p-password > i:hover {
+  color: var(--yellow-primary);
+}
+
+/* ==========================================
+   DROPDOWN
+   ========================================== */
+::ng-deep .field-dropdown {
+  width: 100%;
+}
+
+::ng-deep .field-dropdown .p-dropdown {
+  width: 100%;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-card);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .field-dropdown .p-dropdown:hover {
+  border-color: var(--yellow-dark);
+}
+
+::ng-deep .field-dropdown .p-dropdown:focus,
+::ng-deep .field-dropdown .p-dropdown.p-focus {
+  border-color: var(--yellow-primary);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+::ng-deep .field-dropdown .p-dropdown-label {
+  padding: 0.65rem;
+  color: var(--text-primary);
+}
+
+::ng-deep .field-dropdown .p-dropdown-trigger {
+  color: var(--text-primary);
+}
+
+::ng-deep .p-dropdown-panel {
+  background-color: var(--bg-card);
+  border: 2px solid var(--yellow-primary);
+  border-radius: 6px;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  color: var(--text-primary);
+  padding: 0.65rem 1rem;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: var(--yellow-light);
+  color: var(--black);
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: var(--yellow-primary);
+  color: var(--black);
+}
+
+/* ==========================================
+   MENSAJES DE ERROR
+   ========================================== */
+.field-error {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--error-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* ==========================================
+   BOTONES DE ACCIÓN
+   ========================================== */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.btn-cancelar {
+  background-color: var(--bg-secondary) !important;
+  border: 2px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  padding: 0.65rem 1.5rem !important;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: var(--hover-bg) !important;
+  border-color: var(--text-secondary) !important;
+  transform: translateY(-2px);
+}
+
+.btn-guardar {
+  background-color: var(--yellow-primary) !important;
+  border: 2px solid var(--yellow-primary) !important;
+  color: var(--black) !important;
+  padding: 0.65rem 1.5rem !important;
+  border-radius: 6px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background-color: var(--yellow-dark) !important;
+  border-color: var(--yellow-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+.btn-guardar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-guardar .pi-save {
+  font-size: 1rem;
+}
+
+/* ==========================================
+   ESTADOS DE VALIDACIÓN
+   ========================================== */
+::ng-deep .ng-invalid.ng-touched .field-input,
+::ng-deep .ng-invalid.ng-touched .p-inputtext,
+::ng-deep .ng-invalid.ng-touched .p-dropdown {
+  border-color: var(--error-color);
+}
+
+::ng-deep .ng-valid.ng-touched .field-input,
+::ng-deep .ng-valid.ng-touched .p-inputtext {
+  border-color: var(--success-color);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 992px) {
+  .usuario-form {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    grid-template-areas:
+      "nombre"
+      "correo"
+      "contrasena"
+      "confirmar"
+      "rol"
+      "area"
+      "actions";
+  }
+}
+
+@media (max-width: 768px) {
+  .crear-usuario-container {
+    margin: 0.5rem auto;
+    padding: 0 0.5rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .btn-volver {
+    width: 100%;
+  }
+
+  .usuario-form {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancelar,
+  .btn-guardar {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================
+   OPTIMIZACIÓN PARA NO TENER SCROLL
+   ========================================== */
+@media (min-width: 1024px) and (min-height: 768px) {
+  .crear-usuario-container {
+    height: calc(100vh - 2rem);
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep .usuario-card {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   LOADING STATE
+   ========================================== */
+::ng-deep .p-button-loading .p-button-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+   ========================================== */
+.field-input:focus-visible,
+.btn-volver:focus-visible,
+.btn-cancelar:focus-visible,
+.btn-guardar:focus-visible {
+  outline: 3px solid var(--yellow-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   AJUSTES FINOS
+   ========================================== */
+::ng-deep .p-inputtext,
+::ng-deep .p-dropdown {
+  font-size: 0.95rem;
+}
+
+::ng-deep .p-password-strength {
+  font-size: 0.8rem;
+}

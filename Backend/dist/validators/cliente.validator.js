@@ -13,13 +13,18 @@ exports.crearClienteValidator = [
         .trim()
         .notEmpty()
         .withMessage("El país es requerido"),
+    (0, express_validator_1.body)("tipo_cliente")
+        .notEmpty()
+        .withMessage("El tipo de cliente es requerido")
+        .isIn(["Meta Ads", "Google Ads", "Externo", "Otro"])
+        .withMessage("El tipo de cliente debe ser: Meta Ads, Google Ads, Externo u Otro"),
     (0, express_validator_1.body)("pautador_id")
         .notEmpty()
         .withMessage("El pautador es requerido")
         .isInt()
         .withMessage("El pautador debe ser un número válido"),
     (0, express_validator_1.body)("disenador_id")
-        .optional()
+        .optional({ nullable: true, checkFalsy: true })
         .isInt()
         .withMessage("El diseñador debe ser un número válido"),
     (0, express_validator_1.body)("fecha_inicio")
@@ -36,12 +41,16 @@ exports.actualizarClienteValidator = [
         .isLength({ min: 2 })
         .withMessage("El nombre debe tener al menos 2 caracteres"),
     (0, express_validator_1.body)("pais").optional().trim().notEmpty().withMessage("El país no puede estar vacío"),
+    (0, express_validator_1.body)("tipo_cliente")
+        .optional()
+        .isIn(["Meta Ads", "Google Ads", "Externo", "Otro"])
+        .withMessage("El tipo de cliente debe ser: Meta Ads, Google Ads, Externo u Otro"),
     (0, express_validator_1.body)("pautador_id")
         .optional()
         .isInt()
         .withMessage("El pautador debe ser un número válido"),
     (0, express_validator_1.body)("disenador_id")
-        .optional()
+        .optional({ nullable: true, checkFalsy: true })
         .isInt()
         .withMessage("El diseñador debe ser un número válido"),
     (0, express_validator_1.body)("status")

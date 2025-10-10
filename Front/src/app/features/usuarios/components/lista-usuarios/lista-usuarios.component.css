@@ -1,422 +1,444 @@
-/* ===================================== */
-/* CONTENEDOR PRINCIPAL */
-/* ===================================== */
+/* ========================================
+   Variables de Colores Institucionales
+   ======================================== */
+:root {
+  /* Modo Claro */
+  --color-primary: #000000;
+  --color-secondary: #ffd700;
+  --color-background: #f8f9fa;
+  --color-card-bg: #ffffff;
+  --color-text: #000000;
+  --color-text-muted: #6c757d;
+  --color-border: #dee2e6;
+  --color-hover: #f1f3f5;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+}
+
+/* Modo Oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #ffd700;
+    --color-secondary: #ffffff;
+    --color-background: #0a0a0a;
+    --color-card-bg: #1a1a1a;
+    --color-text: #ffffff;
+    --color-text-muted: #9ca3af;
+    --color-border: #2a2a2a;
+    --color-hover: #252525;
+    --color-success: #10b981;
+    --color-danger: #ef4444;
+    --color-warning: #f59e0b;
+    --color-info: #3b82f6;
+  }
+}
+
+.dark-mode {
+  --color-primary: #ffd700;
+  --color-secondary: #ffffff;
+  --color-background: #0a0a0a;
+  --color-card-bg: #1a1a1a;
+  --color-text: #ffffff;
+  --color-text-muted: #9ca3af;
+  --color-border: #2a2a2a;
+  --color-hover: #252525;
+}
+
+/* ========================================
+   Contenedor Principal
+   ======================================== */
 .usuarios-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  background-color: var(--color-background);
+  min-height: 100vh;
+  padding: 1.5rem !important;
 }
 
-/* ===================================== */
-/* UTILITIES */
-/* ===================================== */
-.p-4 {
-  padding: 1rem;
+/* ========================================
+   Toolbar - Limpio y Plano
+   ======================================== */
+::ng-deep .p-toolbar {
+  background-color: var(--color-card-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  box-shadow: none !important;
 }
 
-.m-0 {
-  margin: 0;
+::ng-deep .p-toolbar h2 {
+  color: var(--color-text) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
 }
 
-.mr-2 {
+::ng-deep .p-toolbar h2 i {
+  color: var(--color-text);
   margin-right: 0.5rem;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+/* Botón Crear Usuario */
+::ng-deep .p-toolbar .p-button-success {
+  background-color: var(--color-secondary) !important;
+  border: none !important;
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+  padding: 0.625rem 1.25rem !important;
+  border-radius: 6px !important;
+  transition: opacity 0.2s ease !important;
 }
 
-.flex {
-  display: flex;
+::ng-deep .p-toolbar .p-button-success:hover {
+  opacity: 0.85;
 }
 
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.align-items-center {
-  align-items: center;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-/* ===================================== */
-/* TOOLBAR */
-/* ===================================== */
-::ng-deep .p-toolbar {
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Título en toolbar */
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-h2 i {
-  font-size: 1.5rem;
-}
-
-/* ===================================== */
-/* CARD */
-/* ===================================== */
+/* ========================================
+   Card
+   ======================================== */
 ::ng-deep .p-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-card-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
 }
 
 ::ng-deep .p-card .p-card-body {
-  padding: 0;
+  padding: 0 !important;
 }
 
 ::ng-deep .p-card .p-card-content {
-  padding: 0;
+  padding: 0 !important;
 }
 
-/* ===================================== */
-/* TABLA */
-/* ===================================== */
-::ng-deep .p-datatable {
-  font-size: 0.875rem;
-}
-
-/* Header de tabla */
+/* ========================================
+   Tabla - Header Limpio
+   ======================================== */
 ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-  font-weight: 600;
-  padding: 1rem;
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
 }
 
-/* Cuerpo de tabla */
-::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-  padding: 0.875rem 1rem;
-  vertical-align: middle;
+/* ========================================
+   Barra de Búsqueda
+   ======================================== */
+::ng-deep .p-datatable .p-datatable-header {
+  background-color: var(--color-card-bg) !important;
+  border: none !important;
+  padding: 1.25rem 1.5rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
 }
 
-/* Hover en filas */
-::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  transition: background-color 0.2s;
-}
-
-/* Caption con buscador */
-::ng-deep .p-datatable .p-datatable-caption {
-  padding: 1rem;
-  border-bottom: 1px solid var(--surface-border);
-}
-
-/* Input de búsqueda */
 ::ng-deep .p-input-icon-left {
-  display: inline-block;
-  position: relative;
+  width: 100%;
+  max-width: 350px;
 }
 
 ::ng-deep .p-input-icon-left > i {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-color-secondary);
+  color: var(--color-text-muted);
+  left: 0.875rem;
 }
 
 ::ng-deep .p-input-icon-left > input {
-  padding-left: 2.5rem;
-  width: 300px;
-  border-radius: 6px;
+  padding: 0.625rem 0.875rem 0.625rem 2.5rem !important;
+  width: 100%;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 6px !important;
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  font-size: 0.875rem !important;
+  transition: border-color 0.2s ease !important;
 }
 
-/* Mensaje vacío */
-::ng-deep .p-datatable .p-datatable-emptymessage > td {
-  padding: 2rem;
-  text-align: center;
+::ng-deep .p-input-icon-left > input:focus {
+  border-color: var(--color-secondary) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1) !important;
 }
 
-/* ===================================== */
-/* TAGS */
-/* ===================================== */
-::ng-deep .p-tag {
-  font-size: 0.75rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 6px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+::ng-deep .p-input-icon-left > input::placeholder {
+  color: var(--color-text-muted);
 }
 
-/* Tags de roles - modo claro */
-::ng-deep .p-tag.p-tag-success {
-  background-color: #d4edda;
-  color: #155724;
+/* ========================================
+   Cuerpo de la Tabla
+   ======================================== */
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background-color: var(--color-card-bg) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  transition: background-color 0.15s ease;
 }
 
-::ng-deep .p-tag.p-tag-info {
-  background-color: #d1ecf1;
-  color: #0c5460;
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: var(--color-hover) !important;
 }
 
-::ng-deep .p-tag.p-tag-warning {
-  background-color: #fff3cd;
-  color: #856404;
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.875rem 1rem !important;
+  color: var(--color-text) !important;
+  font-size: 0.875rem !important;
+  border: none !important;
+  vertical-align: middle;
 }
 
-::ng-deep .p-tag.p-tag-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-/* Tags de roles - modo oscuro */
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-success {
-  background-color: #1e4620;
-  color: #a3d9a5;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-info {
-  background-color: #1e3a5f;
-  color: #7ec8e3;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-warning {
-  background-color: #5a4a1a;
-  color: #ffd666;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-danger {
-  background-color: #5a1a1a;
-  color: #f1aeb5;
-}
-
-/* ===================================== */
-/* BOTONES */
-/* ===================================== */
-::ng-deep .p-button {
-  border-radius: 6px;
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:first-child {
   font-weight: 500;
-  transition: all 0.2s;
 }
 
-::ng-deep .p-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:nth-child(2) {
+  color: var(--color-text-muted);
 }
 
-/* Botón crear usuario */
-::ng-deep .p-button.p-button-success {
-  background-color: #22c55e;
-  border-color: #22c55e;
+/* ========================================
+   Tags - MINIMALISTAS CON INDICADOR
+   ======================================== */
+
+/* Ocultar los tags originales y reemplazarlos */
+::ng-deep .p-tag {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  color: var(--color-text) !important;
 }
 
-::ng-deep .p-button.p-button-success:hover {
-  background-color: #16a34a;
-  border-color: #16a34a;
+/* Indicador de punto para estados */
+::ng-deep .p-tag::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-/* Botones de acción */
-::ng-deep .p-button.p-button-rounded {
-  width: 2.5rem;
-  height: 2.5rem;
+/* Estado Activo - Punto Verde */
+::ng-deep .p-tag.p-tag-success::before {
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
+/* Estado Inactivo - Punto Rojo */
+::ng-deep .p-tag.p-tag-danger::before {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Roles - Solo texto sin fondo */
+::ng-deep .p-tag.p-tag-warning,
+::ng-deep .p-tag.p-tag-info {
+  background-color: transparent !important;
+  color: var(--color-text) !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+::ng-deep .p-tag.p-tag-warning::before,
+::ng-deep .p-tag.p-tag-info::before {
+  display: none;
+}
+
+/* ========================================
+   Botones de Acción - Minimalistas
+   ======================================== */
 ::ng-deep .p-button.p-button-rounded.p-button-text {
-  transition: all 0.2s;
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  padding: 0 !important;
+  transition: background-color 0.2s ease !important;
+  border-radius: 6px !important;
 }
 
 ::ng-deep .p-button.p-button-rounded.p-button-text:hover {
-  transform: scale(1.1);
+  background-color: var(--color-hover) !important;
 }
 
-/* Botón info (ver) */
-::ng-deep .p-button.p-button-info.p-button-text {
-  color: #3b82f6;
+::ng-deep .p-button-info.p-button-text {
+  color: var(--color-info) !important;
 }
 
-::ng-deep .p-button.p-button-info.p-button-text:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+::ng-deep .p-button-warning.p-button-text {
+  color: var(--color-warning) !important;
 }
 
-/* Botón warning (editar) */
-::ng-deep .p-button.p-button-warning.p-button-text {
-  color: #f59e0b;
-}
-
-::ng-deep .p-button.p-button-warning.p-button-text:hover {
-  background-color: rgba(245, 158, 11, 0.1);
-}
-
-/* ===================================== */
-/* PAGINADOR */
-/* ===================================== */
+/* ========================================
+   Paginador - Limpio
+   ======================================== */
 ::ng-deep .p-paginator {
-  padding: 1rem;
-  border-top: 1px solid var(--surface-border);
+  background-color: var(--color-card-bg) !important;
+  border: none !important;
+  border-top: 1px solid var(--color-border) !important;
+  padding: 1rem 1.5rem !important;
 }
 
 ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
-  min-width: 2.5rem;
-  height: 2.5rem;
-  margin: 0 0.25rem;
-  border-radius: 6px;
+  color: var(--color-text) !important;
+  border-radius: 4px !important;
+  min-width: 2.25rem !important;
+  height: 2.25rem !important;
+  transition: background-color 0.2s ease !important;
+  margin: 0 0.125rem;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background-color: var(--color-hover) !important;
 }
 
 ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background-color: #3b82f6;
-  color: #fff;
+  background-color: var(--color-secondary) !important;
+  color: var(--color-primary) !important;
+  font-weight: 600;
 }
 
-/* ===================================== */
-/* TOOLTIPS */
-/* ===================================== */
-::ng-deep .p-tooltip {
-  border-radius: 6px;
-  font-size: 0.875rem;
+::ng-deep .p-paginator .p-paginator-first,
+::ng-deep .p-paginator .p-paginator-prev,
+::ng-deep .p-paginator .p-paginator-next,
+::ng-deep .p-paginator .p-paginator-last {
+  color: var(--color-text) !important;
+  border-radius: 4px !important;
+  min-width: 2.25rem !important;
+  height: 2.25rem !important;
+  transition: background-color 0.2s ease !important;
 }
 
+::ng-deep .p-paginator .p-paginator-first:hover,
+::ng-deep .p-paginator .p-paginator-prev:hover,
+::ng-deep .p-paginator .p-paginator-next:hover,
+::ng-deep .p-paginator .p-paginator-last:hover {
+  background-color: var(--color-hover) !important;
+}
+
+::ng-deep .p-dropdown {
+  border: 1px solid var(--color-border) !important;
+  border-radius: 4px !important;
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  height: 2.25rem;
+}
+
+::ng-deep .p-dropdown:hover {
+  border-color: var(--color-secondary) !important;
+}
+
+::ng-deep .p-dropdown-panel {
+  background-color: var(--color-card-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .p-dropdown-item {
+  color: var(--color-text) !important;
+}
+
+::ng-deep .p-dropdown-item:hover {
+  background-color: var(--color-hover) !important;
+}
+
+/* ========================================
+   Empty State
+   ======================================== */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td[colspan] {
+  padding: 3rem 2rem !important;
+  text-align: center;
+}
+
+/* ========================================
+   Tooltips
+   ======================================== */
 ::ng-deep .p-tooltip .p-tooltip-text {
-  padding: 0.5rem 0.75rem;
+  background-color: var(--color-primary) !important;
+  color: var(--color-secondary) !important;
+  font-size: 0.8rem !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 4px !important;
 }
 
-/* ===================================== */
-/* SCROLLBAR */
-/* ===================================== */
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ========================================
+   Scrollbar
+   ======================================== */
+::ng-deep .p-datatable-wrapper::-webkit-scrollbar {
+  height: 6px;
 }
 
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
-  background: var(--surface-ground);
-  border-radius: 4px;
+::ng-deep .p-datatable-wrapper::-webkit-scrollbar-track {
+  background: var(--color-border);
+  border-radius: 3px;
 }
 
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
-  background: var(--text-color-secondary);
-  border-radius: 4px;
-  opacity: 0.6;
+::ng-deep .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: 3px;
 }
 
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
-  background: var(--text-color);
-  opacity: 0.8;
+::ng-deep .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text);
 }
 
-/* ===================================== */
-/* LOADER */
-/* ===================================== */
-app-loader {
-  display: block;
-  min-height: 400px;
-}
-
-/* ===================================== */
-/* RESPONSIVE */
-/* ===================================== */
+/* ========================================
+   Responsive
+   ======================================== */
 @media (max-width: 768px) {
   .usuarios-container {
-    padding: 0.5rem;
+    padding: 1rem !important;
   }
 
-  h2 {
-    font-size: 1.25rem;
-  }
-
-  h2 i {
-    font-size: 1.25rem;
-  }
-
-  /* Toolbar responsive */
   ::ng-deep .p-toolbar {
-    padding: 0.75rem 1rem;
-  }
-
-  ::ng-deep .p-toolbar .p-toolbar-group-left,
-  ::ng-deep .p-toolbar .p-toolbar-group-right {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    gap: 1rem;
+    padding: 1rem !important;
+  }
+
+  ::ng-deep .p-toolbar h2 {
+    font-size: 1.25rem !important;
+  }
+
+  ::ng-deep .p-toolbar .p-button-success {
     width: 100%;
   }
 
-  /* Botones más pequeños */
-  ::ng-deep .p-button.p-button-rounded {
-    width: 2rem;
-    height: 2rem;
+  ::ng-deep .p-datatable .p-datatable-header {
+    padding: 1rem !important;
   }
 
-  /* Input de búsqueda */
-  ::ng-deep .p-input-icon-left > input {
-    width: 100%;
-    max-width: 250px;
+  ::ng-deep .p-input-icon-left {
+    max-width: 100%;
   }
 
-  /* Tabla responsive */
   ::ng-deep .p-datatable .p-datatable-thead > tr > th,
   ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+    padding: 0.75rem 0.5rem !important;
+    font-size: 0.8rem !important;
   }
 
-  /* Tags más pequeños */
-  ::ng-deep .p-tag {
-    font-size: 0.65rem;
-    padding: 0.25rem 0.5rem;
+  ::ng-deep .p-paginator {
+    padding: 0.75rem 1rem !important;
   }
 }
 
 @media (max-width: 576px) {
-  .usuarios-container {
-    padding: 0.25rem;
+  ::ng-deep .p-toolbar h2 {
+    font-size: 1.125rem !important;
   }
 
-  h2 {
-    font-size: 1rem;
+  ::ng-deep .p-button.p-button-rounded.p-button-text {
+    width: 2rem !important;
+    height: 2rem !important;
   }
-
-  ::ng-deep .p-button {
-    font-size: 0.875rem;
-  }
-
-  ::ng-deep .p-button-label {
-    display: none;
-  }
-
-  ::ng-deep .p-datatable {
-    font-size: 0.75rem;
-  }
-
-  .gap-2 {
-    gap: 0.25rem;
-  }
-}
-
-/* ===================================== */
-/* ANIMACIONES */
-/* ===================================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.usuarios-container {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-/* ===================================== */
-/* ACCESIBILIDAD */
-/* ===================================== */
-button:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-input:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
 }
