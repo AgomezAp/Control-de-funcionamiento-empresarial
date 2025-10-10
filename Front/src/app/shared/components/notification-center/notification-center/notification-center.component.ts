@@ -7,16 +7,21 @@ import { TimeAgoPipe } from '../../../pipes/time-ago.pipe';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { ScrollPanelModule } from 'primeng/scrollpanel'
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TooltipModule } from 'primeng/tooltip';
+import { EmptyStateComponent } from '../../../components/empty-state/empty-state/empty-state.component';
+
 @Component({
   selector: 'app-notification-center',
-standalone: true,
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
     BadgeModule,
     ScrollPanelModule,
-    TimeAgoPipe
+    TooltipModule,
+    TimeAgoPipe,
+    EmptyStateComponent
   ],
   templateUrl: './notification-center.component.html',
   styleUrl: './notification-center.component.css'

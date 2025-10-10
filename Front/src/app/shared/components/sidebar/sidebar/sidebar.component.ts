@@ -1,33 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { RoleEnum } from '../../../../core/models/role.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuarioAuth } from '../../../../core/models/auth.model';
 import { MenuItem } from 'primeng/api';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { InitialsPipe } from '../../../pipes/initials.pipe';
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    PanelMenuModule
-  ],
+  imports: [CommonModule, RouterModule, PanelMenuModule, InitialsPipe],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
   menuItems: MenuItem[] = [];
   currentUser: UsuarioAuth | null = null;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {
+    // Cerrar menú móvil al navegar
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Aquí puedes agregar lógica para cerrar el sidebar en móvil
+      });
+  }
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       this.buildMenu();
     });
@@ -40,38 +43,38 @@ export class SidebarComponent implements OnInit {
       {
         label: 'Dashboard',
         icon: 'pi pi-home',
-        routerLink: ['/dashboard']
+        routerLink: ['/dashboard'],
       },
       {
         label: 'Peticiones',
-        icon: 'pi pi-file',
+        icon: 'pi pi-file-edit',
         items: [
           {
             label: 'Todas',
             icon: 'pi pi-list',
-            routerLink: ['/peticiones']
+            routerLink: ['/peticiones'],
           },
           {
             label: 'Crear Nueva',
-            icon: 'pi pi-plus',
-            routerLink: ['/peticiones/crear-nueva']
+            icon: 'pi pi-plus-circle',
+            routerLink: ['/peticiones/crear-nueva'],
           },
           {
             label: 'Pendientes',
             icon: 'pi pi-clock',
-            routerLink: ['/peticiones/pendientes']
+            routerLink: ['/peticiones/pendientes'],
           },
           {
             label: 'En Progreso',
-            icon: 'pi pi-spin pi-spinner',
-            routerLink: ['/peticiones/en-progreso']
+            icon: 'pi pi-sync',
+            routerLink: ['/peticiones/en-progreso'],
           },
           {
             label: 'Histórico',
             icon: 'pi pi-history',
-            routerLink: ['/peticiones/historico']
-          }
-        ]
+            routerLink: ['/peticiones/historico'],
+          },
+        ],
       },
       {
         label: 'Clientes',
@@ -80,100 +83,124 @@ export class SidebarComponent implements OnInit {
           {
             label: 'Todos',
             icon: 'pi pi-list',
-            routerLink: ['/clientes']
+            routerLink: ['/clientes'],
           },
-          ...(this.canCreateClients() ? [{
-            label: 'Crear Nuevo',
-            icon: 'pi pi-plus',
-            routerLink: ['/clientes/crear']
-          }] : [])
-        ]
-      }
+          ...(this.canCreateClients()
+            ? [
+                {
+                  label: 'Crear Nuevo',
+                  icon: 'pi pi-user-plus',
+                  routerLink: ['/clientes/crear'],
+                },
+              ]
+            : []),
+        ],
+      },
     ];
 
     // Agregar Usuarios (solo Admin, Directivo, Líder)
-    if ([RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(this.currentUser.rol)) {
+    if (
+      [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
+        this.currentUser.rol
+      )
+    ) {
       this.menuItems.push({
         label: 'Usuarios',
-        icon: 'pi pi-user',
+        icon: 'pi pi-id-card',
         items: [
           {
             label: 'Todos',
             icon: 'pi pi-list',
-            routerLink: ['/usuarios']
+            routerLink: ['/usuarios'],
           },
-          ...(this.currentUser.rol === RoleEnum.ADMIN ? [{
-            label: 'Crear Nuevo',
-            icon: 'pi pi-user-plus',
-            routerLink: ['/usuarios/crear']
-          }] : [])
-        ]
+          ...(this.currentUser.rol === RoleEnum.ADMIN
+            ? [
+                {
+                  label: 'Crear Nuevo',
+                  icon: 'pi pi-user-plus',
+                  routerLink: ['/usuarios/crear'],
+                },
+              ]
+            : []),
+        ],
       });
     }
 
     // Agregar Estadísticas
     this.menuItems.push({
       label: 'Estadísticas',
-      icon: 'pi pi-chart-bar',
+      icon: 'pi pi-chart-line',
       items: [
         {
           label: 'Mis Estadísticas',
-          icon: 'pi pi-chart-line',
-          routerLink: ['/estadisticas/mis-estadisticas']
+          icon: 'pi pi-chart-bar',
+          routerLink: ['/estadisticas/mis-estadisticas'],
         },
-        ...(this.canViewAreaStats() ? [{
-          label: 'Por Área',
-          icon: 'pi pi-building',
-          routerLink: ['/estadisticas/area']
-        }] : []),
-        ...(this.currentUser.rol === RoleEnum.ADMIN ? [{
-          label: 'Globales',
-          icon: 'pi pi-globe',
-          routerLink: ['/estadisticas/globales']
-        }] : [])
-      ]
+        ...(this.canViewAreaStats()
+          ? [
+              {
+                label: 'Por Área',
+                icon: 'pi pi-building',
+                routerLink: ['/estadisticas/area'],
+              },
+            ]
+          : []),
+        ...(this.currentUser.rol === RoleEnum.ADMIN
+          ? [
+              {
+                label: 'Globales',
+                icon: 'pi pi-globe',
+                routerLink: ['/estadisticas/globales'],
+              },
+            ]
+          : []),
+      ],
     });
 
     // Agregar Facturación (solo Admin y Directivo)
     if ([RoleEnum.ADMIN, RoleEnum.DIRECTIVO].includes(this.currentUser.rol)) {
       this.menuItems.push({
         label: 'Facturación',
-        icon: 'pi pi-dollar',
+        icon: 'pi pi-wallet',
         items: [
           {
             label: 'Resumen',
             icon: 'pi pi-list',
-            routerLink: ['/facturacion/resumen']
+            routerLink: ['/facturacion/resumen'],
           },
           {
             label: 'Generar',
-            icon: 'pi pi-plus',
-            routerLink: ['/facturacion/generar']
-          }
-        ]
+            icon: 'pi pi-plus-circle',
+            routerLink: ['/facturacion/generar'],
+          },
+        ],
       });
     }
 
     // Agregar Configuración (solo Admin)
     if (this.currentUser.rol === RoleEnum.ADMIN) {
       this.menuItems.push({
-        separator: true
+        separator: true,
       });
       this.menuItems.push({
         label: 'Configuración',
         icon: 'pi pi-cog',
-        routerLink: ['/configuracion']
+        routerLink: ['/configuracion'],
       });
     }
   }
 
   canCreateClients(): boolean {
     if (!this.currentUser) return false;
-    return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(this.currentUser.rol);
+    return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
+      this.currentUser.rol
+    );
   }
 
   canViewAreaStats(): boolean {
     if (!this.currentUser) return false;
-    return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(this.currentUser.rol);
+    return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
+      this.currentUser.rol
+    );
   }
 }

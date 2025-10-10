@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 // PrimeNG
@@ -36,111 +41,11 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
     TagModule,
     ToastModule,
     CurrencycopPipe,
-    LoaderComponent
+    LoaderComponent,
   ],
   providers: [MessageService],
-  template: `
-    <div class="container p-4">
-      <app-loader *ngIf="loading"></app-loader>
-
-      <div *ngIf="!loading && peticion">
-        <p-card>
-          <ng-template pTemplate="header">
-            <div class="p-4">
-              <h2 class="m-0"><i class="pi pi-check-circle mr-2"></i>Aceptar Petición</h2>
-            </div>
-          </ng-template>
-
-          <!-- Resumen de la Petición -->
-          <div class="peticion-summary mb-4 p-4 border-round bg-primary-50">
-            <div class="grid">
-              <div class="col-12 md:col-6">
-                <label class="text-muted">ID</label>
-                <p class="font-bold text-xl">#{{ peticion.id }}</p>
-              </div>
-              <div class="col-12 md:col-6">
-                <label class="text-muted">Estado</label>
-                <p-tag [value]="peticion.estado" severity="info"></p-tag>
-              </div>
-              <div class="col-12 md:col-6">
-                <label class="text-muted">Cliente</label>
-                <p class="font-semibold">{{ peticion.cliente?.nombre }}</p>
-              </div>
-              <div class="col-12 md:col-6">
-                <label class="text-muted">Categoría</label>
-                <p class="font-semibold">{{ peticion.categoria?.nombre }}</p>
-              </div>
-              <div class="col-12">
-                <label class="text-muted">Descripción</label>
-                <p>{{ peticion.descripcion }}</p>
-              </div>
-              <div class="col-12">
-                <label class="text-muted">Costo</label>
-                <p class="font-bold text-primary text-2xl">{{ peticion.costo | currencyCop }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Formulario -->
-          <form [formGroup]="form" (ngSubmit)="aceptar()">
-            <div class="field">
-              <label for="tiempo_limite_horas" class="block mb-2">
-                Tiempo Límite (horas) <span class="text-red-500">*</span>
-              </label>
-              <p-inputNumber
-                id="tiempo_limite_horas"
-                formControlName="tiempo_limite_horas"
-                [min]="1"
-                [max]="720"
-                [showButtons]="true"
-                placeholder="Ingrese el tiempo en horas"
-                styleClass="w-full"
-              ></p-inputNumber>
-              <small class="text-muted">
-                Tiempo estimado para completar esta petición (mínimo 1 hora, máximo 30 días)
-              </small>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="flex gap-2 justify-content-end mt-4">
-                <button
-                  pButton
-                  label="Cancelar"
-                  icon="pi pi-times"
-                  class="p-button-outlined p-button-secondary"
-                  type="button"
-                  (click)="cancelar()"
-                ></button>
-                <button
-                  pButton
-                  label="Aceptar Petición"
-                  icon="pi pi-check"
-                  class="p-button-success"
-                  type="submit"
-                  [disabled]="!form.valid || submitting"
-                  [loading]="submitting"
-                ></button>
-              </div>
-            </ng-template>
-          </form>
-        </p-card>
-      </div>
-    </div>
-    <p-toast></p-toast>
-  `,
-  styles: [`
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .text-muted {
-      color: #6c757d;
-      font-size: 0.875rem;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-  `]
+  templateUrl: './aceptar-peticion.component.html',
+  styleUrls: ['./aceptar-peticion.component.css'],
 })
 export class AceptarPeticionComponent implements OnInit {
   peticion: Peticion | null = null;
@@ -159,7 +64,7 @@ export class AceptarPeticionComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.peticionId = +params['id'];
       if (this.peticionId) {
         this.loadPeticion();
@@ -169,7 +74,10 @@ export class AceptarPeticionComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      tiempo_limite_horas: [48, [Validators.required, Validators.min(1), Validators.max(720)]]
+      tiempo_limite_horas: [
+        48,
+        [Validators.required, Validators.min(1), Validators.max(720)],
+      ],
     });
   }
 
@@ -179,12 +87,12 @@ export class AceptarPeticionComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data) {
           this.peticion = response.data;
-          
+
           if (this.peticion.estado !== 'Pendiente') {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'Esta petición ya no está pendiente'
+              detail: 'Esta petición ya no está pendiente',
             });
             setTimeout(() => {
               this.router.navigate(['/peticiones', this.peticionId]);
@@ -198,10 +106,10 @@ export class AceptarPeticionComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo cargar la petición'
+          detail: 'No se pudo cargar la petición',
         });
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -210,7 +118,7 @@ export class AceptarPeticionComponent implements OnInit {
 
     this.submitting = true;
     const data = {
-      tiempo_limite_horas: this.form.value.tiempo_limite_horas
+      tiempo_limite_horas: this.form.value.tiempo_limite_horas,
     };
 
     this.peticionService.accept(this.peticion.id, data).subscribe({
@@ -219,7 +127,7 @@ export class AceptarPeticionComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
-            detail: 'Petición aceptada correctamente'
+            detail: 'Petición aceptada correctamente',
           });
           setTimeout(() => {
             this.router.navigate(['/peticiones', this.peticionId]);
@@ -232,10 +140,10 @@ export class AceptarPeticionComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo aceptar la petición'
+          detail: 'No se pudo aceptar la petición',
         });
         this.submitting = false;
-      }
+      },
     });
   }
 

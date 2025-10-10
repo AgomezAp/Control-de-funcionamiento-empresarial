@@ -33,29 +33,33 @@
 
     <!-- Contenido del usuario -->
     <div *ngIf="!cargando && usuario">
-      <p-tabView>
+      <p-tabView
+        [(activeIndex)]="activeTabIndex"
+        (onChange)="onTabChange($event)"
+      >
         <!-- Tab: Información Personal -->
-        <p-tabPanel header="Información Personal">
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-user"></i>
+            <span>Información Personal</span>
+          </ng-template>
+
           <div class="flex flex-col gap-4 p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
-                  >Nombre Completo</label
-                >
+                <label class="block font-semibold mb-1">Nombre Completo</label>
                 <p class="text-lg">{{ usuario.nombre_completo }}</p>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                <label class="block font-semibold mb-1"
                   >Correo Electrónico</label
                 >
                 <p class="text-lg">{{ usuario.correo }}</p>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
-                  >Estado</label
-                >
+                <label class="block font-semibold mb-1">Estado</label>
                 <p-tag
                   [value]="usuario.status ? 'Activo' : 'Inactivo'"
                   [severity]="usuario.status ? 'success' : 'danger'"
@@ -63,9 +67,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
-                  >ID de Usuario</label
-                >
+                <label class="block font-semibold mb-1">ID de Usuario</label>
                 <p class="text-sm font-mono">{{ usuario.uid }}</p>
               </div>
             </div>
@@ -76,14 +78,14 @@
             <h3 class="text-xl font-bold">Asignaciones</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="info-box rol-box">
-                <label class="block text-sm font-semibold text-gray-600 mb-2">
+                <label class="block font-semibold mb-2">
                   <i class="pi pi-shield mr-2"></i>Rol
                 </label>
                 <p class="text-lg font-medium" *ngIf="usuario.rol">
                   {{ usuario.rol.nombre }}
                 </p>
                 <p
-                  class="text-sm text-gray-600"
+                  class="text-sm info-description"
                   *ngIf="usuario.rol && usuario.rol.descripcion"
                 >
                   {{ usuario.rol.descripcion }}
@@ -91,14 +93,14 @@
               </div>
 
               <div class="info-box area-box">
-                <label class="block text-sm font-semibold text-gray-600 mb-2">
+                <label class="block font-semibold mb-2">
                   <i class="pi pi-building mr-2"></i>Área
                 </label>
                 <p class="text-lg font-medium" *ngIf="usuario.area">
                   {{ usuario.area.nombre }}
                 </p>
                 <p
-                  class="text-sm text-gray-600"
+                  class="text-sm info-description"
                   *ngIf="usuario.area && usuario.area.descripcion"
                 >
                   {{ usuario.area.descripcion }}
@@ -111,24 +113,24 @@
             <!-- Fechas -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                <label class="block font-semibold mb-1"
                   >Fecha de Creación</label
                 >
                 <p class="text-sm">
                   {{ usuario.fecha_creacion | date : "dd/MM/yyyy HH:mm" }}
-                  <span class="text-gray-500 ml-2"
+                  <span class="time-ago ml-2"
                     >({{ usuario.fecha_creacion | timeAgo }})</span
                   >
                 </p>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1"
+                <label class="block font-semibold mb-1"
                   >Última Actualización</label
                 >
                 <p class="text-sm">
                   {{ usuario.fecha_actualizacion | date : "dd/MM/yyyy HH:mm" }}
-                  <span class="text-gray-500 ml-2"
+                  <span class="time-ago ml-2"
                     >({{ usuario.fecha_actualizacion | timeAgo }})</span
                   >
                 </p>
@@ -138,7 +140,12 @@
         </p-tabPanel>
 
         <!-- Tab: Estadísticas -->
-        <p-tabPanel header="Estadísticas" (onClick)="cargarEstadisticas()">
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-chart-bar"></i>
+            <span>Estadísticas</span>
+          </ng-template>
+
           <div class="flex flex-col gap-4 p-4">
             <div *ngIf="cargandoEstadisticas" class="flex flex-col gap-3">
               <p-skeleton height="4rem" />

@@ -1,127 +1,731 @@
+/* ============================================
+   VARIABLES Y COLORES INSTITUCIONALES
+   ============================================ */
+:host {
+  /* Colores Institucionales */
+  --institutional-yellow: #ffc107;
+  --institutional-yellow-dark: #ffb300;
+  --institutional-yellow-light: #ffd54f;
+  --institutional-yellow-lighter: #fff9e6;
+
+  /* Modo Claro */
+  --sidebar-bg-light: #ffffff;
+  --sidebar-text-light: #1a1a1a;
+  --sidebar-text-secondary-light: #666666;
+  --sidebar-border-light: #e0e0e0;
+  --sidebar-hover-light: #f8f9fa;
+  --sidebar-active-light: #fff9e6;
+  --sidebar-shadow-light: 2px 0 12px rgba(0, 0, 0, 0.06);
+
+  /* Modo Oscuro */
+  --sidebar-bg-dark: #1a1a1a;
+  --sidebar-card-dark: #242424;
+  --sidebar-text-dark: #ffffff;
+  --sidebar-text-secondary-dark: #b3b3b3;
+  --sidebar-border-dark: #333333;
+  --sidebar-hover-dark: #2a2a2a;
+  --sidebar-active-dark: rgba(255, 193, 7, 0.15);
+  --sidebar-shadow-dark: 2px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   SIDEBAR PRINCIPAL
+   ============================================ */
 .sidebar {
   width: 280px;
   height: calc(100vh - 70px);
-  background-color: var(--bg-card);
-  border-right: 1px solid var(--border-color);
+  background-color: var(--sidebar-bg-light);
+  border-right: 2px solid var(--institutional-yellow);
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 70px;
-  overflow-y: auto;
-  transition: all var(--transition-normal);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 900;
+  box-shadow: var(--sidebar-shadow-light);
+}
 
-  @media (max-width: 1024px) {
+:host-context(.dark-mode) .sidebar {
+  background-color: var(--sidebar-bg-dark);
+  box-shadow: var(--sidebar-shadow-dark);
+}
+
+/* ============================================
+   CONTENIDO DEL SIDEBAR
+   ============================================ */
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.25rem 0.875rem;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: var(--sidebar-border-light);
+  border-radius: 3px;
+}
+
+:host-context(.dark-mode) .sidebar-content::-webkit-scrollbar-thumb {
+  background: var(--sidebar-border-dark);
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: var(--institutional-yellow);
+}
+
+.sidebar-nav {
+  width: 100%;
+}
+
+/* ============================================
+   PANEL MENU - ESTILOS GLOBALES
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu {
+  border: none;
+  background: transparent;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel {
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   ENCABEZADOS DEL PANEL
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link {
+  background-color: transparent;
+  border: none;
+  color: var(--sidebar-text-light);
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 2px solid transparent;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-panelmenu-header-link {
+  color: var(--sidebar-text-dark);
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link:hover {
+  background-color: var(--sidebar-hover-light);
+  color: var(--institutional-yellow);
+  transform: translateX(4px);
+  border-color: var(--institutional-yellow);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-panelmenu-header-link:hover {
+  background-color: var(--sidebar-hover-dark);
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link:focus {
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
+/* Icono del encabezado */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link .p-menuitem-icon {
+  color: var(--institutional-yellow);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-panelmenu-header-link:hover
+  .p-menuitem-icon {
+  transform: scale(1.1);
+}
+
+/* Texto del encabezado */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link .p-menuitem-text {
+  flex: 1;
+}
+
+/* Icono de expandir/contraer */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link .p-panelmenu-icon {
+  color: var(--sidebar-text-secondary-light);
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-panelmenu-header-link
+  .p-panelmenu-icon {
+  color: var(--sidebar-text-secondary-dark);
+}
+
+::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-panelmenu-header-link:not(.p-disabled):hover
+  .p-panelmenu-icon {
+  color: var(--institutional-yellow);
+}
+
+/* ============================================
+   CONTENIDO EXPANDIDO
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-content {
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0 0.5rem 0;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-menuitem {
+  position: relative;
+}
+
+/* ============================================
+   ITEMS DEL SUBMENÚ
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link {
+  color: var(--sidebar-text-secondary-light);
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+:host-context(.dark-mode) ::ng-deep .sidebar .p-panelmenu .p-menuitem-link {
+  color: var(--sidebar-text-secondary-dark);
+}
+
+/* Punto indicador */
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link::before {
+  content: "";
+  position: absolute;
+  left: 1.75rem;
+  width: 6px;
+  height: 6px;
+  background-color: var(--sidebar-text-secondary-light);
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-menuitem-link::before {
+  background-color: var(--sidebar-text-secondary-dark);
+}
+
+/* Hover */
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link:hover {
+  background-color: var(--sidebar-hover-light);
+  color: var(--institutional-yellow);
+  padding-left: 3.25rem;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-menuitem-link:hover {
+  background-color: var(--sidebar-hover-dark);
+}
+
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link:hover::before {
+  background-color: var(--institutional-yellow);
+  width: 10px;
+  height: 10px;
+  left: 1.625rem;
+  box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+}
+
+/* Item Activo (RouterLinkActive) */
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link.router-link-active {
+  background-color: var(--sidebar-active-light);
+  color: var(--institutional-yellow);
+  font-weight: 600;
+  padding-left: 3.25rem;
+  border-color: var(--institutional-yellow);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-menuitem-link.router-link-active {
+  background-color: var(--sidebar-active-dark);
+}
+
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link.router-link-active::before {
+  background: linear-gradient(
+    135deg,
+    var(--institutional-yellow) 0%,
+    var(--institutional-yellow-dark) 100%
+  );
+  width: 10px;
+  height: 10px;
+  left: 1.625rem;
+  box-shadow: 0 0 12px rgba(255, 193, 7, 0.8);
+}
+
+/* Iconos de los items */
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link .p-menuitem-icon {
+  font-size: 1rem;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link:hover .p-menuitem-icon {
+  transform: scale(1.1);
+}
+
+/* ============================================
+   SEPARADOR
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-menu-separator {
+  border-top: 2px solid var(--institutional-yellow);
+  margin: 1rem 0;
+  opacity: 0.3;
+}
+
+:host-context(.dark-mode) ::ng-deep .sidebar .p-panelmenu .p-menu-separator {
+  opacity: 0.5;
+}
+
+/* ============================================
+   FOOTER DEL SIDEBAR
+   ============================================ */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 2px solid var(--institutional-yellow);
+  background-color: var(--sidebar-bg-light);
+}
+
+:host-context(.dark-mode) .sidebar-footer {
+  background-color: var(--sidebar-card-dark);
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem;
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-hover-light) 0%,
+    transparent 100%
+  );
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+:host-context(.dark-mode) .user-card {
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-hover-dark) 0%,
+    transparent 100%
+  );
+}
+
+.user-card:hover {
+  background: linear-gradient(
+    135deg,
+    var(--institutional-yellow-lighter) 0%,
+    var(--sidebar-hover-light) 100%
+  );
+  border-color: var(--institutional-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+:host-context(.dark-mode) .user-card:hover {
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-active-dark) 0%,
+    var(--sidebar-hover-dark) 100%
+  );
+}
+
+/* Avatar */
+.user-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--institutional-yellow) 0%,
+    var(--institutional-yellow-dark) 100%
+  );
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-card:hover .user-avatar {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
+}
+
+/* Indicador de estado en línea */
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  border: 2px solid var(--sidebar-bg-light);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  animation: pulse-status 2s ease-in-out infinite;
+}
+
+:host-context(.dark-mode) .status-indicator {
+  border-color: var(--sidebar-card-dark);
+}
+
+@keyframes pulse-status {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Detalles del Usuario */
+.user-details {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--sidebar-text-light);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+:host-context(.dark-mode) .user-name {
+  color: var(--sidebar-text-dark);
+}
+
+.user-role,
+.user-area {
+  font-size: 0.75rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.user-role {
+  color: var(--institutional-yellow);
+  font-weight: 600;
+}
+
+.user-role i {
+  font-size: 0.7rem;
+}
+
+.user-area {
+  color: var(--sidebar-text-secondary-light);
+  font-weight: 500;
+}
+
+:host-context(.dark-mode) .user-area {
+  color: var(--sidebar-text-secondary-dark);
+}
+
+.user-area i {
+  font-size: 0.7rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .sidebar {
     position: fixed;
     left: -280px;
     top: 70px;
     z-index: 999;
-    box-shadow: var(--shadow-xl);
+    box-shadow: none;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-    &.active {
-      left: 0;
-    }
+  .sidebar.active {
+    left: 0;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
+  }
+
+  :host-context(.dark-mode) .sidebar.active {
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.5);
   }
 }
 
-.sidebar-content {
-  flex: 1;
-  padding: var(--spacing-md);
-  overflow-y: auto;
-
-  ::ng-deep {
-    .p-panelmenu {
-      border: none;
-      
-      .p-panelmenu-panel {
-        margin-bottom: var(--spacing-xs);
-      }
-
-      .p-panelmenu-header-link {
-        background-color: transparent;
-        border: none;
-        color: var(--text-primary);
-        padding: var(--spacing-md);
-        border-radius: var(--border-radius-md);
-        transition: all var(--transition-fast);
-
-        &:hover {
-          background-color: rgba(255, 193, 7, 0.1);
-          color: var(--color-accent);
-        }
-
-        &:focus {
-          box-shadow: none;
-        }
-      }
-
-      .p-menuitem-link {
-        color: var(--text-secondary);
-        padding: var(--spacing-sm) var(--spacing-md);
-        border-radius: var(--border-radius-md);
-        transition: all var(--transition-fast);
-
-        &:hover {
-          background-color: rgba(255, 193, 7, 0.1);
-          color: var(--color-accent);
-        }
-
-        &.active-menuitem {
-          background-color: rgba(255, 193, 7, 0.2);
-          color: var(--color-accent);
-          font-weight: 600;
-        }
-      }
-    }
+/* Móviles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
   }
-}
 
-.sidebar-footer {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
-}
+  .sidebar-content {
+    padding: 1rem 0.75rem;
+  }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
+  .sidebar-footer {
+    padding: 0.875rem;
+  }
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--color-accent);
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1.125rem;
-}
+  .user-card {
+    padding: 0.75rem;
+  }
 
-.user-details {
-  flex: 1;
-  overflow: hidden;
+  .user-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+  }
 
   .user-name {
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.85rem;
   }
 
-  .user-role {
-    font-size: 0.75rem;
-    color: var(--color-accent);
-    margin: 0;
-  }
-
+  .user-role,
   .user-area {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin: 0;
+    font-size: 0.7rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 260px;
+  }
+}
+
+/* ============================================
+   OVERLAY PARA MÓVILES
+   ============================================ */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 1024px) {
+  .sidebar-overlay {
+    display: block;
+    pointer-events: none;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+   ============================================ */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.sidebar-content .p-panelmenu {
+  animation: slideInFromLeft 0.4s ease-out;
+}
+
+/* Animación de entrada para items del menú */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel {
+  animation: slideInFromLeft 0.3s ease-out backwards;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-panel:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+/* ============================================
+   ESTADOS DE LOADING/DISABLED
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link.p-disabled:hover {
+  background-color: transparent;
+  color: var(--sidebar-text-secondary-light);
+  transform: none;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .sidebar
+  .p-panelmenu
+  .p-menuitem-link.p-disabled:hover {
+  color: var(--sidebar-text-secondary-dark);
+}
+
+/* ============================================
+   MEJORAS DE ACCESIBILIDAD
+   ============================================ */
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link:focus-visible,
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link:focus-visible {
+  outline: 2px solid var(--institutional-yellow);
+  outline-offset: 2px;
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+  ::ng-deep .sidebar .p-panelmenu .p-menuitem-link::before {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::ng-deep .sidebar .p-panelmenu .p-menuitem-link.router-link-active {
+    border-width: 3px;
+  }
+
+  .sidebar {
+    border-right-width: 3px;
+  }
+
+  .user-avatar {
+    border: 3px solid var(--sidebar-bg-light);
+  }
+}
+
+/* ============================================
+   OPTIMIZACIONES DE RENDIMIENTO
+   ============================================ */
+.sidebar,
+.sidebar-content,
+::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link,
+::ng-deep .sidebar .p-panelmenu .p-menuitem-link {
+  will-change: transform;
+}
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-content,
+  .user-avatar,
+  .status-indicator,
+  ::ng-deep .sidebar .p-panelmenu .p-panelmenu-header-link,
+  ::ng-deep .sidebar .p-panelmenu .p-menuitem-link,
+  ::ng-deep .sidebar .p-panelmenu .p-menuitem-link::before {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .sidebar {
+    display: none;
   }
 }

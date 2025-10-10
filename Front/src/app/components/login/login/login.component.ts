@@ -4,8 +4,13 @@ import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
-import { PasswordModule } from 'primeng/password'
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MENSAJES } from '../../../core/constants/mensajes.constants';
 import { AuthService } from '../../../core/services/auth.service';
@@ -29,7 +34,7 @@ import { NotificacionService } from '../../../core/services/notificacion.service
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loading: boolean = false;
-
+  showPassword = false;
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -38,17 +43,22 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
+    this.loginForm = this.fb.group({
+      correo: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required, Validators.minLength(6)]],
+      recordar: [false],
+    });
   }
-
   initForm(): void {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
-      recordar: [false]
+      recordar: [false],
     });
   }
-
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -69,7 +79,7 @@ export class LoginComponent implements OnInit {
       error: (error: any) => {
         this.loading = false;
         this.notificacionService.error(error.message || MENSAJES.ERROR.LOGIN);
-      }
+      },
     });
   }
 
@@ -77,8 +87,12 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  hasError(field: string, error: string): boolean {
-    const control = this.loginForm.get(field);
-    return !!(control && control.hasError(error) && (control.dirty || control.touched));
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.loginForm.get(controlName);
+    return !!(
+      control &&
+      control.hasError(errorName) &&
+      (control.dirty || control.touched)
+    );
   }
 }

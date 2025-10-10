@@ -19,62 +19,85 @@
           placeholder="Buscar... (Ctrl+K)"
           class="search-input"
         />
-        <span class="search-shortcut">Ctrl+K</span>
+        <kbd class="search-shortcut">
+          <span>Ctrl</span>
+          <span>K</span>
+        </kbd>
       </div>
     </div>
 
     <!-- Actions Section -->
     <div class="navbar-actions">
-      <!-- Theme Toggle -->
-      <button
-        pButton
-        type="button"
-        [icon]="(isDarkMode$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
-        class="action-btn theme-btn"
-        (click)="toggleTheme()"
-        [pTooltip]="(isDarkMode$ | async) ? 'Modo Claro' : 'Modo Oscuro'"
-        tooltipPosition="bottom"
-      ></button>
-
-      <!-- Notifications -->
-      <div class="notification-wrapper">
+      <!-- Theme Toggle - MEJORADO -->
+      <div class="action-item theme-toggle-wrapper">
         <button
           pButton
           type="button"
-          icon="pi pi-bell"
+          class="action-btn theme-btn"
+          (click)="toggleTheme()"
+          [pTooltip]="
+            (isDarkMode$ | async)
+              ? 'Cambiar a modo claro'
+              : 'Cambiar a modo oscuro'
+          "
+          tooltipPosition="bottom"
+        >
+          <i class="pi pi-sun theme-icon" *ngIf="isDarkMode$ | async"></i>
+          <i class="pi pi-moon theme-icon" *ngIf="!(isDarkMode$ | async)"></i>
+        </button>
+      </div>
+
+      <!-- Notifications - MEJORADO -->
+      <div class="action-item notification-wrapper">
+        <button
+          pButton
+          type="button"
           class="action-btn notification-btn"
           (click)="openNotifications()"
-          pTooltip="Notificaciones"
+          pTooltip="Ver notificaciones"
           tooltipPosition="bottom"
-        ></button>
-        <span
-          *ngIf="(unreadCount$ | async) && (unreadCount$ | async)! > 0"
-          class="notification-badge"
+          [class.has-notifications]="
+            (unreadCount$ | async) && (unreadCount$ | async)! > 0
+          "
         >
-          {{ (unreadCount$ | async)! > 99 ? "99+" : (unreadCount$ | async) }}
-        </span>
+          <i class="pi pi-bell bell-icon"></i>
+          <span
+            *ngIf="(unreadCount$ | async) && (unreadCount$ | async)! > 0"
+            class="notification-badge"
+          >
+            {{ (unreadCount$ | async)! > 99 ? "99+" : (unreadCount$ | async) }}
+          </span>
+        </button>
       </div>
 
-      <!-- User Menu -->
-      <div class="user-menu" (click)="menu.toggle($event)">
-        <div class="user-avatar">
-          <span class="avatar-text">{{
-            currentUser?.nombre_completo | initials
-          }}</span>
+      <!-- User Menu - MEJORADO -->
+      <div class="action-item user-menu-wrapper">
+        <div class="user-menu" (click)="menu.toggle($event)">
+          <div class="user-avatar-container">
+            <div class="user-avatar">
+              <span class="avatar-text">{{
+                currentUser?.nombre_completo | initials
+              }}</span>
+            </div>
+            <span class="user-status"></span>
+          </div>
+          <div class="user-info">
+            <span class="user-name">{{ currentUser?.nombre_completo }}</span>
+            <span class="user-role">
+              <i class="pi pi-briefcase"></i>
+              {{ currentUser?.rol || "Usuario" }}
+            </span>
+          </div>
+          <i class="pi pi-chevron-down dropdown-icon"></i>
         </div>
-        <div class="user-info">
-          <span class="user-name">{{ currentUser?.nombre_completo }}</span>
-          <span class="user-role">{{ currentUser?.rol || "Usuario" }}</span>
-        </div>
-        <i class="pi pi-chevron-down dropdown-icon"></i>
-      </div>
 
-      <p-menu
-        #menu
-        [model]="userMenuItems"
-        [popup]="true"
-        styleClass="user-dropdown-menu"
-      ></p-menu>
+        <p-menu
+          #menu
+          [model]="userMenuItems"
+          [popup]="true"
+          styleClass="user-dropdown-menu"
+        ></p-menu>
+      </div>
     </div>
   </div>
 </nav>

@@ -1,6 +1,6 @@
 <div class="auth-container">
   <div class="auth-card">
-    <!-- Header compacto -->
+    <!-- Header -->
     <div class="auth-header">
       <i class="pi pi-box logo-icon"></i>
       <h1>Sistema de Gestión de Peticiones</h1>
@@ -11,21 +11,22 @@
         <!-- Email -->
         <div class="form-group">
           <label for="correo">Correo electrónico</label>
-          <span class="p-input-icon-left">
-            <i class="pi pi-envelope"></i>
+          <div class="input-wrapper">
+            <i class="pi pi-envelope input-icon"></i>
             <input
               id="correo"
               type="email"
               pInputText
               formControlName="correo"
               placeholder="correo@ejemplo.com"
-              [class.ng-invalid]="
+              class="custom-input"
+              [class.input-error]="
                 hasError('correo', 'required') || hasError('correo', 'email')
               "
             />
-          </span>
+          </div>
           <small
-            class="p-error"
+            class="error-message"
             *ngIf="
               hasError('correo', 'required') || hasError('correo', 'email')
             "
@@ -38,26 +39,31 @@
           </small>
         </div>
 
-        <!-- Password con estructura corregida -->
+        <!-- Password -->
         <div class="form-group">
           <label for="contrasena">Contraseña</label>
-          <div class="password-wrapper">
-            <i class="pi pi-lock password-icon-left"></i>
-            <p-password
+          <div class="input-wrapper password-container">
+            <i class="pi pi-lock input-icon"></i>
+            <input
               id="contrasena"
+              [type]="showPassword ? 'text' : 'password'"
+              pInputText
               formControlName="contrasena"
               placeholder="••••••••"
-              [toggleMask]="true"
-              [feedback]="false"
-              inputStyleClass="password-input-custom"
-              [class.ng-invalid]="
+              class="custom-input password-field"
+              [class.input-error]="
                 hasError('contrasena', 'required') ||
                 hasError('contrasena', 'minlength')
               "
-            ></p-password>
+            />
+            <i
+              [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"
+              class="password-toggle"
+              (click)="togglePassword()"
+            ></i>
           </div>
           <small
-            class="p-error"
+            class="error-message"
             *ngIf="
               hasError('contrasena', 'required') ||
               hasError('contrasena', 'minlength')
@@ -71,13 +77,16 @@
           </small>
         </div>
 
-        <!-- Remember & Forgot en una línea -->
+        <!-- Remember & Forgot -->
         <div class="form-options">
-          <p-checkbox
-            formControlName="recordar"
-            label="Recordarme"
-            [binary]="true"
-          ></p-checkbox>
+          <div class="checkbox-wrapper">
+            <p-checkbox
+              formControlName="recordar"
+              [binary]="true"
+              inputId="recordar"
+            ></p-checkbox>
+            <label for="recordar" class="checkbox-label">Recordarme</label>
+          </div>
           <a routerLink="/auth/recuperar-password" class="forgot-link">
             ¿Olvidaste tu contraseña?
           </a>

@@ -1,0 +1,99 @@
+<div class="container-aceptar">
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading && peticion" class="content-wrapper">
+    <p-card styleClass="peticion-card">
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <h2 class="header-title">
+            <i class="pi pi-check-circle"></i>
+            <span>Aceptar Petición</span>
+          </h2>
+        </div>
+      </ng-template>
+
+      <!-- Contenido Principal -->
+      <div class="card-content">
+        <!-- Resumen de la Petición -->
+        <div class="peticion-summary">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="label">ID</span>
+              <span class="value">#{{ peticion.id }}</span>
+            </div>
+            
+            <div class="summary-item">
+              <span class="label">Estado</span>
+              <p-tag [value]="peticion.estado" severity="info" styleClass="custom-tag"></p-tag>
+            </div>
+            
+            <div class="summary-item">
+              <span class="label">Cliente</span>
+              <span class="value">{{ peticion.cliente?.nombre }}</span>
+            </div>
+            
+            <div class="summary-item">
+              <span class="label">Categoría</span>
+              <span class="value">{{ peticion.categoria?.nombre }}</span>
+            </div>
+            
+            <div class="summary-item full-width">
+              <span class="label">Descripción</span>
+              <span class="value description">{{ peticion.descripcion }}</span>
+            </div>
+            
+            <div class="summary-item">
+              <span class="label">Costo</span>
+              <span class="value costo">{{ peticion.costo | currencyCop }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario -->
+        <form [formGroup]="form" (ngSubmit)="aceptar()" class="form-section">
+          <div class="field-wrapper">
+            <label for="tiempo_limite_horas" class="field-label">
+              Tiempo Límite (horas) <span class="required">*</span>
+            </label>
+            <p-inputNumber
+              id="tiempo_limite_horas"
+              formControlName="tiempo_limite_horas"
+              [min]="1"
+              [max]="720"
+              [showButtons]="true"
+              placeholder="Ingrese el tiempo en horas"
+              styleClass="w-full input-custom"
+            ></p-inputNumber>
+            <small class="field-hint">
+              Tiempo estimado: 1 hora - 30 días (720 horas)
+            </small>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="actions-footer">
+            <button
+              pButton
+              label="Cancelar"
+              icon="pi pi-times"
+              class="btn-cancelar"
+              type="button"
+              (click)="cancelar()"
+            ></button>
+            <button
+              pButton
+              label="Aceptar Petición"
+              icon="pi pi-check"
+              class="btn-aceptar"
+              type="submit"
+              [disabled]="!form.valid || submitting"
+              [loading]="submitting"
+            ></button>
+          </div>
+        </form>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<p-toast></p-toast>

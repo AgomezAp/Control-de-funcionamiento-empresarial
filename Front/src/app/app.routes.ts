@@ -97,6 +97,26 @@ export const routes: Routes = [
           )
       },
 
+      // Notificaciones
+      {
+        path: 'notificaciones',
+        loadComponent: () =>
+          import('./shared/components/notification-center/notification-center/notification-center.component').then(
+            (m) => m.NotificationCenterComponent
+          ),
+        data: { breadcrumb: 'Notificaciones' }
+      },
+
+      // Perfil de usuario
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./features/usuarios/components/perfil-usuario/perfil-usuario.component').then(
+            (m) => m.PerfilUsuarioComponent
+          ),
+        data: { breadcrumb: 'Mi Perfil' }
+      },
+
       // Configuración (Solo Admin)
       {
         path: 'configuracion',

@@ -1,17 +1,32 @@
 <aside class="sidebar">
+  <!-- Contenido del Menú -->
   <div class="sidebar-content">
-    <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+    <nav class="sidebar-nav">
+      <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+    </nav>
   </div>
-  
+
+  <!-- Footer con información del usuario -->
   <div class="sidebar-footer">
-    <div class="user-info" *ngIf="currentUser">
-      <div class="user-avatar">
-        {{ currentUser.nombre_completo.charAt(0) }}
+    <div class="user-card" *ngIf="currentUser">
+      <div class="user-avatar-wrapper">
+        <div class="user-avatar">
+          {{ currentUser.nombre_completo | initials }}
+        </div>
+        <span class="status-indicator"></span>
       </div>
       <div class="user-details">
-        <p class="user-name">{{ currentUser.nombre_completo }}</p>
-        <p class="user-role">{{ currentUser.rol }}</p>
-        <p class="user-area">{{ currentUser.area }}</p>
+        <p class="user-name" [title]="currentUser.nombre_completo">
+          {{ currentUser.nombre_completo }}
+        </p>
+        <p class="user-role">
+          <i class="pi pi-briefcase"></i>
+          {{ currentUser.rol }}
+        </p>
+        <p class="user-area" *ngIf="currentUser.area">
+          <i class="pi pi-building"></i>
+          {{ currentUser.area }}
+        </p>
       </div>
     </div>
   </div>

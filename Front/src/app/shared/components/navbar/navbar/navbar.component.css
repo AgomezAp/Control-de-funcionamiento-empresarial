@@ -518,3 +518,71 @@
 .navbar {
   animation: slideDown 0.4s ease-out;
 }
+/* ============================================
+   THEME TOGGLE - CORREGIDO
+   ============================================ */
+.theme-btn {
+  position: relative;
+  overflow: visible;
+}
+
+.theme-icon {
+  font-size: 1.15rem;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  color: var(--navbar-text-light);
+}
+
+:host-context(.dark-mode) .theme-icon {
+  color: var(--navbar-text-dark);
+}
+
+/* Icono de sol (cuando está en modo oscuro) */
+.pi-sun {
+  color: var(--institutional-yellow);
+  animation: rotateIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Icono de luna (cuando está en modo claro) */
+.pi-moon {
+  color: var(--navbar-text-light);
+  animation: rotateIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+:host-context(.dark-mode) .pi-moon {
+  color: var(--navbar-text-dark);
+}
+
+@keyframes rotateIn {
+  from {
+    transform: rotate(-180deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-btn:hover {
+  background-color: rgba(255, 193, 7, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+.theme-btn:hover .theme-icon {
+  color: var(--institutional-yellow);
+  transform: scale(1.15);
+}
+
+/* Efecto de pulso al cambiar */
+.theme-btn:active .theme-icon {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}

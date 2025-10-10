@@ -1,28 +1,35 @@
-/* ===================================== */
-/* VARIABLES */
-/* ===================================== */
+/* ============================================
+   VARIABLES
+   ============================================ */
 :host {
-  --brand-yellow: #fbbf24;
-  --brand-yellow-light: #fcd34d;
-  --brand-yellow-dark: #f59e0b;
-  --brand-black: #0f0f0f;
-  --brand-white: #ffffff;
-  --brand-gray: #9ca3af;
+  --yellow-primary: #ffc107;
+  --yellow-light: #ffd54f;
+  --yellow-dark: #ffb300;
+  --black-primary: #0f0f0f;
+  --black-secondary: #1a1a1a;
+  --white-primary: #ffffff;
+  --gray-text: #9ca3af;
+  --gray-light: #e5e7eb;
+  --error-color: #ef4444;
+  --error-light: #fca5a5;
 }
 
-/* ===================================== */
-/* CONTENEDOR - SIN SCROLL */
-/* ===================================== */
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 .auth-container {
   min-height: 100vh;
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--black-primary) 0%,
+    var(--black-secondary) 100%
+  );
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .auth-container::before {
@@ -34,72 +41,84 @@
   bottom: 0;
   background-image: radial-gradient(
       circle at 20% 50%,
-      rgba(251, 191, 36, 0.05) 0%,
+      rgba(255, 193, 7, 0.08) 0%,
       transparent 50%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(251, 191, 36, 0.05) 0%,
+      rgba(255, 193, 7, 0.08) 0%,
       transparent 50%
     );
   pointer-events: none;
 }
 
 :host-context(.light-theme) .auth-container {
-  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+  background: linear-gradient(135deg, #f9fafb 0%, var(--gray-light) 100%);
 }
 
-/* ===================================== */
-/* TARJETA - COMPACTA */
-/* ===================================== */
+/* ============================================
+   TARJETA
+   ============================================ */
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   position: relative;
   z-index: 1;
 }
 
-/* ===================================== */
-/* HEADER - COMPACTO */
-/* ===================================== */
+/* ============================================
+   HEADER
+   ============================================ */
 .auth-header {
   text-align: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 .logo-icon {
-  font-size: 2.5rem;
-  color: var(--brand-yellow);
+  font-size: 3rem;
+  color: var(--yellow-primary);
   display: block;
-  margin: 0 auto 0.75rem;
-  filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.3));
+  margin: 0 auto 1rem;
+  filter: drop-shadow(0 4px 16px rgba(255, 193, 7, 0.4));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .auth-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: var(--brand-white);
+  color: var(--white-primary);
   margin: 0;
   line-height: 1.3;
 }
 
 :host-context(.light-theme) .auth-header h1 {
-  color: var(--brand-black);
+  color: var(--black-primary);
 }
 
-/* ===================================== */
-/* CARD */
-/* ===================================== */
+/* ============================================
+   CARD DE PRIMENG
+   ============================================ */
 ::ng-deep .auth-card .p-card {
-  background: rgba(26, 26, 26, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(251, 191, 36, 0.1);
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.05);
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 193, 7, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 193, 7, 0.08);
+  overflow: hidden;
 }
 
 ::ng-deep .auth-card .p-card .p-card-body {
-  padding: 1.75rem;
+  padding: 2rem;
 }
 
 ::ng-deep .auth-card .p-card .p-card-content {
@@ -107,367 +126,356 @@
 }
 
 :host-context(.light-theme) ::ng-deep .auth-card .p-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(15, 15, 15, 0.1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }
 
-/* ===================================== */
-/* FORMULARIO - COMPACTO */
-/* ===================================== */
+/* ============================================
+   FORMULARIO
+   ============================================ */
 .form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-group:last-of-type {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--brand-white);
-  margin-bottom: 0.4rem;
+  color: var(--white-primary);
+  margin-bottom: 0.5rem;
 }
 
 :host-context(.light-theme) .form-group label {
-  color: var(--brand-black);
+  color: var(--black-primary);
 }
 
-/* ===================================== */
-/* INPUT EMAIL */
-/* ===================================== */
-::ng-deep .p-input-icon-left {
-  position: relative;
-  display: block;
-  width: 100%;
-}
-
-::ng-deep .p-input-icon-left > i {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0.875rem;
-  color: var(--brand-yellow);
-  font-size: 1rem;
-  z-index: 1;
-}
-
-::ng-deep .p-inputtext {
-  width: 100%;
-  padding: 0.75rem 0.875rem 0.75rem 2.5rem;
-  background: rgba(15, 15, 15, 0.4);
-  border: 2px solid rgba(251, 191, 36, 0.2);
-  border-radius: 10px;
-  color: var(--brand-white);
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-::ng-deep .p-inputtext::placeholder {
-  color: rgba(156, 163, 175, 0.6);
-}
-
-::ng-deep .p-inputtext:focus {
-  outline: none;
-  border-color: var(--brand-yellow);
-  background: rgba(15, 15, 15, 0.7);
-  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
-}
-
-:host-context(.light-theme) ::ng-deep .p-inputtext {
-  background: #ffffff;
-  border-color: rgba(15, 15, 15, 0.15);
-  color: var(--brand-black);
-}
-
-/* ===================================== */
-/* PASSWORD - ESTRUCTURA CORREGIDA */
-/* ===================================== */
-.password-wrapper {
+/* ============================================
+   INPUT WRAPPER
+   ============================================ */
+.input-wrapper {
   position: relative;
   width: 100%;
 }
 
-.password-icon-left {
+.input-icon {
   position: absolute;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  left: 0.875rem;
-  color: var(--brand-yellow);
-  font-size: 1rem;
-  z-index: 3;
+  color: var(--yellow-primary);
+  font-size: 1.1rem;
+  z-index: 2;
   pointer-events: none;
 }
 
-::ng-deep .p-password {
+/* ============================================
+   INPUTS PERSONALIZADOS
+   ============================================ */
+.custom-input {
   width: 100%;
-  display: block;
-}
-
-::ng-deep .p-password .p-password-input,
-::ng-deep .p-password input.password-input-custom {
-  width: 100%;
-  padding: 0.75rem 2.75rem 0.75rem 2.5rem !important;
-  background: rgba(15, 15, 15, 0.4);
-  border: 2px solid rgba(251, 191, 36, 0.2);
-  border-radius: 10px;
-  color: var(--brand-white);
-  font-size: 0.9rem;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  background: rgba(15, 15, 15, 0.5);
+  border: 2px solid rgba(255, 193, 7, 0.25);
+  border-radius: 12px;
+  color: var(--white-primary);
+  font-size: 0.95rem;
   transition: all 0.3s ease;
-}
-
-::ng-deep .p-password .p-password-input:focus,
-::ng-deep .p-password input.password-input-custom:focus {
   outline: none;
-  border-color: var(--brand-yellow);
+}
+
+.custom-input::placeholder {
+  color: rgba(156, 163, 175, 0.5);
+}
+
+.custom-input:focus {
+  border-color: var(--yellow-primary);
   background: rgba(15, 15, 15, 0.7);
-  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.12);
 }
 
-/* Botón de toggle (ojo) centrado */
-::ng-deep .p-password-toggle-icon,
-::ng-deep .p-password .p-icon {
-  position: absolute !important;
-  top: 50% !important;
-  right: 0.875rem !important;
-  transform: translateY(-50%) !important;
-  color: var(--brand-yellow) !important;
+.custom-input.input-error {
+  border-color: var(--error-color);
+}
+
+.custom-input.input-error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+:host-context(.light-theme) .custom-input {
+  background: var(--white-primary);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--black-primary);
+}
+
+:host-context(.light-theme) .custom-input:focus {
+  background: var(--white-primary);
+}
+
+/* ============================================
+   PASSWORD FIELD
+   ============================================ */
+.password-container {
+  position: relative;
+}
+
+.password-field {
+  padding-right: 3rem !important;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--yellow-primary);
+  font-size: 1.1rem;
   cursor: pointer;
-  font-size: 1rem;
+  z-index: 2;
+  transition: all 0.2s ease;
 }
 
-:host-context(.light-theme) ::ng-deep .p-password .p-password-input,
-:host-context(.light-theme) ::ng-deep .p-password input.password-input-custom {
-  background: #ffffff;
-  border-color: rgba(15, 15, 15, 0.15);
-  color: var(--brand-black);
+.password-toggle:hover {
+  color: var(--yellow-light);
+  transform: translateY(-50%) scale(1.1);
 }
 
-/* ===================================== */
-/* ERRORES - COMPACTOS */
-/* ===================================== */
-.p-error {
+/* ============================================
+   MENSAJES DE ERROR
+   ============================================ */
+.error-message {
   display: block;
-  color: #fca5a5;
+  color: var(--error-light);
   font-size: 0.8rem;
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
   font-weight: 500;
+  padding-left: 0.25rem;
 }
 
-:host-context(.light-theme) .p-error {
-  color: #dc2626;
+:host-context(.light-theme) .error-message {
+  color: var(--error-color);
 }
 
-::ng-deep .ng-invalid.ng-touched .p-inputtext,
-::ng-deep .ng-invalid.ng-touched .p-password input {
-  border-color: #ef4444;
-}
-
-/* ===================================== */
-/* OPCIONES - EN LÍNEA */
-/* ===================================== */
+/* ============================================
+   OPCIONES DEL FORMULARIO
+   ============================================ */
 .form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
+.checkbox-label {
+  color: var(--white-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+:host-context(.light-theme) .checkbox-label {
+  color: var(--black-primary);
+}
+
+/* Estilos del checkbox de PrimeNG */
 ::ng-deep .p-checkbox {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 ::ng-deep .p-checkbox .p-checkbox-box {
-  width: 1.125rem;
-  height: 1.125rem;
-  background: rgba(15, 15, 15, 0.4);
-  border: 2px solid rgba(251, 191, 36, 0.3);
-  border-radius: 5px;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: rgba(15, 15, 15, 0.5);
+  border: 2px solid rgba(255, 193, 7, 0.3);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-checkbox .p-checkbox-box:hover {
+  border-color: var(--yellow-primary);
 }
 
 ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
-  background: var(--brand-yellow);
-  border-color: var(--brand-yellow);
+  background: var(--yellow-primary);
+  border-color: var(--yellow-primary);
 }
 
 ::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
-  color: var(--brand-black);
-}
-
-::ng-deep .p-checkbox-label {
-  color: var(--brand-white);
-  margin-left: 0.5rem;
-  font-size: 0.85rem;
-}
-
-:host-context(.light-theme) ::ng-deep .p-checkbox-label {
-  color: var(--brand-black);
+  color: var(--black-primary);
+  font-size: 0.75rem;
+  font-weight: bold;
 }
 
 :host-context(.light-theme) ::ng-deep .p-checkbox .p-checkbox-box {
-  background: #ffffff;
-  border-color: rgba(15, 15, 15, 0.2);
+  background: var(--white-primary);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* ===================================== */
-/* ENLACE OLVIDASTE CONTRASEÑA */
-/* ===================================== */
+/* ============================================
+   ENLACE OLVIDASTE CONTRASEÑA
+   ============================================ */
 .forgot-link {
-  color: var(--brand-yellow);
+  color: var(--yellow-primary);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .forgot-link:hover {
-  color: var(--brand-yellow-light);
+  color: var(--yellow-light);
   text-decoration: underline;
 }
 
-/* ===================================== */
-/* BOTÓN */
-/* ===================================== */
-::ng-deep .submit-btn,
-::ng-deep button.p-button {
+/* ============================================
+   BOTÓN DE ENVÍO
+   ============================================ */
+::ng-deep .submit-btn {
   width: 100%;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem;
   background: linear-gradient(
     135deg,
-    var(--brand-yellow) 0%,
-    var(--brand-yellow-dark) 100%
+    var(--yellow-primary) 0%,
+    var(--yellow-dark) 100%
   );
   border: none;
-  border-radius: 10px;
-  color: var(--brand-black);
+  border-radius: 12px;
+  color: var(--black-primary);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.35);
   cursor: pointer;
 }
 
-::ng-deep button.p-button:hover:not(:disabled) {
+::ng-deep .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+  box-shadow: 0 6px 25px rgba(255, 193, 7, 0.45);
 }
 
-::ng-deep button.p-button:active:not(:disabled) {
+::ng-deep .submit-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-::ng-deep button.p-button:disabled {
-  opacity: 0.5;
+::ng-deep .submit-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* ===================================== */
-/* ENLACE REGISTRO - COMPACTO */
-/* ===================================== */
+::ng-deep .submit-btn .p-button-icon {
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   ENLACE DE REGISTRO
+   ============================================ */
 .register-link {
   text-align: center;
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(251, 191, 36, 0.1);
-  color: var(--brand-gray);
-  font-size: 0.875rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 193, 7, 0.15);
+  color: var(--gray-text);
+  font-size: 0.9rem;
 }
 
 :host-context(.light-theme) .register-link {
   color: #6b7280;
+  border-top-color: rgba(0, 0, 0, 0.08);
 }
 
 .register-link a {
-  color: var(--brand-yellow);
+  color: var(--yellow-primary);
   text-decoration: none;
   font-weight: 600;
-  margin-left: 0.25rem;
+  margin-left: 0.35rem;
+  transition: all 0.2s ease;
 }
 
 .register-link a:hover {
-  color: var(--brand-yellow-light);
+  color: var(--yellow-light);
   text-decoration: underline;
 }
 
-/* ===================================== */
-/* RESPONSIVE - COMPACTO */
-/* ===================================== */
-@media (max-height: 700px) {
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
   .auth-container {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 
   .auth-header {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .logo-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
   }
 
   .auth-header h1 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   ::ng-deep .auth-card .p-card .p-card-body {
     padding: 1.5rem;
   }
 
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
   .form-options {
-    margin-bottom: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
-  .register-link {
-    margin-top: 1rem;
-    padding-top: 1rem;
+  .forgot-link {
+    font-size: 0.85rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-height: 700px) {
   .auth-container {
-    padding: 0.75rem;
+    padding: 1rem;
+  }
+
+  .auth-header {
+    margin-bottom: 1.25rem;
   }
 
   .logo-icon {
     font-size: 2.25rem;
+    margin-bottom: 0.75rem;
   }
 
-  .auth-header h1 {
-    font-size: 1.35rem;
-  }
-
-  ::ng-deep .auth-card .p-card .p-card-body {
-    padding: 1.5rem;
-  }
-
-  .form-options {
-    gap: 0.25rem;
-  }
-
-  .forgot-link {
-    font-size: 0.8rem;
-  }
-
-  ::ng-deep .p-checkbox-label {
-    font-size: 0.8rem;
+  .form-group {
+    margin-bottom: 1.25rem;
   }
 }
 
-/* ===================================== */
-/* ACCESIBILIDAD */
-/* ===================================== */
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
 *:focus-visible {
-  outline: 2px solid var(--brand-yellow);
+  outline: 2px solid var(--yellow-primary);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
