@@ -78,6 +78,31 @@
     <div *ngIf="activeIndex === 1" class="step-content">
       <form [formGroup]="formCategoria" class="step-form">
         
+        <!-- Seleccionar Área -->
+        <div class="form-field">
+          <label for="area" class="form-label">
+            <i class="pi pi-briefcase"></i>
+            Área 
+            <span class="required">*</span>
+          </label>
+          <p-dropdown
+            id="area"
+            formControlName="area"
+            [options]="[
+              { label: 'Diseño', value: 'Diseño' },
+              { label: 'Pautas', value: 'Pautas' }
+            ]"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccione el área"
+            styleClass="form-dropdown"
+          ></p-dropdown>
+          <small class="form-hint" *ngIf="formCategoria.value.area === 'Pautas'">
+            <i class="pi pi-info-circle"></i>
+            Las peticiones de Pautas se asignan automáticamente al pautador del cliente
+          </small>
+        </div>
+
         <div class="form-field">
           <label for="categoria_id" class="form-label">
             <i class="pi pi-tag"></i>

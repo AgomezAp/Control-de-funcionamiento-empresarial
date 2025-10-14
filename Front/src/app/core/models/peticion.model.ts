@@ -16,6 +16,7 @@ export interface Peticion {
   descripcion: string;
   descripcion_extra?: string | null;
   costo: number;
+  area: 'Pautas' | 'Diseño';
   estado: EstadoPeticion;
   creador_id: number;
   asignado_a?: number | null;
@@ -42,6 +43,7 @@ export interface PeticionCreate {
   descripcion: string;
   descripcion_extra?: string;
   costo?: number;
+  area: 'Pautas' | 'Diseño';
 }
 
 export interface PeticionUpdate {

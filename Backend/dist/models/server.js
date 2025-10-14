@@ -45,8 +45,8 @@ class Server {
                 console.log("✅ Conectado a la base de datos PostgreSQL con éxito");
                 // ⬇️ AGREGA ESTO PARA CONFIRMAR QUE LAS ASOCIACIONES SE CARGARON
                 console.log("🔗 Asociaciones de modelos cargadas");
-                // Sincronizar modelos con la base de datos
-                yield connection_1.default.sync({ force: true });
+                // Sincronizar modelos con la base de datos (alter: true para actualizar sin borrar)
+                yield connection_1.default.sync({ alter: false });
                 console.log("✅ Modelos sincronizados con la base de datos");
             }
             catch (error) {

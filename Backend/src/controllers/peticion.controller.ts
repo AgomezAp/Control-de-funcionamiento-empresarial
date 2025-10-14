@@ -10,6 +10,7 @@ export class PeticionController {
       const {
         cliente_id,
         categoria_id,
+        area,
         descripcion,
         descripcion_extra,
         costo,
@@ -20,6 +21,7 @@ export class PeticionController {
         {
           cliente_id,
           categoria_id,
+          area,
           descripcion,
           descripcion_extra,
           costo,

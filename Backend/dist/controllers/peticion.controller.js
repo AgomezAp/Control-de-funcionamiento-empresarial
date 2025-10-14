@@ -17,10 +17,11 @@ class PeticionController {
     crear(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { cliente_id, categoria_id, descripcion, descripcion_extra, costo, tiempo_limite_horas, } = req.body;
+                const { cliente_id, categoria_id, area, descripcion, descripcion_extra, costo, tiempo_limite_horas, } = req.body;
                 const peticion = yield peticionService.crear({
                     cliente_id,
                     categoria_id,
+                    area,
                     descripcion,
                     descripcion_extra,
                     costo,

@@ -120,6 +120,7 @@ export class CrearPeticionComponent implements OnInit {
 
     this.formCategoria = this.fb.group({
       categoria_id: [null, Validators.required],
+      area: ['Diseño', Validators.required],
       costo_custom: [null]
     });
 
@@ -282,6 +283,7 @@ export class CrearPeticionComponent implements OnInit {
     const data: PeticionCreate = {
       cliente_id: this.formCliente.value.cliente_id,
       categoria_id: this.formCategoria.value.categoria_id,
+      area: this.formCategoria.value.area,
       descripcion: this.formDescripcion.value.descripcion,
       descripcion_extra: this.formDescripcion.value.descripcion_extra || undefined,
       costo: this.getCostoFinal()
@@ -294,7 +296,9 @@ export class CrearPeticionComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
-            detail: 'Petición creada correctamente'
+            detail: data.area === 'Pautas' 
+              ? 'Petición de Pautas creada y asignada automáticamente'
+              : 'Petición creada correctamente'
           });
           setTimeout(() => {
             this.router.navigate(['/peticiones', response.data?.id]);

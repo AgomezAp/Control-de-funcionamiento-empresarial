@@ -19,13 +19,14 @@ export class PeticionService {
       descripcion: string;
       descripcion_extra?: string;
       costo?: number;
+      area: "Pautas" | "Diseño";
       tiempo_limite_horas?: number;
     },
     usuarioActual: any
   ) {
     // Verificar que el cliente existe
-    const cliente = await Cliente.findByPk(data.cliente_id);
-    if (!cliente) {
+    const clienteData = await Cliente.findByPk(data.cliente_id);
+    if (!clienteData) {
       throw new NotFoundError("Cliente no encontrado");
     }
 
@@ -52,6 +53,22 @@ export class PeticionService {
     // Si no es variable, tomar el costo de la categoría
     const costoFinal = categoria.es_variable ? data.costo! : categoria.costo;
 
+    // Determinar estado y asignación según el área
+    let estadoInicial: "Pendiente" | "En Progreso" = "Pendiente";
+    let usuarioAsignado: number | null = null;
+    let fechaAceptacion: Date | null = null;
+    let temporizadorActivo = false;
+    let fechaInicioTemporizador: Date | null = null;
+
+    // Si el área es "Pautas", asignar automáticamente al pautador del cliente
+    if (data.area === "Pautas") {
+      estadoInicial = "En Progreso";
+      usuarioAsignado = clienteData.pautador_id;
+      fechaAceptacion = new Date();
+      temporizadorActivo = true;
+      fechaInicioTemporizador = new Date();
+    }
+
     // Crear la petición
     const peticion = await Peticion.create({
       cliente_id: data.cliente_id,
@@ -59,9 +76,13 @@ export class PeticionService {
       descripcion: data.descripcion,
       descripcion_extra: data.descripcion_extra,
       costo: costoFinal,
-      estado: "Pendiente",
+      area: data.area,
+      estado: estadoInicial,
       creador_id: usuarioActual.uid,
-      tiempo_limite_horas: data.tiempo_limite_horas,
+      asignado_a: usuarioAsignado,
+      fecha_aceptacion: fechaAceptacion,
+      temporizador_activo: temporizadorActivo,
+      fecha_inicio_temporizador: fechaInicioTemporizador,
     });
 
     // Registrar en auditoría
@@ -72,17 +93,41 @@ export class PeticionService {
       valor_nuevo: JSON.stringify({
         cliente_id: data.cliente_id,
         categoria_id: data.categoria_id,
-        estado: "Pendiente",
+        area: data.area,
+        estado: estadoInicial,
+        asignado_a: usuarioAsignado,
       }),
       usuario_id: usuarioActual.uid,
-      descripcion: "Creación de nueva petición",
+      descripcion: data.area === "Pautas" 
+        ? "Creación de petición de Pautas (auto-asignada)"
+        : "Creación de nueva petición",
     });
 
     // Obtener petición completa con relaciones
     const peticionCompleta = await this.obtenerPorId(peticion.id);
 
-    // Emitir evento WebSocket de nueva petición
-    webSocketService.emitNuevaPeticion(peticionCompleta);
+    // Emitir evento WebSocket
+    if (data.area === "Pautas") {
+      // Si fue auto-asignada, emitir evento de aceptación
+      // Obtener datos del usuario asignado
+      const usuarioPautador = await Usuario.findByPk(usuarioAsignado!);
+      
+      webSocketService.emitPeticionAceptada(
+        peticion.id,
+        usuarioAsignado!,
+        {
+          uid: usuarioPautador!.uid,
+          nombre_completo: usuarioPautador!.nombre_completo,
+          correo: usuarioPautador!.correo,
+        },
+        fechaAceptacion!,
+        null,
+        0
+      );
+    } else {
+      // Si es de Diseño, emitir evento de nueva petición
+      webSocketService.emitNuevaPeticion(peticionCompleta);
+    }
 
     return peticionCompleta;
   }

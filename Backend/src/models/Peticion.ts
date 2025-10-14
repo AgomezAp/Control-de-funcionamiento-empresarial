@@ -8,6 +8,7 @@ export class Peticion extends Model {
   public descripcion!: string;
   public descripcion_extra!: string | null;
   public costo!: number;
+  public area!: "Pautas" | "Diseño";
   public estado!: "Pendiente" | "En Progreso" | "Resuelta" | "Cancelada";
   public creador_id!: number;
   public asignado_a!: number | null;
@@ -57,6 +58,11 @@ Peticion.init(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       comment: "Se toma de la categoría o se ingresa manual si es variable",
+    },
+    area: {
+      type: DataTypes.ENUM("Pautas", "Diseño"),
+      allowNull: false,
+      comment: "Área a la que pertenece la petición: Pautas o Diseño",
     },
     estado: {
       type: DataTypes.ENUM("Pendiente", "En Progreso", "Resuelta", "Cancelada"),

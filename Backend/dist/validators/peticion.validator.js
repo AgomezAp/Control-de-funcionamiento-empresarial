@@ -13,6 +13,11 @@ exports.crearPeticionValidator = [
         .withMessage("La categoría es requerida")
         .isInt()
         .withMessage("La categoría debe ser un número válido"),
+    (0, express_validator_1.body)("area")
+        .notEmpty()
+        .withMessage("El área es requerida")
+        .isIn(["Pautas", "Diseño"])
+        .withMessage("El área debe ser 'Pautas' o 'Diseño'"),
     (0, express_validator_1.body)("descripcion")
         .trim()
         .notEmpty()
@@ -57,11 +62,6 @@ exports.cambiarEstadoPeticionValidator = [
 ];
 exports.aceptarPeticionValidator = [
     (0, express_validator_1.param)("id").isInt().withMessage("El ID debe ser un número válido"),
-    (0, express_validator_1.body)("tiempo_limite_horas")
-        .notEmpty()
-        .withMessage("El tiempo límite es requerido")
-        .isInt({ min: 1 })
-        .withMessage("El tiempo límite debe ser un número entero positivo"),
 ];
 exports.obtenerPeticionesPorClienteMesValidator = [
     (0, express_validator_1.query)("cliente_id")

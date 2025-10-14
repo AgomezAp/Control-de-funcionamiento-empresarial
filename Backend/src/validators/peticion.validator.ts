@@ -13,6 +13,12 @@ export const crearPeticionValidator = [
     .isInt()
     .withMessage("La categoría debe ser un número válido"),
 
+  body("area")
+    .notEmpty()
+    .withMessage("El área es requerida")
+    .isIn(["Pautas", "Diseño"])
+    .withMessage("El área debe ser 'Pautas' o 'Diseño'"),
+
   body("descripcion")
     .trim()
     .notEmpty()
@@ -67,12 +73,6 @@ export const cambiarEstadoPeticionValidator = [
 
 export const aceptarPeticionValidator = [
   param("id").isInt().withMessage("El ID debe ser un número válido"),
-
-  body("tiempo_limite_horas")
-    .notEmpty()
-    .withMessage("El tiempo límite es requerido")
-    .isInt({ min: 1 })
-    .withMessage("El tiempo límite debe ser un número entero positivo"),
 ];
 
 export const obtenerPeticionesPorClienteMesValidator = [

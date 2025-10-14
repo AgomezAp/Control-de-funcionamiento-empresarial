@@ -30,8 +30,8 @@ class PeticionService {
     crear(data, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
             // Verificar que el cliente existe
-            const cliente = yield Cliente_1.default.findByPk(data.cliente_id);
-            if (!cliente) {
+            const clienteData = yield Cliente_1.default.findByPk(data.cliente_id);
+            if (!clienteData) {
                 throw new error_util_1.NotFoundError("Cliente no encontrado");
             }
             // Verificar que la categoría existe
@@ -49,6 +49,20 @@ class PeticionService {
             }
             // Si no es variable, tomar el costo de la categoría
             const costoFinal = categoria.es_variable ? data.costo : categoria.costo;
+            // Determinar estado y asignación según el área
+            let estadoInicial = "Pendiente";
+            let usuarioAsignado = null;
+            let fechaAceptacion = null;
+            let temporizadorActivo = false;
+            let fechaInicioTemporizador = null;
+            // Si el área es "Pautas", asignar automáticamente al pautador del cliente
+            if (data.area === "Pautas") {
+                estadoInicial = "En Progreso";
+                usuarioAsignado = clienteData.pautador_id;
+                fechaAceptacion = new Date();
+                temporizadorActivo = true;
+                fechaInicioTemporizador = new Date();
+            }
             // Crear la petición
             const peticion = yield Peticion_1.default.create({
                 cliente_id: data.cliente_id,
@@ -56,9 +70,13 @@ class PeticionService {
                 descripcion: data.descripcion,
                 descripcion_extra: data.descripcion_extra,
                 costo: costoFinal,
-                estado: "Pendiente",
+                area: data.area,
+                estado: estadoInicial,
                 creador_id: usuarioActual.uid,
-                tiempo_limite_horas: data.tiempo_limite_horas,
+                asignado_a: usuarioAsignado,
+                fecha_aceptacion: fechaAceptacion,
+                temporizador_activo: temporizadorActivo,
+                fecha_inicio_temporizador: fechaInicioTemporizador,
             });
             // Registrar en auditoría
             yield this.auditoriaService.registrarCambio({
@@ -68,15 +86,32 @@ class PeticionService {
                 valor_nuevo: JSON.stringify({
                     cliente_id: data.cliente_id,
                     categoria_id: data.categoria_id,
-                    estado: "Pendiente",
+                    area: data.area,
+                    estado: estadoInicial,
+                    asignado_a: usuarioAsignado,
                 }),
                 usuario_id: usuarioActual.uid,
-                descripcion: "Creación de nueva petición",
+                descripcion: data.area === "Pautas"
+                    ? "Creación de petición de Pautas (auto-asignada)"
+                    : "Creación de nueva petición",
             });
             // Obtener petición completa con relaciones
             const peticionCompleta = yield this.obtenerPorId(peticion.id);
-            // Emitir evento WebSocket de nueva petición
-            webSocket_service_1.webSocketService.emitNuevaPeticion(peticionCompleta);
+            // Emitir evento WebSocket
+            if (data.area === "Pautas") {
+                // Si fue auto-asignada, emitir evento de aceptación
+                // Obtener datos del usuario asignado
+                const usuarioPautador = yield Usuario_1.default.findByPk(usuarioAsignado);
+                webSocket_service_1.webSocketService.emitPeticionAceptada(peticion.id, usuarioAsignado, {
+                    uid: usuarioPautador.uid,
+                    nombre_completo: usuarioPautador.nombre_completo,
+                    correo: usuarioPautador.correo,
+                }, fechaAceptacion, null, 0);
+            }
+            else {
+                // Si es de Diseño, emitir evento de nueva petición
+                webSocket_service_1.webSocketService.emitNuevaPeticion(peticionCompleta);
+            }
             return peticionCompleta;
         });
     }
