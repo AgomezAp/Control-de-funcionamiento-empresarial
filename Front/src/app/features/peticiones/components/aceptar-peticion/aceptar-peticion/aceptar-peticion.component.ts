@@ -1,17 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 // PrimeNG
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -33,11 +26,9 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     RouterModule,
     CardModule,
     ButtonModule,
-    InputNumberModule,
     TagModule,
     ToastModule,
     CurrencycopPipe,
@@ -49,7 +40,6 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
 })
 export class AceptarPeticionComponent implements OnInit {
   peticion: Peticion | null = null;
-  form!: FormGroup;
   loading = false;
   submitting = false;
   peticionId: number = 0;
@@ -57,27 +47,16 @@ export class AceptarPeticionComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
     private peticionService: PeticionService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.route.params.subscribe((params) => {
       this.peticionId = +params['id'];
       if (this.peticionId) {
         this.loadPeticion();
       }
-    });
-  }
-
-  initForm(): void {
-    this.form = this.fb.group({
-      tiempo_limite_horas: [
-        48,
-        [Validators.required, Validators.min(1), Validators.max(720)],
-      ],
     });
   }
 
@@ -114,20 +93,17 @@ export class AceptarPeticionComponent implements OnInit {
   }
 
   aceptar(): void {
-    if (!this.form.valid || !this.peticion) return;
+    if (!this.peticion) return;
 
     this.submitting = true;
-    const data = {
-      tiempo_limite_horas: this.form.value.tiempo_limite_horas,
-    };
 
-    this.peticionService.accept(this.peticion.id, data).subscribe({
+    this.peticionService.accept(this.peticion.id).subscribe({
       next: (response) => {
         if (response.success) {
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
-            detail: 'Petición aceptada correctamente',
+            detail: 'Petición aceptada correctamente. El temporizador ha iniciado automáticamente.',
           });
           setTimeout(() => {
             this.router.navigate(['/peticiones', this.peticionId]);
@@ -140,7 +116,7 @@ export class AceptarPeticionComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo aceptar la petición',
+          detail: error.error.message || 'No se pudo aceptar la petición',
         });
         this.submitting = false;
       },

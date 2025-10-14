@@ -39,13 +39,6 @@
       </button>
     </div>
 
-    <!-- Timer -->
-    <app-timer
-      *ngIf="peticion.estado === 'En Progreso' && peticion.fecha_limite"
-      [fechaLimite]="peticion.fecha_limite"
-      class="timer-container"
-    ></app-timer>
-
     <!-- Información General -->
     <div class="section-container">
       <div class="section-title">
@@ -132,22 +125,15 @@
           </div>
         </div>
 
-        <!-- Fecha Límite -->
-        <div *ngIf="peticion.fecha_limite" class="info-item">
-          <i class="pi pi-calendar icon"></i>
+        <!-- Tiempo Empleado -->
+        <div *ngIf="peticion.estado === 'En Progreso' || peticion.estado === 'Resuelta'" class="info-item">
+          <i class="pi pi-clock icon"></i>
           <div class="info-content">
-            <label>Fecha Límite</label>
-            <span>{{ peticion.fecha_limite | date : "dd/MM/yyyy HH:mm" }}</span>
-            <small>{{ peticion.tiempo_limite_horas }} horas</small>
-          </div>
-        </div>
-
-        <!-- Placeholder si no hay fecha límite -->
-        <div *ngIf="!peticion.fecha_limite" class="info-item info-item-empty">
-          <i class="pi pi-calendar icon"></i>
-          <div class="info-content">
-            <label>Fecha Límite</label>
-            <span class="empty-text">Sin fecha límite</span>
+            <label>Tiempo Empleado</label>
+            <span>{{ formatearTiempo(peticion.tiempo_empleado_segundos || 0) }}</span>
+            <small *ngIf="peticion.temporizador_activo" class="text-success">
+              <i class="pi pi-circle-fill" style="font-size: 0.5rem;"></i> En curso
+            </small>
           </div>
         </div>
 

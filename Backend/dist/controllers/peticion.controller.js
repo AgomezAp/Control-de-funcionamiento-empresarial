@@ -78,8 +78,7 @@ class PeticionController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { tiempo_limite_horas } = req.body;
-                const peticion = yield peticionService.aceptarPeticion(Number(id), tiempo_limite_horas, req.usuario);
+                const peticion = yield peticionService.aceptarPeticion(Number(id), req.usuario);
                 return response_util_1.ApiResponse.success(res, peticion, "Petición aceptada exitosamente");
             }
             catch (error) {
@@ -142,6 +141,54 @@ class PeticionController {
             }
             catch (error) {
                 return response_util_1.ApiResponse.error(res, error.message || "Error al obtener histórico", error.statusCode || 500);
+            }
+        });
+    }
+    obtenerResumenGlobal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const resumen = yield peticionService.obtenerResumenGlobal();
+                return response_util_1.ApiResponse.success(res, resumen, "Resumen global de peticiones obtenido exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al obtener resumen global", error.statusCode || 500);
+            }
+        });
+    }
+    // ====== CONTROL DE TEMPORIZADOR ======
+    pausarTemporizador(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const peticion = yield peticionService.pausarTemporizador(Number(id), req.usuario);
+                return response_util_1.ApiResponse.success(res, peticion, "Temporizador pausado exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al pausar temporizador", error.statusCode || 500);
+            }
+        });
+    }
+    reanudarTemporizador(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const peticion = yield peticionService.reanudarTemporizador(Number(id), req.usuario);
+                return response_util_1.ApiResponse.success(res, peticion, "Temporizador reanudado exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al reanudar temporizador", error.statusCode || 500);
+            }
+        });
+    }
+    obtenerTiempoEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const tiempoEmpleado = yield peticionService.obtenerTiempoEmpleado(Number(id));
+                return response_util_1.ApiResponse.success(res, tiempoEmpleado, "Tiempo empleado obtenido exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al obtener tiempo empleado", error.statusCode || 500);
             }
         });
     }

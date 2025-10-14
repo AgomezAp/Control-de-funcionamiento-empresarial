@@ -17,6 +17,28 @@ const peticionController = new PeticionController();
 // Todas las rutas requieren autenticación
 router.use(authMiddleware);
 
+// ⚠️ IMPORTANTE: Rutas específicas ANTES de rutas con parámetros
+
+// Obtener peticiones pendientes
+router.get("/pendientes", peticionController.obtenerPendientes);
+
+// Obtener histórico de peticiones
+router.get("/historico", peticionController.obtenerHistorico);
+
+// Obtener resumen global (Admin, Directivo, Líder)
+router.get(
+  "/resumen/global",
+  roleAuth("Admin", "Directivo", "Líder"),
+  peticionController.obtenerResumenGlobal
+);
+
+// Obtener peticiones por cliente y mes
+router.get(
+  "/cliente-mes",
+  validate(obtenerPeticionesPorClienteMesValidator),
+  peticionController.obtenerPorClienteYMes
+);
+
 // Crear petición
 router.post(
   "/",
@@ -27,19 +49,6 @@ router.post(
 // Obtener todas las peticiones (con filtros opcionales)
 router.get("/", peticionController.obtenerTodos);
 
-// Obtener peticiones pendientes
-router.get("/pendientes", peticionController.obtenerPendientes);
-
-// Obtener histórico de peticiones
-router.get("/historico", peticionController.obtenerHistorico);
-
-// Obtener peticiones por cliente y mes
-router.get(
-  "/cliente-mes",
-  validate(obtenerPeticionesPorClienteMesValidator),
-  peticionController.obtenerPorClienteYMes
-);
-
 // Obtener petición por ID
 router.get("/:id", peticionController.obtenerPorId);
 
@@ -49,6 +58,11 @@ router.post(
   validate(aceptarPeticionValidator),
   peticionController.aceptarPeticion
 );
+
+// Control de temporizador
+router.post("/:id/pausar-temporizador", peticionController.pausarTemporizador);
+router.post("/:id/reanudar-temporizador", peticionController.reanudarTemporizador);
+router.get("/:id/tiempo-empleado", peticionController.obtenerTiempoEmpleado);
 
 // Cambiar estado de petición
 router.patch(

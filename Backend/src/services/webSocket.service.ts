@@ -203,7 +203,7 @@ class WebSocketService {
     usuarioId: number,
     usuario: any,
     fecha_aceptacion: Date,
-    fecha_limite: Date,
+    fecha_limite: Date | null,
     tiempo_limite_horas: number
   ): void {
     const data = {

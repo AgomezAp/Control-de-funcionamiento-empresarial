@@ -45,7 +45,6 @@ import { TimerComponent } from '../../../../../shared/components/timer/timer/tim
     TimeAgoPipe,
     CurrencycopPipe,
     LoaderComponent,
-    TimerComponent,
   ],
   providers: [MessageService],
   templateUrl: './detalle-peticion.component.html',
@@ -127,8 +126,9 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
             this.peticion.asignado_a = data.usuarioId;
             this.peticion.asignado = data.usuario;
             this.peticion.fecha_aceptacion = data.fecha_aceptacion;
-            this.peticion.fecha_limite = data.fecha_limite;
-            this.peticion.tiempo_limite_horas = data.tiempo_limite_horas;
+            this.peticion.tiempo_empleado_segundos = data.tiempo_empleado_segundos || 0;
+            this.peticion.temporizador_activo = data.temporizador_activo || false;
+            this.peticion.fecha_inicio_temporizador = data.fecha_inicio_temporizador;
 
             this.messageService.add({
               severity: 'success',
@@ -233,6 +233,13 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  formatearTiempo(segundos: number): string {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segs = segundos % 60;
+    return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
   }
 
   volver(): void {

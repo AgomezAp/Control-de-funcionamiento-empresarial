@@ -13,9 +13,12 @@ export class Peticion extends Model {
   public asignado_a!: number | null;
   public fecha_creacion!: Date;
   public fecha_aceptacion!: Date | null;
-  public fecha_limite!: Date | null;
   public fecha_resolucion!: Date | null;
-  public tiempo_limite_horas!: number | null;
+  // Campos del temporizador
+  public tiempo_empleado_segundos!: number;
+  public temporizador_activo!: boolean;
+  public fecha_inicio_temporizador!: Date | null;
+  public fecha_pausa_temporizador!: Date | null;
 }
 
 Peticion.init(
@@ -88,19 +91,31 @@ Peticion.init(
       allowNull: true,
       comment: "Cuando el diseñador acepta la petición",
     },
-    fecha_limite: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      comment: "Se calcula desde fecha_aceptacion + tiempo_limite_horas",
-    },
     fecha_resolucion: {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    tiempo_limite_horas: {
+    tiempo_empleado_segundos: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      comment: "Tiempo total empleado en segundos",
+    },
+    temporizador_activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      comment: "Indica si el temporizador está corriendo actualmente",
+    },
+    fecha_inicio_temporizador: {
+      type: DataTypes.DATE,
       allowNull: true,
-      comment: "Horas límite para completar la tarea desde que se acepta",
+      comment: "Última vez que se inició o reanudó el temporizador",
+    },
+    fecha_pausa_temporizador: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: "Última vez que se pausó el temporizador",
     },
   },
   {

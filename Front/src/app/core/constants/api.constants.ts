@@ -29,10 +29,15 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `${environment.apiUrl}/peticiones/${id}`,
     PENDIENTES: `${environment.apiUrl}/peticiones/pendientes`,
     HISTORICO: `${environment.apiUrl}/peticiones/historico`,
+    RESUMEN_GLOBAL: `${environment.apiUrl}/peticiones/resumen/global`,
     CLIENTE_MES: `${environment.apiUrl}/peticiones/cliente-mes`,
     ACEPTAR: (id: number) => `${environment.apiUrl}/peticiones/${id}/aceptar`,
     CAMBIAR_ESTADO: (id: number) =>
       `${environment.apiUrl}/peticiones/${id}/estado`,
+    // Control de temporizador
+    PAUSAR_TEMPORIZADOR: (id: number) => `${environment.apiUrl}/peticiones/${id}/pausar-temporizador`,
+    REANUDAR_TEMPORIZADOR: (id: number) => `${environment.apiUrl}/peticiones/${id}/reanudar-temporizador`,
+    TIEMPO_EMPLEADO: (id: number) => `${environment.apiUrl}/peticiones/${id}/tiempo-empleado`,
   },
 
   // Estadísticas
@@ -52,6 +57,7 @@ export const API_ENDPOINTS = {
     BASE: `${environment.apiUrl}/facturacion`,
     GENERAR: `${environment.apiUrl}/facturacion/generar`,
     GENERAR_TODOS: `${environment.apiUrl}/facturacion/generar-todos`,
+    GENERAR_AUTOMATICA: `${environment.apiUrl}/facturacion/generar-automatica`,
     RESUMEN: `${environment.apiUrl}/facturacion/resumen`,
     DETALLE: `${environment.apiUrl}/facturacion/detalle`,
     BY_ID: (id: number) => `${environment.apiUrl}/facturacion/${id}`,

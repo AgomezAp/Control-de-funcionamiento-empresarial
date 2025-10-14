@@ -20,7 +20,7 @@ Categoria.init({
         allowNull: false,
     },
     area_tipo: {
-        type: sequelize_1.DataTypes.ENUM("Diseño", "Pautas"),
+        type: sequelize_1.DataTypes.ENUM("Diseño", "Pautas", "Gestión Administrativa"),
         allowNull: false,
     },
     costo: {

@@ -46,7 +46,7 @@ class Server {
                 // ⬇️ AGREGA ESTO PARA CONFIRMAR QUE LAS ASOCIACIONES SE CARGARON
                 console.log("🔗 Asociaciones de modelos cargadas");
                 // Sincronizar modelos con la base de datos
-                yield connection_1.default.sync({ alter: false });
+                yield connection_1.default.sync({ force: true });
                 console.log("✅ Modelos sincronizados con la base de datos");
             }
             catch (error) {

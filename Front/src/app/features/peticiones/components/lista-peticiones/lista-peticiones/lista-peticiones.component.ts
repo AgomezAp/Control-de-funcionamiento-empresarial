@@ -87,7 +87,6 @@ import { ExportService, PeticionParaPDF } from '../../../../../core/services/exp
     // Components
     EmptyStateComponent,
     LoaderComponent,
-    TimerComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './lista-peticiones.component.html',
@@ -301,9 +300,8 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
             this.peticiones[index].asignado_a = data.usuarioId;
             this.peticiones[index].asignado = data.usuario;
             this.peticiones[index].fecha_aceptacion = data.fecha_aceptacion;
-            this.peticiones[index].fecha_limite = data.fecha_limite;
-            this.peticiones[index].tiempo_limite_horas =
-              data.tiempo_limite_horas;
+            this.peticiones[index].tiempo_empleado_segundos = data.tiempo_empleado_segundos || 0;
+            this.peticiones[index].temporizador_activo = data.temporizador_activo || false;
 
             // Trigger change detection
             this.peticiones = [...this.peticiones];
@@ -544,7 +542,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
         fecha_creacion: new Date(p.fecha_creacion).toLocaleString('es-CO'),
         creador: p.creador?.nombre_completo || 'Desconocido',
         asignado: p.asignado?.nombre_completo,
-        fecha_limite: p.fecha_limite ? new Date(p.fecha_limite).toLocaleString('es-CO') : undefined,
+        tiempo_empleado: this.formatearTiempo(p.tiempo_empleado_segundos || 0),
       }));
 
       this.exportService.exportarListaPeticionesAPDF(peticionesParaPDF, 'Lista de Peticiones');
@@ -580,7 +578,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
         fecha_creacion: new Date(peticion.fecha_creacion).toLocaleString('es-CO'),
         creador: peticion.creador?.nombre_completo || 'Desconocido',
         asignado: peticion.asignado?.nombre_completo,
-        fecha_limite: peticion.fecha_limite ? new Date(peticion.fecha_limite).toLocaleString('es-CO') : undefined,
+        tiempo_empleado: this.formatearTiempo(peticion.tiempo_empleado_segundos || 0),
       };
 
       this.exportService.exportarPeticionAPDF(peticionParaPDF);
@@ -627,7 +625,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
         fecha_creacion: new Date(p.fecha_creacion).toLocaleString('es-CO'),
         creador: p.creador?.nombre_completo || 'Desconocido',
         asignado: p.asignado?.nombre_completo,
-        fecha_limite: p.fecha_limite ? new Date(p.fecha_limite).toLocaleString('es-CO') : undefined,
+        tiempo_empleado: this.formatearTiempo(p.tiempo_empleado_segundos || 0),
       }));
 
       this.exportService.imprimirListaPeticiones(peticionesParaImprimir, 'Lista de Peticiones');
@@ -657,7 +655,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
         fecha_creacion: new Date(peticion.fecha_creacion).toLocaleString('es-CO'),
         creador: peticion.creador?.nombre_completo || 'Desconocido',
         asignado: peticion.asignado?.nombre_completo,
-        fecha_limite: peticion.fecha_limite ? new Date(peticion.fecha_limite).toLocaleString('es-CO') : undefined,
+        tiempo_empleado: this.formatearTiempo(peticion.tiempo_empleado_segundos || 0),
       };
 
       this.exportService.imprimirPeticion(peticionParaImprimir);
@@ -669,6 +667,13 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
         detail: 'No se pudo imprimir la petición',
       });
     }
+  }
+
+  formatearTiempo(segundos: number): string {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segs = segundos % 60;
+    return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
   }
 
   exportarExcel(): void {

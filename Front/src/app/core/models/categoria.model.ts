@@ -1,8 +1,8 @@
 export enum AreaTipo {
   DISENO = 'Diseño',
-  PAUTAS = 'Pautas'
+  PAUTAS = 'Pautas',
+  GESTION_ADMINISTRATIVA = 'Gestión Administrativa'
 }
-
 export interface Categoria {
   id: number;
   nombre: string;
@@ -11,7 +11,6 @@ export interface Categoria {
   es_variable: boolean;
   requiere_descripcion_extra: boolean;
 }
-
 // Categorías de Diseño
 export enum CategoriasDiseno {
   CREACION_SUBPESTANA = 'Creación de subpestaña',
@@ -33,7 +32,6 @@ export enum CategoriasDiseno {
   LIMPIEZA_CACHE = 'Limpieza de caché',
   DESCARGA_IMAGENES = 'Descarga de imágenes'
 }
-
 // Categorías de Pautas
 export enum CategoriasPautas {
   BARRIDO_WEB = 'Barrido web (revisión)',
@@ -49,4 +47,13 @@ export enum CategoriasPautas {
   ETIQUETAS_CONVERSION = 'Etiquetas de conversión',
   VERIFICACION_ANUNCIANTE = 'Verificación de anunciante',
   APELACION = 'Apelación'
+}
+// Categorías de Gestión Administrativa
+// NOTA: El usuario puede modificar estas categorías según sus necesidades
+export enum CategoriasGestionAdministrativa {
+  TRAMITE_ADMINISTRATIVO = 'Trámite Administrativo',
+  GESTION_DOCUMENTAL = 'Gestión Documental',
+  ARCHIVO_ORGANIZACION = 'Archivo y Organización',
+  PROCESO_COMPRAS = 'Proceso de Compras',
+  GESTION_CONTRATOS = 'Gestión de Contratos'
 }

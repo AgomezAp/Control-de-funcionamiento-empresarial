@@ -4,7 +4,7 @@ import sequelize from "../database/connection";
 export class Categoria extends Model {
   public id!: number;
   public nombre!: string;
-  public area_tipo!: "Diseño" | "Pautas";
+  public area_tipo!: "Diseño" | "Pautas" | "Gestión Administrativa";
   public costo!: number;
   public es_variable!: boolean;
   public requiere_descripcion_extra!: boolean;
@@ -22,7 +22,7 @@ Categoria.init(
       allowNull: false,
     },
     area_tipo: {
-      type: DataTypes.ENUM("Diseño", "Pautas"),
+      type: DataTypes.ENUM("Diseño", "Pautas", "Gestión Administrativa"),
       allowNull: false,
     },
     costo: {

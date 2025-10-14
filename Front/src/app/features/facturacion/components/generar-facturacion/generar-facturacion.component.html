@@ -1,209 +1,253 @@
-<div class="container mx-auto p-4 max-w-3xl">
+<div class="generar-facturacion-container">
   <p-toast></p-toast>
 
-  <!-- Header -->
-  <div class="mb-6">
-    <div class="flex items-center gap-4 mb-4">
-      <button
-        pButton
-        icon="pi pi-arrow-left"
-        class="p-button-text p-button-rounded"
-        (click)="volver()"
-      ></button>
-      <h2 class="text-3xl font-bold text-gray-800">
-        <i class="pi pi-plus-circle text-green-600 mr-2"></i>
-        Generar Facturación
-      </h2>
+  <!-- Header Compacto -->
+  <div class="page-header">
+    <button
+      pButton
+      icon="pi pi-arrow-left"
+      class="btn-back"
+      (click)="volver()"
+      pTooltip="Volver"
+      tooltipPosition="right"
+    ></button>
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-plus-circle"></i>
+        <h2>Generar Facturación</h2>
+      </div>
+      <p class="header-subtitle">
+        Genera periodos de facturación para uno o varios clientes
+      </p>
     </div>
-    <p class="text-gray-600 ml-14">
-      Genera periodos de facturación para uno o varios clientes
-    </p>
   </div>
 
-  <!-- Formulario -->
-  <p-card>
+  <!-- Formulario Compacto -->
+  <div class="form-card">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <!-- Tipo de Generación -->
-      <div class="mb-6">
-        <label class="block text-sm font-semibold text-gray-700 mb-3">
-          Tipo de Generación
-        </label>
-        <div class="flex gap-6">
-          <div class="flex items-center cursor-pointer" (click)="tipoGeneracion = 'individual'; onTipoChange()">
-            <input
-              type="radio"
-              name="tipoGeneracion"
-              value="individual"
-              [checked]="tipoGeneracion === 'individual'"
-              id="individual"
-              class="mr-2"
-            />
-            <label for="individual" class="cursor-pointer">
-              <i class="pi pi-user text-blue-600"></i>
-              Cliente Individual
+      <!-- Grid Principal -->
+      <div class="form-grid">
+        <!-- Columna Izquierda: Tipo y Cliente -->
+        <div class="form-column column-left">
+          <!-- Tipo de Generación -->
+          <div class="form-section compact">
+            <label class="section-label">
+              <i class="pi pi-cog"></i>
+              Tipo de Generación
             </label>
-          </div>
-          <div class="flex items-center cursor-pointer" (click)="tipoGeneracion = 'todos'; onTipoChange()">
-            <input
-              type="radio"
-              name="tipoGeneracion"
-              value="todos"
-              [checked]="tipoGeneracion === 'todos'"
-              id="todos"
-              class="mr-2"
-            />
-            <label for="todos" class="cursor-pointer">
-              <i class="pi pi-users text-green-600"></i>
-              Todos los Clientes
-            </label>
-          </div>
-        </div>
-      </div>
+            <div class="radio-group-compact">
+              <div
+                class="radio-option-compact"
+                [class.selected]="tipoGeneracion === 'individual'"
+                (click)="tipoGeneracion = 'individual'; onTipoChange()"
+              >
+                <input
+                  type="radio"
+                  name="tipoGeneracion"
+                  value="individual"
+                  [checked]="tipoGeneracion === 'individual'"
+                  id="individual"
+                />
+                <i class="pi pi-user"></i>
+                <div class="radio-text-compact">
+                  <span class="radio-title-compact">Cliente Individual</span>
+                </div>
+              </div>
 
-      <p-divider></p-divider>
-
-      <!-- Cliente Individual -->
-      <div *ngIf="tipoGeneracion === 'individual'" class="mb-6">
-        <label for="cliente" class="block text-sm font-semibold text-gray-700 mb-2">
-          Cliente <span class="text-red-500">*</span>
-        </label>
-        <p-dropdown
-          id="cliente"
-          formControlName="cliente_id"
-          [options]="clientes"
-          optionLabel="nombre"
-          optionValue="id"
-          placeholder="Seleccione un cliente"
-          [filter]="true"
-          filterBy="nombre,pais"
-          [showClear]="true"
-          [style]="{ width: '100%' }"
-          [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('cliente_id') }"
-        >
-          <ng-template let-cliente pTemplate="item">
-            <div class="flex items-center gap-2">
-              <i class="pi pi-building text-gray-500"></i>
-              <div>
-                <div class="font-semibold">{{ cliente.nombre }}</div>
-                <div class="text-xs text-gray-500">{{ cliente.pais }}</div>
+              <div
+                class="radio-option-compact"
+                [class.selected]="tipoGeneracion === 'todos'"
+                (click)="tipoGeneracion = 'todos'; onTipoChange()"
+              >
+                <input
+                  type="radio"
+                  name="tipoGeneracion"
+                  value="todos"
+                  [checked]="tipoGeneracion === 'todos'"
+                  id="todos"
+                />
+                <i class="pi pi-users"></i>
+                <div class="radio-text-compact">
+                  <span class="radio-title-compact">Todos los Clientes</span>
+                </div>
               </div>
             </div>
-          </ng-template>
-        </p-dropdown>
-        <small *ngIf="isFieldInvalid('cliente_id')" class="p-error block mt-1">
-          {{ getErrorMessage('cliente_id') }}
-        </small>
-      </div>
+          </div>
 
-      <!-- Mensaje para todos -->
-      <div *ngIf="tipoGeneracion === 'todos'" class="mb-6">
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-          <div class="flex items-start gap-3">
-            <i class="pi pi-info-circle text-blue-600 text-xl"></i>
-            <div>
-              <p class="font-semibold text-blue-900 mb-1">Generación Masiva</p>
-              <p class="text-sm text-blue-800">
-                Se generará un periodo de facturación para <strong>todos los clientes activos</strong> 
-                que tengan peticiones en el mes seleccionado.
-              </p>
+          <!-- Cliente Individual -->
+          <div
+            *ngIf="tipoGeneracion === 'individual'"
+            class="form-section compact"
+          >
+            <label for="cliente" class="field-label">
+              <i class="pi pi-building"></i>
+              Cliente
+              <span class="required">*</span>
+            </label>
+            <p-dropdown
+              id="cliente"
+              formControlName="cliente_id"
+              [options]="clientes"
+              optionLabel="nombre"
+              optionValue="id"
+              placeholder="Seleccione un cliente"
+              [filter]="true"
+              filterBy="nombre,pais"
+              [showClear]="true"
+              styleClass="custom-dropdown-field"
+              [ngClass]="{ 'field-invalid': isFieldInvalid('cliente_id') }"
+            >
+              <ng-template let-cliente pTemplate="item">
+                <div class="dropdown-item-compact">
+                  <i class="pi pi-building"></i>
+                  <div class="dropdown-item-info">
+                    <span class="dropdown-item-name">{{ cliente.nombre }}</span>
+                    <span class="dropdown-item-detail">{{ cliente.pais }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <small *ngIf="isFieldInvalid('cliente_id')" class="field-error">
+              <i class="pi pi-exclamation-circle"></i>
+              {{ getErrorMessage("cliente_id") }}
+            </small>
+          </div>
+
+          <!-- Mensaje para todos -->
+          <div *ngIf="tipoGeneracion === 'todos'" class="form-section compact">
+            <div class="info-banner-compact info-banner-blue">
+              <i class="pi pi-info-circle"></i>
+              <div class="info-content-compact">
+                <strong>Generación Masiva:</strong>
+                Se generará para todos los clientes activos del periodo.
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Periodo -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <label for="mes" class="block text-sm font-semibold text-gray-700 mb-2">
-            Mes <span class="text-red-500">*</span>
-          </label>
-          <p-dropdown
-            id="mes"
-            formControlName="mes"
-            [options]="meses"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Seleccione el mes"
-            [style]="{ width: '100%' }"
-            [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('mes') }"
-          ></p-dropdown>
-          <small *ngIf="isFieldInvalid('mes')" class="p-error block mt-1">
-            {{ getErrorMessage('mes') }}
-          </small>
-        </div>
+        <!-- Columna Central: Periodo -->
+        <div class="form-column column-center">
+          <!-- Periodo -->
+          <div class="form-section compact">
+            <label class="section-label">
+              <i class="pi pi-calendar"></i>
+              Periodo de Facturación
+            </label>
 
-        <div>
-          <label for="año" class="block text-sm font-semibold text-gray-700 mb-2">
-            Año <span class="text-red-500">*</span>
-          </label>
-          <p-dropdown
-            id="año"
-            formControlName="año"
-            [options]="anios"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Seleccione el año"
-            [style]="{ width: '100%' }"
-            [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('año') }"
-          ></p-dropdown>
-          <small *ngIf="isFieldInvalid('año')" class="p-error block mt-1">
-            {{ getErrorMessage('año') }}
-          </small>
-        </div>
-      </div>
+            <div class="field-wrapper">
+              <label for="mes" class="field-label-compact">
+                Mes <span class="required">*</span>
+              </label>
+              <p-dropdown
+                id="mes"
+                formControlName="mes"
+                [options]="meses"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Mes"
+                styleClass="custom-dropdown-field"
+                [ngClass]="{ 'field-invalid': isFieldInvalid('mes') }"
+              ></p-dropdown>
+              <small *ngIf="isFieldInvalid('mes')" class="field-error">
+                <i class="pi pi-exclamation-circle"></i>
+                {{ getErrorMessage("mes") }}
+              </small>
+            </div>
 
-      <p-divider></p-divider>
-
-      <!-- Vista previa -->
-      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-        <h3 class="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-          <i class="pi pi-eye text-blue-600"></i>
-          Vista Previa
-        </h3>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-gray-600">Tipo:</span>
-            <span class="font-semibold">
-              {{ tipoGeneracion === 'individual' ? 'Cliente Individual' : 'Todos los Clientes' }}
-            </span>
-          </div>
-          <div *ngIf="tipoGeneracion === 'individual' && form.value.cliente_id" class="flex justify-between">
-            <span class="text-gray-600">Cliente:</span>
-            <span class="font-semibold">
-              {{ getSelectedCliente() }}
-            </span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Periodo:</span>
-            <span class="font-semibold">
-              {{ form.value.mes ? meses[form.value.mes - 1].label : '-' }} {{ anioSeleccionado || '-' }}
-            </span>
+            <div class="field-wrapper">
+              <label for="año" class="field-label-compact">
+                Año <span class="required">*</span>
+              </label>
+              <p-dropdown
+                id="año"
+                formControlName="año"
+                [options]="anios"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Año"
+                styleClass="custom-dropdown-field"
+                [ngClass]="{ 'field-invalid': isFieldInvalid('año') }"
+              ></p-dropdown>
+              <small *ngIf="isFieldInvalid('año')" class="field-error">
+                <i class="pi pi-exclamation-circle"></i>
+                {{ getErrorMessage("año") }}
+              </small>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Advertencia -->
-      <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-        <div class="flex items-start gap-3">
-          <i class="pi pi-exclamation-triangle text-yellow-600 text-xl"></i>
-          <div>
-            <p class="font-semibold text-yellow-900 mb-1">Importante</p>
-            <p class="text-sm text-yellow-800">
-              Si ya existe un periodo de facturación para este cliente y periodo, 
-              se actualizarán los datos con la información más reciente.
-            </p>
+        <!-- Columna Derecha: Vista Previa -->
+        <div class="form-column column-right">
+          <!-- Vista previa -->
+          <div class="preview-section-compact">
+            <h3 class="preview-title-compact">
+              <i class="pi pi-eye"></i>
+              Vista Previa
+            </h3>
+            <div class="preview-content-compact">
+              <div class="preview-item-compact">
+                <i
+                  [class]="
+                    tipoGeneracion === 'individual'
+                      ? 'pi pi-user'
+                      : 'pi pi-users'
+                  "
+                ></i>
+                <div class="preview-text">
+                  <span class="preview-label-compact">Tipo</span>
+                  <span class="preview-value-compact">
+                    {{
+                      tipoGeneracion === "individual" ? "Individual" : "Todos"
+                    }}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                *ngIf="tipoGeneracion === 'individual' && form.value.cliente_id"
+                class="preview-item-compact"
+              >
+                <i class="pi pi-building"></i>
+                <div class="preview-text">
+                  <span class="preview-label-compact">Cliente</span>
+                  <span class="preview-value-compact">
+                    {{ getSelectedCliente() }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="preview-item-compact">
+                <i class="pi pi-calendar"></i>
+                <div class="preview-text">
+                  <span class="preview-label-compact">Periodo</span>
+                  <span class="preview-value-compact">
+                    {{ form.value.mes ? meses[form.value.mes - 1].label : "-" }}
+                    {{ anioSeleccionado || "-" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Advertencia Compacta -->
+          <div class="info-banner-compact info-banner-yellow">
+            <i class="pi pi-exclamation-triangle"></i>
+            <div class="info-content-compact">
+              <strong>Importante:</strong>
+              Los datos existentes serán actualizados.
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Botones -->
-      <div class="flex justify-end gap-3">
+      <div class="form-actions-compact">
         <button
           pButton
           type="button"
           label="Cancelar"
           icon="pi pi-times"
-          class="p-button-outlined"
+          class="btn-cancel"
           (click)="volver()"
           [disabled]="loading"
         ></button>
@@ -212,10 +256,10 @@
           type="submit"
           label="Generar Facturación"
           icon="pi pi-check"
-          class="p-button-success"
+          class="btn-submit"
           [loading]="loading"
         ></button>
       </div>
     </form>
-  </p-card>
+  </div>
 </div>

@@ -253,5 +253,105 @@ class FacturacionService {
             return resultados;
         });
     }
+    /**
+     * Genera facturación automática para TODAS las peticiones resueltas del periodo
+     * que no tengan un periodo de facturación asociado
+     */
+    generarFacturacionAutomatica(año, mes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fechaInicio = new Date(año, mes - 1, 1);
+            const fechaFin = new Date(año, mes, 0, 23, 59, 59);
+            // 1. Buscar TODAS las peticiones resueltas del periodo en el histórico
+            const peticionesResueltas = yield PeticionHistorico_1.default.findAll({
+                where: {
+                    estado: "Resuelta",
+                    fecha_resolucion: {
+                        [sequelize_1.Op.between]: [fechaInicio, fechaFin],
+                    },
+                },
+                include: [
+                    {
+                        model: Cliente_1.default,
+                        as: "cliente",
+                        attributes: ["id", "nombre", "pais"],
+                    },
+                    {
+                        model: Categoria_1.default,
+                        as: "categoria",
+                        attributes: ["nombre", "area_tipo"],
+                    },
+                ],
+            });
+            if (peticionesResueltas.length === 0) {
+                return {
+                    mensaje: "No hay peticiones resueltas para este periodo",
+                    periodos_generados: 0,
+                    total_peticiones: 0,
+                    costo_total: 0,
+                };
+            }
+            // 2. Agrupar por cliente_id
+            const peticionesPorCliente = {};
+            peticionesResueltas.forEach((peticion) => {
+                const clienteId = peticion.cliente_id;
+                if (!peticionesPorCliente[clienteId]) {
+                    peticionesPorCliente[clienteId] = {
+                        cliente: peticion.cliente,
+                        peticiones: [],
+                        costo_total: 0,
+                    };
+                }
+                peticionesPorCliente[clienteId].peticiones.push(peticion);
+                peticionesPorCliente[clienteId].costo_total += Number(peticion.costo);
+            });
+            // 3. Crear/actualizar periodo de facturación para cada cliente
+            const periodosGenerados = [];
+            let totalPeticiones = 0;
+            let costoTotal = 0;
+            for (const clienteId in peticionesPorCliente) {
+                const data = peticionesPorCliente[clienteId];
+                // Buscar si ya existe un periodo
+                const [periodo, created] = yield PeriodoFacturacion_1.default.findOrCreate({
+                    where: {
+                        cliente_id: Number(clienteId),
+                        año,
+                        mes,
+                    },
+                    defaults: {
+                        cliente_id: Number(clienteId),
+                        año,
+                        mes,
+                        total_peticiones: data.peticiones.length,
+                        costo_total: data.costo_total,
+                        estado: "Abierto",
+                    },
+                });
+                if (!created) {
+                    // Si ya existía, actualizar con los nuevos totales
+                    yield periodo.update({
+                        total_peticiones: data.peticiones.length,
+                        costo_total: data.costo_total,
+                    });
+                }
+                periodosGenerados.push({
+                    periodo_id: periodo.id,
+                    cliente: data.cliente.nombre,
+                    peticiones: data.peticiones.length,
+                    costo: data.costo_total,
+                    estado: created ? "Creado" : "Actualizado",
+                });
+                totalPeticiones += data.peticiones.length;
+                costoTotal += data.costo_total;
+            }
+            console.log(`✅ Facturación automática generada: ${periodosGenerados.length} clientes, ${totalPeticiones} peticiones, $${costoTotal}`);
+            return {
+                mensaje: "Facturación automática generada exitosamente",
+                periodos_generados: periodosGenerados.length,
+                total_peticiones: totalPeticiones,
+                costo_total: costoTotal,
+                detalle: periodosGenerados,
+            };
+        });
+    }
 }
 exports.FacturacionService = FacturacionService;

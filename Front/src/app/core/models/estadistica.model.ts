@@ -30,7 +30,9 @@ export interface EstadisticaPorArea {
   area: string;
   peticiones_creadas: number;
   peticiones_resueltas: number;
+  peticiones_canceladas: number;
   costo_total: number;
+  efectividad: number | string;
 }
 
 export interface TopUsuario {

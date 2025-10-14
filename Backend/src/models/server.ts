@@ -40,7 +40,7 @@ class Server {
       console.log("🔗 Asociaciones de modelos cargadas");
 
       // Sincronizar modelos con la base de datos
-      await sequelize.sync({ alter: false });
+      await sequelize.sync({ force: true });
       console.log("✅ Modelos sincronizados con la base de datos");
     } catch (error) {
       console.error("❌ Error al conectar con la base de datos:", error);

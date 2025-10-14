@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.detenerCronJobs = exports.iniciarCronJobs = exports.generarPeriodosFacturacion = exports.calcularEstadisticasMensuales = exports.moverPeticionesResueltasAHistorico = exports.verificarPeticionesVencidas = void 0;
+exports.detenerCronJobs = exports.iniciarCronJobs = exports.generarPeriodosFacturacion = exports.calcularEstadisticasMensuales = exports.moverPeticionesResueltasAHistorico = exports.verificarPeticionesConMuchoTiempo = void 0;
 const node_cron_1 = __importDefault(require("node-cron"));
 const Peticion_1 = __importDefault(require("../models/Peticion"));
 const sequelize_1 = require("sequelize");
@@ -24,41 +24,42 @@ const peticionService = new peticion_service_1.PeticionService();
 const estadisticaService = new estadistica_service_1.EstadisticaService();
 const facturacionService = new facturacion_service_1.FacturacionService();
 // ==========================================
-// CRON: Revisar peticiones vencidas
+// CRON: Revisar peticiones con mucho tiempo empleado
 // Se ejecuta cada 30 minutos
 // ==========================================
-exports.verificarPeticionesVencidas = node_cron_1.default.schedule("*/30 * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
+exports.verificarPeticionesConMuchoTiempo = node_cron_1.default.schedule("*/30 * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("🔄 Verificando peticiones vencidas...");
-        const ahora = new Date();
-        // Buscar peticiones en progreso que ya pasaron su fecha límite
-        const peticionesVencidas = yield Peticion_1.default.findAll({
+        console.log("🔄 Verificando peticiones con mucho tiempo empleado...");
+        // Buscar peticiones en progreso con temporizador activo
+        const peticionesEnProgreso = yield Peticion_1.default.findAll({
             where: {
                 estado: "En Progreso",
-                fecha_limite: {
-                    [sequelize_1.Op.lt]: ahora,
-                },
+                temporizador_activo: true,
             },
         });
-        if (peticionesVencidas.length > 0) {
-            console.log(`⚠️  ${peticionesVencidas.length} peticiones vencidas encontradas`);
-            // Aquí puedes decidir qué hacer:
-            // 1. Notificar a los responsables
-            // 2. Cambiar estado automáticamente
-            // 3. Registrar en auditoría
-            for (const peticion of peticionesVencidas) {
-                console.log(`❌ Petición ${peticion.id} vencida - Límite: ${peticion.fecha_limite}`);
-                // Emitir evento WebSocket de petición vencida
-                const peticionCompleta = yield peticionService.obtenerPorId(peticion.id);
-                webSocket_service_1.webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
+        if (peticionesEnProgreso.length > 0) {
+            console.log(`⏱️  ${peticionesEnProgreso.length} peticiones en progreso con temporizador activo`);
+            for (const peticion of peticionesEnProgreso) {
+                // Calcular tiempo total empleado
+                const ahora = new Date();
+                const tiempoTranscurrido = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
+                const tiempoTotal = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+                const horasEmpleadas = Math.floor(tiempoTotal / 3600);
+                // Notificar si lleva más de 8 horas
+                if (horasEmpleadas >= 8) {
+                    console.log(`⚠️  Petición ${peticion.id} - Tiempo empleado: ${horasEmpleadas} horas`);
+                    // Emitir evento WebSocket de alerta
+                    const peticionCompleta = yield peticionService.obtenerPorId(peticion.id);
+                    webSocket_service_1.webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
+                }
             }
         }
         else {
-            console.log("✅ No hay peticiones vencidas");
+            console.log("✅ No hay peticiones con temporizador activo");
         }
     }
     catch (error) {
-        console.error("❌ Error verificando peticiones vencidas:", error);
+        console.error("❌ Error verificando peticiones:", error);
     }
 }));
 // ==========================================
@@ -129,7 +130,7 @@ exports.generarPeriodosFacturacion = node_cron_1.default.schedule("0 3 1 * *", (
 // ==========================================
 const iniciarCronJobs = () => {
     console.log("🚀 Iniciando cron jobs...");
-    exports.verificarPeticionesVencidas.start();
+    exports.verificarPeticionesConMuchoTiempo.start();
     exports.moverPeticionesResueltasAHistorico.start();
     exports.calcularEstadisticasMensuales.start();
     exports.generarPeriodosFacturacion.start();
@@ -138,7 +139,7 @@ const iniciarCronJobs = () => {
 exports.iniciarCronJobs = iniciarCronJobs;
 // Detener todos los cron jobs
 const detenerCronJobs = () => {
-    exports.verificarPeticionesVencidas.stop();
+    exports.verificarPeticionesConMuchoTiempo.stop();
     exports.moverPeticionesResueltasAHistorico.stop();
     exports.calcularEstadisticasMensuales.stop();
     exports.generarPeriodosFacturacion.stop();

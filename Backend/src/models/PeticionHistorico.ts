@@ -14,10 +14,9 @@ export class PeticionHistorico extends Model {
   public asignado_a!: number | null;
   public fecha_creacion!: Date;
   public fecha_aceptacion!: Date | null;
-  public fecha_limite!: Date | null;
   public fecha_resolucion!: Date;
   public fecha_movido_historico!: Date;
-  public tiempo_limite_horas!: number | null;
+  public tiempo_empleado_segundos!: number;
 }
 
 PeticionHistorico.init(
@@ -72,10 +71,6 @@ PeticionHistorico.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    fecha_limite: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
     fecha_resolucion: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -85,9 +80,11 @@ PeticionHistorico.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    tiempo_limite_horas: {
+    tiempo_empleado_segundos: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: 0,
+      comment: "Tiempo total empleado en la petición en segundos",
     },
   },
   {

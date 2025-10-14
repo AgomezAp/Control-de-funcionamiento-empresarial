@@ -245,13 +245,13 @@
                   <i [class]="'pi ' + getStatusIcon(peticion.estado)"></i>
                   {{ peticion.estado }}
                 </span>
-                <app-timer
-                  *ngIf="
-                    peticion.estado === 'En Progreso' && peticion.fecha_limite
-                  "
-                  [fechaLimite]="peticion.fecha_limite"
-                  class="timer-mini"
-                ></app-timer>
+                <div
+                  *ngIf="peticion.estado === 'En Progreso'"
+                  class="tiempo-empleado-badge"
+                >
+                  <i class="pi pi-clock"></i>
+                  {{ formatearTiempo(peticion.tiempo_empleado_segundos || 0) }}
+                </div>
               </div>
             </td>
 
@@ -403,11 +403,11 @@
           <span class="cost-amount">{{ peticion.costo | currencyCop }}</span>
         </div>
 
-        <app-timer
-          *ngIf="peticion.estado === 'En Progreso' && peticion.fecha_limite"
-          [fechaLimite]="peticion.fecha_limite"
-          class="card-timer"
-        ></app-timer>
+        <div *ngIf="peticion.estado === 'En Progreso'" class="card-time-employed">
+          <i class="pi pi-clock"></i>
+          <span>Tiempo: {{ formatearTiempo(peticion.tiempo_empleado_segundos || 0) }}</span>
+          <span *ngIf="peticion.temporizador_activo" class="active-indicator">●</span>
+        </div>
 
         <div class="card-info-item timestamp">
           <i class="pi pi-clock"></i>

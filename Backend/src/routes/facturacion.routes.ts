@@ -20,6 +20,12 @@ router.post(
   facturacionController.generarPeriodosParaTodosLosClientes
 );
 
+// Generar facturación automática para peticiones resueltas
+router.post(
+  "/generar-automatica",
+  facturacionController.generarFacturacionAutomatica
+);
+
 // Obtener resumen de facturación mensual
 router.get("/resumen", facturacionController.obtenerResumenFacturacionMensual);
 

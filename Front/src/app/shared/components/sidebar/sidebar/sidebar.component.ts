@@ -2,30 +2,48 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { RoleEnum } from '../../../../core/models/role.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuarioAuth } from '../../../../core/models/auth.model';
-import { MenuItem } from 'primeng/api';
-import { PanelMenuModule } from 'primeng/panelmenu';
 import { InitialsPipe } from '../../../pipes/initials.pipe';
+
+interface MenuItemCustom {
+  label: string;
+  icon: string;
+  routerLink?: string[];
+  items?: MenuItemCustom[]; // Esto debe ser opcional
+  separator?: boolean;
+  expanded?: boolean;
+}
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, PanelMenuModule, InitialsPipe],
+  imports: [CommonModule, RouterModule, InitialsPipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
+  animations: [
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0, overflow: 'hidden' }),
+        animate('300ms ease-out', style({ height: '*', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ height: 0, opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SidebarComponent implements OnInit {
-  menuItems: MenuItem[] = [];
+  menuItems: MenuItemCustom[] = [];
   currentUser: UsuarioAuth | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
-    // Cerrar menú móvil al navegar
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Aquí puedes agregar lógica para cerrar el sidebar en móvil
+        // Cerrar sidebar en móvil si es necesario
       });
   }
 
@@ -48,6 +66,7 @@ export class SidebarComponent implements OnInit {
       {
         label: 'Peticiones',
         icon: 'pi pi-file-edit',
+        expanded: false,
         items: [
           {
             label: 'Todas',
@@ -79,6 +98,7 @@ export class SidebarComponent implements OnInit {
       {
         label: 'Clientes',
         icon: 'pi pi-users',
+        expanded: false,
         items: [
           {
             label: 'Todos',
@@ -98,7 +118,7 @@ export class SidebarComponent implements OnInit {
       },
     ];
 
-    // Agregar Usuarios (solo Admin, Directivo, Líder)
+    // Agregar Usuarios
     if (
       [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
         this.currentUser.rol
@@ -107,6 +127,7 @@ export class SidebarComponent implements OnInit {
       this.menuItems.push({
         label: 'Usuarios',
         icon: 'pi pi-id-card',
+        expanded: false,
         items: [
           {
             label: 'Todos',
@@ -130,6 +151,7 @@ export class SidebarComponent implements OnInit {
     this.menuItems.push({
       label: 'Estadísticas',
       icon: 'pi pi-chart-line',
+      expanded: false,
       items: [
         {
           label: 'Mis Estadísticas',
@@ -157,11 +179,12 @@ export class SidebarComponent implements OnInit {
       ],
     });
 
-    // Agregar Facturación (solo Admin y Directivo)
+    // Agregar Facturación
     if ([RoleEnum.ADMIN, RoleEnum.DIRECTIVO].includes(this.currentUser.rol)) {
       this.menuItems.push({
         label: 'Facturación',
         icon: 'pi pi-wallet',
+        expanded: false,
         items: [
           {
             label: 'Resumen',
@@ -177,10 +200,12 @@ export class SidebarComponent implements OnInit {
       });
     }
 
-    // Agregar Configuración (solo Admin)
+    // Agregar Configuración
     if (this.currentUser.rol === RoleEnum.ADMIN) {
       this.menuItems.push({
         separator: true,
+        label: '',
+        icon: '',
       });
       this.menuItems.push({
         label: 'Configuración',
@@ -188,6 +213,16 @@ export class SidebarComponent implements OnInit {
         routerLink: ['/configuracion'],
       });
     }
+  }
+
+  toggleMenu(item: MenuItemCustom): void {
+    if (item.items && item.items.length > 0) {
+      item.expanded = !item.expanded;
+    }
+  }
+
+  hasChildren(item: MenuItemCustom): boolean {
+    return !!item.items && item.items.length > 0;
   }
 
   canCreateClients(): boolean {

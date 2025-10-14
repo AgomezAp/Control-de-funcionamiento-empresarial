@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { EstadisticaService } from '../../../../core/services/estadistica.service';
 import { EstadisticaUsuario } from '../../../../core/models/estadistica.model';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-mis-estadisticas',
@@ -62,7 +63,8 @@ export class MisEstadisticasComponent implements OnInit {
 
   constructor(
     private estadisticaService: EstadisticaService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -186,5 +188,14 @@ export class MisEstadisticasComponent implements OnInit {
       default:
         return 'bg-gray-100 text-gray-900';
     }
+  }
+
+  // Método para verificar si el usuario puede ver costos
+  puedeVerCostos(): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return false;
+    
+    const rolesConAcceso = ['Admin', 'Directivo'];
+    return rolesConAcceso.includes(currentUser.rol);
   }
 }

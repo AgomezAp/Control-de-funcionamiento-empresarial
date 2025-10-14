@@ -85,4 +85,12 @@ export class FacturacionService {
       {}
     );
   }
+
+  // Generar facturación automática para peticiones resueltas
+  generarAutomatica(año: number, mes: number): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      API_ENDPOINTS.FACTURACION.GENERAR_AUTOMATICA,
+      { año, mes }
+    );
+  }
 }

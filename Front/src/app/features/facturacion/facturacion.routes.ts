@@ -28,6 +28,18 @@ export const FACTURACION_ROUTES: Routes = [
       )
   },
   {
+    path: 'detalle/:id',
+    canActivate: [roleGuard],
+    data: { 
+      breadcrumb: 'Detalle de Facturación',
+      roles: [RoleEnum.ADMIN, RoleEnum.DIRECTIVO]
+    },
+    loadComponent: () =>
+      import('./components/detalle-facturacion/detalle-facturacion.component').then(
+        (m) => m.DetalleFacturacionComponent
+      )
+  },
+  {
     path: '',
     redirectTo: 'resumen',
     pathMatch: 'full'

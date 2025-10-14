@@ -185,7 +185,7 @@ export class GlobalesEstadisticasComponent implements OnInit {
   }
 
   getAreaSeverity(area: EstadisticaPorArea): string {
-    const efectividad = this.calcularPorcentaje(area.peticiones_resueltas, area.peticiones_creadas);
+    const efectividad = parseFloat(area.efectividad?.toString() || '0');
     return this.getSeverity(efectividad);
   }
 }

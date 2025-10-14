@@ -37,6 +37,7 @@ export class AreaEstadisticasComponent implements OnInit {
   loading = false;
   estadisticas: EstadisticaUsuario[] = [];
   areaUsuario: string = '';
+  esAdmin: boolean = false;
 
   // Filtros
   anios: { label: string; value: number }[] = [];
@@ -85,9 +86,14 @@ export class AreaEstadisticasComponent implements OnInit {
 
   loadAreaUsuario(): void {
     this.authService.currentUser$.subscribe(user => {
-      if (user && user.area) {
-        this.areaUsuario = user.area;
-        this.loadEstadisticas();
+      if (user) {
+        // Verificar si es Admin
+        this.esAdmin = user.rol === 'Admin';
+        
+        if (user.area) {
+          this.areaUsuario = user.area;
+          this.loadEstadisticas();
+        }
       }
     });
   }
@@ -117,12 +123,15 @@ export class AreaEstadisticasComponent implements OnInit {
   }
 
   loadEstadisticas(): void {
-    if (!this.areaUsuario) return;
+    if (!this.areaUsuario && !this.esAdmin) return;
 
     this.loading = true;
 
+    // Si es Admin, pasar null para obtener todas las áreas
+    const area = this.esAdmin ? null : this.areaUsuario;
+
     this.estadisticaService
-      .getPorArea(this.areaUsuario, this.selectedAnio, this.selectedMes)
+      .getPorArea(area as any, this.selectedAnio, this.selectedMes)
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {

@@ -169,10 +169,32 @@ export class EstadisticaService {
   }
 
   async obtenerEstadisticasPorArea(
-    area_nombre: string,
+    area_nombre: string | null,
     año: number,
     mes: number
   ) {
+    // Si area_nombre es null (Admin), devolver todas las estadísticas
+    if (!area_nombre) {
+      return await EstadisticaUsuario.findAll({
+        where: { año, mes },
+        include: [
+          {
+            model: Usuario,
+            as: "usuario",
+            attributes: ["uid", "nombre_completo", "correo"],
+            include: [
+              {
+                model: Area,
+                as: "area",
+                attributes: ["nombre"],
+              },
+            ],
+          },
+        ],
+        order: [["peticiones_resueltas", "DESC"]],
+      });
+    }
+
     const area = await Area.findOne({ where: { nombre: area_nombre } });
 
     if (!area) {
@@ -204,7 +226,8 @@ export class EstadisticaService {
   }
 
   async obtenerEstadisticasGlobales(año: number, mes: number) {
-    const estadisticas = await EstadisticaUsuario.findAll({
+    // Verificar si existen estadísticas para este periodo
+    let estadisticas = await EstadisticaUsuario.findAll({
       where: { año, mes },
       include: [
         {
@@ -215,6 +238,25 @@ export class EstadisticaService {
         },
       ],
     });
+
+    // 🔥 Si NO existen estadísticas, calcularlas automáticamente
+    if (!estadisticas || estadisticas.length === 0) {
+      console.log(`⚠️ No hay estadísticas para ${año}-${mes}. Recalculando automáticamente...`);
+      await this.recalcularTodasEstadisticas(año, mes);
+      
+      // Volver a consultar después de calcular
+      estadisticas = await EstadisticaUsuario.findAll({
+        where: { año, mes },
+        include: [
+          {
+            model: Usuario,
+            as: "usuario",
+            attributes: ["uid", "nombre_completo"],
+            include: [{ model: Area, as: "area", attributes: ["nombre"] }],
+          },
+        ],
+      });
+    }
 
     const totales = {
       total_peticiones_creadas: 0,
@@ -255,19 +297,41 @@ export class EstadisticaService {
           area: areaNombre,
           peticiones_creadas: 0,
           peticiones_resueltas: 0,
+          peticiones_canceladas: 0,
           costo_total: 0,
+          efectividad: 0,
         };
       }
 
       porArea[areaNombre].peticiones_creadas += est.peticiones_creadas;
       porArea[areaNombre].peticiones_resueltas += est.peticiones_resueltas;
+      porArea[areaNombre].peticiones_canceladas += est.peticiones_canceladas;
       porArea[areaNombre].costo_total += Number(est.costo_total_generado);
+    });
+
+    // Calcular efectividad por área
+    Object.values(porArea).forEach((area: any) => {
+      const totalProcesadas = area.peticiones_resueltas + area.peticiones_canceladas;
+      if (totalProcesadas > 0) {
+        area.efectividad = ((area.peticiones_resueltas / totalProcesadas) * 100).toFixed(2);
+      } else {
+        area.efectividad = 0;
+      }
     });
 
     return {
       totales,
       por_area: Object.values(porArea),
-      por_usuario: estadisticas,
+      por_usuario: estadisticas.map((est) => ({
+        uid: (est as any).usuario.uid,
+        nombre_completo: (est as any).usuario.nombre_completo,
+        area: (est as any).usuario.area.nombre,
+        peticiones_creadas: est.peticiones_creadas,
+        peticiones_resueltas: est.peticiones_resueltas,
+        peticiones_canceladas: est.peticiones_canceladas,
+        tiempo_promedio_resolucion_horas: est.tiempo_promedio_resolucion_horas,
+        costo_total_generado: est.costo_total_generado,
+      })),
     };
   }
 

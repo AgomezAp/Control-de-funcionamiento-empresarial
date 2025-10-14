@@ -111,5 +111,17 @@ class FacturacionController {
             }
         });
     }
+    generarFacturacionAutomatica(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { año, mes } = req.body;
+                const resultado = yield facturacionService.generarFacturacionAutomatica(Number(año), Number(mes));
+                return response_util_1.ApiResponse.success(res, resultado, "Facturación automática generada exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al generar facturación automática", error.statusCode || 500);
+            }
+        });
+    }
 }
 exports.FacturacionController = FacturacionController;

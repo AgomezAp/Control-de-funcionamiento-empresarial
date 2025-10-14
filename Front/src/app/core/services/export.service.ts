@@ -12,7 +12,7 @@ export interface PeticionParaPDF {
   fecha_creacion: string;
   creador: string;
   asignado?: string;
-  fecha_limite?: string;
+  tiempo_empleado?: string;
 }
 
 @Injectable({
@@ -157,12 +157,12 @@ export class ExportService {
       yPos += 10;
     }
 
-    // Fecha límite (si existe)
-    if (peticion.fecha_limite) {
+    // Tiempo empleado (si existe)
+    if (peticion.tiempo_empleado) {
       doc.setFont('helvetica', 'bold');
-      doc.text('Fecha límite:', margin, yPos);
+      doc.text('Tiempo empleado:', margin, yPos);
       doc.setFont('helvetica', 'normal');
-      doc.text(peticion.fecha_limite, margin + 30, yPos);
+      doc.text(peticion.tiempo_empleado, margin + 35, yPos);
       yPos += 10;
     }
 
@@ -516,10 +516,10 @@ export class ExportService {
             <div class="info-value">${peticion.asignado}</div>
           </div>
           ` : ''}
-          ${peticion.fecha_limite ? `
+          ${peticion.tiempo_empleado ? `
           <div class="info-row">
-            <div class="info-label">Fecha límite:</div>
-            <div class="info-value">${peticion.fecha_limite}</div>
+            <div class="info-label">Tiempo empleado:</div>
+            <div class="info-value">${peticion.tiempo_empleado}</div>
           </div>
           ` : ''}
         </div>

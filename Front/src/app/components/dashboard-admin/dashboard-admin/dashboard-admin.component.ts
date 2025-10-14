@@ -56,18 +56,29 @@ export class DashboardAdminComponent implements OnInit {
   }
 
   loadDashboardData(): void {
-    // Cargar peticiones
-    this.peticionService.getAll().subscribe({
-      next: (response:any) => {
+    // Cargar resumen global (activas + históricas)
+    this.peticionService.getResumenGlobal().subscribe({
+      next: (response: any) => {
         if (response.success && response.data) {
-          const peticiones = response.data;
-          this.totalPeticiones = peticiones.length;
-          this.peticionesPendientes = peticiones.filter((p:any) => p.estado === 'Pendiente').length;
-          this.peticionesEnProgreso = peticiones.filter((p:any) => p.estado === 'En Progreso').length;
-          this.peticionesResueltas = peticiones.filter((p:any) => p.estado === 'Resuelta').length;
+          const resumen = response.data;
+          
+          // Usar el resumen que incluye AMBAS tablas
+          this.totalPeticiones = resumen.total_peticiones;
+          this.peticionesPendientes = resumen.por_estado.pendientes;
+          this.peticionesEnProgreso = resumen.por_estado.en_progreso;
+          this.peticionesResueltas = resumen.por_estado.resueltas;
 
-          this.setupChartPeticionesPorEstado(peticiones);
-          this.detectPeticionesVencidas(peticiones);
+          // Setup chart con los datos correctos
+          this.setupChartPeticionesPorEstadoFromResumen(resumen.por_estado);
+        }
+      }
+    });
+
+    // Cargar peticiones activas para detectar vencidas
+    this.peticionService.getAll().subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          this.detectPeticionesVencidas(response.data);
         }
       }
     });
@@ -136,6 +147,33 @@ export class DashboardAdminComponent implements OnInit {
           'rgb(33, 150, 243)',
           'rgb(76, 175, 80)',
           'rgb(139, 195, 74)',
+          'rgb(244, 67, 54)'
+        ],
+        borderWidth: 1
+      }]
+    };
+  }
+
+  setupChartPeticionesPorEstadoFromResumen(porEstado: any): void {
+    this.chartPeticionesPorEstado = {
+      labels: ['Pendiente', 'En Progreso', 'Resuelta', 'Cancelada'],
+      datasets: [{
+        data: [
+          porEstado.pendientes,
+          porEstado.en_progreso,
+          porEstado.resueltas,
+          porEstado.canceladas
+        ],
+        backgroundColor: [
+          'rgba(33, 150, 243, 0.8)',
+          'rgba(255, 193, 7, 0.8)',
+          'rgba(76, 175, 80, 0.8)',
+          'rgba(244, 67, 54, 0.8)'
+        ],
+        borderColor: [
+          'rgb(33, 150, 243)',
+          'rgb(255, 193, 7)',
+          'rgb(76, 175, 80)',
           'rgb(244, 67, 54)'
         ],
         borderWidth: 1

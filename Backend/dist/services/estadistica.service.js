@@ -161,6 +161,27 @@ class EstadisticaService {
     }
     obtenerEstadisticasPorArea(area_nombre, año, mes) {
         return __awaiter(this, void 0, void 0, function* () {
+            // Si area_nombre es null (Admin), devolver todas las estadísticas
+            if (!area_nombre) {
+                return yield EstadisticasUsuario_1.default.findAll({
+                    where: { año, mes },
+                    include: [
+                        {
+                            model: Usuario_1.default,
+                            as: "usuario",
+                            attributes: ["uid", "nombre_completo", "correo"],
+                            include: [
+                                {
+                                    model: Area_1.default,
+                                    as: "area",
+                                    attributes: ["nombre"],
+                                },
+                            ],
+                        },
+                    ],
+                    order: [["peticiones_resueltas", "DESC"]],
+                });
+            }
             const area = yield Area_1.default.findOne({ where: { nombre: area_nombre } });
             if (!area) {
                 return [];
@@ -189,7 +210,8 @@ class EstadisticaService {
     }
     obtenerEstadisticasGlobales(año, mes) {
         return __awaiter(this, void 0, void 0, function* () {
-            const estadisticas = yield EstadisticasUsuario_1.default.findAll({
+            // Verificar si existen estadísticas para este periodo
+            let estadisticas = yield EstadisticasUsuario_1.default.findAll({
                 where: { año, mes },
                 include: [
                     {
@@ -200,6 +222,23 @@ class EstadisticaService {
                     },
                 ],
             });
+            // 🔥 Si NO existen estadísticas, calcularlas automáticamente
+            if (!estadisticas || estadisticas.length === 0) {
+                console.log(`⚠️ No hay estadísticas para ${año}-${mes}. Recalculando automáticamente...`);
+                yield this.recalcularTodasEstadisticas(año, mes);
+                // Volver a consultar después de calcular
+                estadisticas = yield EstadisticasUsuario_1.default.findAll({
+                    where: { año, mes },
+                    include: [
+                        {
+                            model: Usuario_1.default,
+                            as: "usuario",
+                            attributes: ["uid", "nombre_completo"],
+                            include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
+                        },
+                    ],
+                });
+            }
             const totales = {
                 total_peticiones_creadas: 0,
                 total_peticiones_resueltas: 0,
@@ -232,17 +271,39 @@ class EstadisticaService {
                         area: areaNombre,
                         peticiones_creadas: 0,
                         peticiones_resueltas: 0,
+                        peticiones_canceladas: 0,
                         costo_total: 0,
+                        efectividad: 0,
                     };
                 }
                 porArea[areaNombre].peticiones_creadas += est.peticiones_creadas;
                 porArea[areaNombre].peticiones_resueltas += est.peticiones_resueltas;
+                porArea[areaNombre].peticiones_canceladas += est.peticiones_canceladas;
                 porArea[areaNombre].costo_total += Number(est.costo_total_generado);
+            });
+            // Calcular efectividad por área
+            Object.values(porArea).forEach((area) => {
+                const totalProcesadas = area.peticiones_resueltas + area.peticiones_canceladas;
+                if (totalProcesadas > 0) {
+                    area.efectividad = ((area.peticiones_resueltas / totalProcesadas) * 100).toFixed(2);
+                }
+                else {
+                    area.efectividad = 0;
+                }
             });
             return {
                 totales,
                 por_area: Object.values(porArea),
-                por_usuario: estadisticas,
+                por_usuario: estadisticas.map((est) => ({
+                    uid: est.usuario.uid,
+                    nombre_completo: est.usuario.nombre_completo,
+                    area: est.usuario.area.nombre,
+                    peticiones_creadas: est.peticiones_creadas,
+                    peticiones_resueltas: est.peticiones_resueltas,
+                    peticiones_canceladas: est.peticiones_canceladas,
+                    tiempo_promedio_resolucion_horas: est.tiempo_promedio_resolucion_horas,
+                    costo_total_generado: est.costo_total_generado,
+                })),
             };
         });
     }

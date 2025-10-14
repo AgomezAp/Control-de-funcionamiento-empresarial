@@ -11,45 +11,47 @@ const estadisticaService = new EstadisticaService();
 const facturacionService = new FacturacionService();
 
 // ==========================================
-// CRON: Revisar peticiones vencidas
+// CRON: Revisar peticiones con mucho tiempo empleado
 // Se ejecuta cada 30 minutos
 // ==========================================
-export const verificarPeticionesVencidas = cron.schedule("*/30 * * * *", async () => {
+export const verificarPeticionesConMuchoTiempo = cron.schedule("*/30 * * * *", async () => {
   try {
-    console.log("🔄 Verificando peticiones vencidas...");
+    console.log("🔄 Verificando peticiones con mucho tiempo empleado...");
 
-    const ahora = new Date();
-
-    // Buscar peticiones en progreso que ya pasaron su fecha límite
-    const peticionesVencidas = await Peticion.findAll({
+    // Buscar peticiones en progreso con temporizador activo
+    const peticionesEnProgreso = await Peticion.findAll({
       where: {
         estado: "En Progreso",
-        fecha_limite: {
-          [Op.lt]: ahora,
-        },
+        temporizador_activo: true,
       },
     });
 
-    if (peticionesVencidas.length > 0) {
-      console.log(`⚠️  ${peticionesVencidas.length} peticiones vencidas encontradas`);
+    if (peticionesEnProgreso.length > 0) {
+      console.log(`⏱️  ${peticionesEnProgreso.length} peticiones en progreso con temporizador activo`);
 
-      // Aquí puedes decidir qué hacer:
-      // 1. Notificar a los responsables
-      // 2. Cambiar estado automáticamente
-      // 3. Registrar en auditoría
+      for (const peticion of peticionesEnProgreso) {
+        // Calcular tiempo total empleado
+        const ahora = new Date();
+        const tiempoTranscurrido = Math.floor(
+          (ahora.getTime() - peticion.fecha_inicio_temporizador!.getTime()) / 1000
+        );
+        const tiempoTotal = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+        const horasEmpleadas = Math.floor(tiempoTotal / 3600);
 
-      for (const peticion of peticionesVencidas) {
-        console.log(`❌ Petición ${peticion.id} vencida - Límite: ${peticion.fecha_limite}`);
-        
-        // Emitir evento WebSocket de petición vencida
-        const peticionCompleta = await peticionService.obtenerPorId(peticion.id);
-        webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
+        // Notificar si lleva más de 8 horas
+        if (horasEmpleadas >= 8) {
+          console.log(`⚠️  Petición ${peticion.id} - Tiempo empleado: ${horasEmpleadas} horas`);
+          
+          // Emitir evento WebSocket de alerta
+          const peticionCompleta = await peticionService.obtenerPorId(peticion.id);
+          webSocketService.emitPeticionVencida(peticion.id, peticionCompleta);
+        }
       }
     } else {
-      console.log("✅ No hay peticiones vencidas");
+      console.log("✅ No hay peticiones con temporizador activo");
     }
   } catch (error) {
-    console.error("❌ Error verificando peticiones vencidas:", error);
+    console.error("❌ Error verificando peticiones:", error);
   }
 });
 
@@ -131,7 +133,7 @@ export const generarPeriodosFacturacion = cron.schedule("0 3 1 * *", async () =>
 export const iniciarCronJobs = () => {
   console.log("🚀 Iniciando cron jobs...");
 
-  verificarPeticionesVencidas.start();
+  verificarPeticionesConMuchoTiempo.start();
   moverPeticionesResueltasAHistorico.start();
   calcularEstadisticasMensuales.start();
   generarPeriodosFacturacion.start();
@@ -141,7 +143,7 @@ export const iniciarCronJobs = () => {
 
 // Detener todos los cron jobs
 export const detenerCronJobs = () => {
-  verificarPeticionesVencidas.stop();
+  verificarPeticionesConMuchoTiempo.stop();
   moverPeticionesResueltasAHistorico.stop();
   calcularEstadisticasMensuales.stop();
   generarPeriodosFacturacion.stop();

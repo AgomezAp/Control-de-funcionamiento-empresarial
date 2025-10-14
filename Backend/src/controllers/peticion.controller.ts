@@ -97,11 +97,9 @@ export class PeticionController {
   async aceptarPeticion(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { tiempo_limite_horas } = req.body;
 
       const peticion = await peticionService.aceptarPeticion(
         Number(id),
-        tiempo_limite_horas,
         req.usuario
       );
 
@@ -205,6 +203,80 @@ export class PeticionController {
       return ApiResponse.error(
         res,
         error.message || "Error al obtener histórico",
+        error.statusCode || 500
+      );
+    }
+  }
+
+  async obtenerResumenGlobal(req: Request, res: Response) {
+    try {
+      const resumen = await peticionService.obtenerResumenGlobal();
+
+      return ApiResponse.success(
+        res,
+        resumen,
+        "Resumen global de peticiones obtenido exitosamente"
+      );
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al obtener resumen global",
+        error.statusCode || 500
+      );
+    }
+  }
+
+  // ====== CONTROL DE TEMPORIZADOR ======
+
+  async pausarTemporizador(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const peticion = await peticionService.pausarTemporizador(
+        Number(id),
+        req.usuario
+      );
+
+      return ApiResponse.success(res, peticion, "Temporizador pausado exitosamente");
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al pausar temporizador",
+        error.statusCode || 500
+      );
+    }
+  }
+
+  async reanudarTemporizador(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const peticion = await peticionService.reanudarTemporizador(
+        Number(id),
+        req.usuario
+      );
+
+      return ApiResponse.success(res, peticion, "Temporizador reanudado exitosamente");
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al reanudar temporizador",
+        error.statusCode || 500
+      );
+    }
+  }
+
+  async obtenerTiempoEmpleado(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const tiempoEmpleado = await peticionService.obtenerTiempoEmpleado(Number(id));
+
+      return ApiResponse.success(res, tiempoEmpleado, "Tiempo empleado obtenido exitosamente");
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al obtener tiempo empleado",
         error.statusCode || 500
       );
     }

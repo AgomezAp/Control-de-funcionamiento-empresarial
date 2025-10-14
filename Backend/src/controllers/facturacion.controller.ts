@@ -174,4 +174,27 @@ export class FacturacionController {
       );
     }
   }
+
+  async generarFacturacionAutomatica(req: Request, res: Response) {
+    try {
+      const { año, mes } = req.body;
+
+      const resultado = await facturacionService.generarFacturacionAutomatica(
+        Number(año),
+        Number(mes)
+      );
+
+      return ApiResponse.success(
+        res,
+        resultado,
+        "Facturación automática generada exitosamente"
+      );
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al generar facturación automática",
+        error.statusCode || 500
+      );
+    }
+  }
 }

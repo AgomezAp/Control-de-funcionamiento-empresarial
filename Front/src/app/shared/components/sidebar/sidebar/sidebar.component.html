@@ -2,7 +2,59 @@
   <!-- Contenido del Menú -->
   <div class="sidebar-content">
     <nav class="sidebar-nav">
-      <p-panelMenu [model]="menuItems" [multiple]="false"></p-panelMenu>
+      <ul class="menu-list">
+        <ng-container *ngFor="let item of menuItems">
+          <!-- Separador -->
+          <li *ngIf="item.separator" class="menu-separator"></li>
+
+          <!-- Item sin subitems -->
+          <li *ngIf="!item.separator && !hasChildren(item)" class="menu-item">
+            <a
+              [routerLink]="item.routerLink"
+              routerLinkActive="active"
+              class="menu-link"
+            >
+              <i [class]="item.icon" class="menu-icon"></i>
+              <span class="menu-label">{{ item.label }}</span>
+            </a>
+          </li>
+
+          <!-- Item con subitems -->
+          <li
+            *ngIf="!item.separator && hasChildren(item)"
+            class="menu-item has-children"
+            [class.expanded]="item.expanded"
+          >
+            <button class="menu-link" (click)="toggleMenu(item)" type="button">
+              <i [class]="item.icon" class="menu-icon"></i>
+              <span class="menu-label">{{ item.label }}</span>
+              <i
+                class="pi pi-chevron-down menu-arrow"
+                [class.rotated]="item.expanded"
+              ></i>
+            </button>
+
+            <!-- Submenú -->
+            <ul
+              class="submenu"
+              *ngIf="item.expanded && item.items"
+              [@slideDown]
+            >
+              <li *ngFor="let subItem of item.items" class="submenu-item">
+                <a
+                  [routerLink]="subItem.routerLink"
+                  routerLinkActive="active"
+                  class="submenu-link"
+                >
+                  <span class="submenu-dot"></span>
+                  <i [class]="subItem.icon" class="submenu-icon"></i>
+                  <span class="submenu-label">{{ subItem.label }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
     </nav>
   </div>
 

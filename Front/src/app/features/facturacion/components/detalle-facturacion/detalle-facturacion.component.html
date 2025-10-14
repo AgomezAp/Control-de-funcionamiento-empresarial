@@ -1,0 +1,247 @@
+<div class="detalle-facturacion-container">
+  <p-toast></p-toast>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <button
+        pButton
+        icon="pi pi-arrow-left"
+        label="Volver"
+        class="p-button-text"
+        (click)="volver()"
+      ></button>
+      <div class="header-title">
+        <i class="pi pi-file-pdf"></i>
+        <h2>Detalle de Facturación</h2>
+      </div>
+      <button
+        pButton
+        icon="pi pi-file-pdf"
+        label="Exportar PDF"
+        (click)="exportarPDF()"
+        [disabled]="!detalle"
+        class="p-button-success"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="loading" class="loading-section">
+    <p-skeleton width="100%" height="150px" borderRadius="16px"></p-skeleton>
+    <p-skeleton width="100%" height="300px" borderRadius="16px" styleClass="mt-3"></p-skeleton>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div *ngIf="!loading && periodo && detalle" class="content-section">
+    
+    <!-- Info del Cliente -->
+    <p-card class="info-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-building"></i>
+          <h3>Información del Cliente</h3>
+        </div>
+      </ng-template>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Cliente:</span>
+          <span class="info-value">{{ periodo.cliente?.nombre || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Tipo:</span>
+          <span class="info-value">{{ periodo.cliente?.tipo_cliente || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Periodo:</span>
+          <span class="info-value">{{ getPeriodoLabel() }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Estado:</span>
+          <p-tag
+            [value]="periodo.estado"
+            [severity]="getEstadoSeverity(periodo.estado)"
+          ></p-tag>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Fecha Generación:</span>
+          <span class="info-value">{{ periodo.fecha_generacion | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Total Peticiones:</span>
+          <span class="info-value total">{{ detalle.totales.total_peticiones }}</span>
+        </div>
+        <div class="info-item full-width">
+          <span class="info-label">Costo Total:</span>
+          <span class="info-value costo-total">${{ detalle.totales.costo_total | number: '1.2-2' }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Resumen por Categoría -->
+    <p-card class="mt-4">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-chart-bar"></i>
+          <h3>Resumen por Categoría</h3>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="detalle.resumen_categorias"
+        [paginator]="false"
+        responsiveLayout="scroll"
+        styleClass="custom-table"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="categoria">
+              Categoría
+              <p-sortIcon field="categoria"></p-sortIcon>
+            </th>
+            <th pSortableColumn="area_tipo">
+              Área
+              <p-sortIcon field="area_tipo"></p-sortIcon>
+            </th>
+            <th class="text-center" pSortableColumn="cantidad">
+              Cantidad
+              <p-sortIcon field="cantidad"></p-sortIcon>
+            </th>
+            <th class="text-right" pSortableColumn="costo_total">
+              Costo Total
+              <p-sortIcon field="costo_total"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-categoria>
+          <tr>
+            <td>{{ categoria.categoria }}</td>
+            <td>
+              <p-tag [value]="categoria.area_tipo" severity="info"></p-tag>
+            </td>
+            <td class="text-center">
+              <span class="badge-cantidad">{{ categoria.cantidad }}</span>
+            </td>
+            <td class="text-right costo-cell">
+              ${{ categoria.costo_total | number: '1.2-2' }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <tr class="total-row">
+            <td colspan="2"><strong>TOTAL</strong></td>
+            <td class="text-center"><strong>{{ detalle.totales.total_peticiones }}</strong></td>
+            <td class="text-right"><strong>${{ detalle.totales.costo_total | number: '1.2-2' }}</strong></td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" class="text-center">
+              <div class="empty-message">
+                <i class="pi pi-inbox"></i>
+                <p>No hay categorías en este periodo</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <!-- Detalle de Peticiones -->
+    <p-card class="mt-4">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-list"></i>
+          <h3>Detalle de Peticiones</h3>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="detalle.detalle_peticiones"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        responsiveLayout="scroll"
+        styleClass="custom-table"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} peticiones"
+        [showCurrentPageReport]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">
+              ID
+              <p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th pSortableColumn="categoria">
+              Categoría
+              <p-sortIcon field="categoria"></p-sortIcon>
+            </th>
+            <th pSortableColumn="usuario">
+              Usuario
+              <p-sortIcon field="usuario"></p-sortIcon>
+            </th>
+            <th pSortableColumn="fecha_resolucion">
+              Fecha Resolución
+              <p-sortIcon field="fecha_resolucion"></p-sortIcon>
+            </th>
+            <th class="text-right" pSortableColumn="costo">
+              Costo
+              <p-sortIcon field="costo"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-peticion>
+          <tr>
+            <td>
+              <span class="id-badge">#{{ peticion.id }}</span>
+            </td>
+            <td>{{ peticion.categoria?.nombre || 'N/A' }}</td>
+            <td>
+              <div class="user-cell">
+                <i class="pi pi-user"></i>
+                <span>{{ peticion.usuario_resolvio?.nombre_completo || 'N/A' }}</span>
+              </div>
+            </td>
+            <td>{{ peticion.fecha_resolucion | date: 'dd/MM/yyyy' }}</td>
+            <td class="text-right costo-cell">
+              ${{ peticion.costo | number: '1.2-2' }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center">
+              <div class="empty-message">
+                <i class="pi pi-inbox"></i>
+                <p>No hay peticiones en este periodo</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+  </div>
+
+  <!-- Mensaje sin datos -->
+  <div *ngIf="!loading && !periodo" class="no-data-section">
+    <div class="no-data-card">
+      <i class="pi pi-exclamation-triangle"></i>
+      <h3>Periodo no encontrado</h3>
+      <p>No se pudo cargar la información del periodo de facturación</p>
+      <button
+        pButton
+        label="Volver"
+        icon="pi pi-arrow-left"
+        (click)="volver()"
+      ></button>
+    </div>
+  </div>
+
+</div>

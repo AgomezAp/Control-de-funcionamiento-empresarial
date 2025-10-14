@@ -217,7 +217,7 @@ class PeticionService {
             });
         });
     }
-    aceptarPeticion(id, tiempo_limite_horas, usuarioActual) {
+    aceptarPeticion(id, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
             const peticion = yield Peticion_1.default.findByPk(id);
             if (!peticion) {
@@ -232,16 +232,15 @@ class PeticionService {
             if ((categoria === null || categoria === void 0 ? void 0 : categoria.area_tipo) !== (usuarioArea === null || usuarioArea === void 0 ? void 0 : usuarioArea.nombre)) {
                 throw new error_util_1.ForbiddenError(`Solo usuarios del área de ${categoria === null || categoria === void 0 ? void 0 : categoria.area_tipo} pueden aceptar esta petición`);
             }
-            // Calcular fecha límite
+            // Iniciar temporizador automáticamente
             const fecha_aceptacion = new Date();
-            const fecha_limite = new Date(fecha_aceptacion);
-            fecha_limite.setHours(fecha_limite.getHours() + tiempo_limite_horas);
             yield peticion.update({
                 estado: "En Progreso",
                 asignado_a: usuarioActual.uid,
                 fecha_aceptacion,
-                fecha_limite,
-                tiempo_limite_horas,
+                temporizador_activo: true,
+                fecha_inicio_temporizador: fecha_aceptacion,
+                tiempo_empleado_segundos: 0,
             });
             // Registrar en auditoría
             yield this.auditoriaService.registrarCambio({
@@ -252,7 +251,7 @@ class PeticionService {
                 valor_anterior: "null",
                 valor_nuevo: usuarioActual.uid.toString(),
                 usuario_id: usuarioActual.uid,
-                descripcion: `Petición aceptada con ${tiempo_limite_horas} horas de límite`,
+                descripcion: `Petición aceptada - Temporizador iniciado`,
             });
             // Obtener petición actualizada con relaciones
             const peticionActualizada = yield this.obtenerPorId(id);
@@ -261,7 +260,9 @@ class PeticionService {
                 uid: usuarioActual.uid,
                 nombre_completo: usuarioActual.nombre_completo,
                 email: usuarioActual.email,
-            }, fecha_aceptacion, fecha_limite, tiempo_limite_horas);
+            }, fecha_aceptacion, null, // ya no hay fecha_limite
+            0 // ya no hay tiempo_limite_horas
+            );
             return peticionActualizada;
         });
     }
@@ -405,9 +406,8 @@ class PeticionService {
                 asignado_a: peticion.asignado_a,
                 fecha_creacion: peticion.fecha_creacion,
                 fecha_aceptacion: peticion.fecha_aceptacion,
-                fecha_limite: peticion.fecha_limite,
                 fecha_resolucion: peticion.fecha_resolucion,
-                tiempo_limite_horas: peticion.tiempo_limite_horas,
+                tiempo_empleado_segundos: peticion.tiempo_empleado_segundos,
             });
             // Eliminar de la tabla de peticiones activas
             yield peticion.destroy();
@@ -450,6 +450,134 @@ class PeticionService {
                 order: [["fecha_resolucion", "DESC"]],
             });
         });
+    }
+    /**
+     * Obtener resumen global de peticiones (activas + históricas)
+     * Útil para dashboards de administradores
+     */
+    obtenerResumenGlobal() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Contar peticiones activas
+            const peticionesActivas = yield Peticion_1.default.findAll();
+            // Contar peticiones históricas
+            const peticionesHistoricas = yield PeticionHistorico_1.default.findAll();
+            // Totales
+            const totalPeticiones = peticionesActivas.length + peticionesHistoricas.length;
+            // Por estado
+            const pendientes = peticionesActivas.filter((p) => p.estado === "Pendiente").length;
+            const enProgreso = peticionesActivas.filter((p) => p.estado === "En Progreso").length;
+            const resueltas = peticionesHistoricas.filter((p) => p.estado === "Resuelta").length;
+            const canceladas = peticionesHistoricas.filter((p) => p.estado === "Cancelada").length;
+            // Costo total
+            const costoActivas = peticionesActivas.reduce((sum, p) => sum + Number(p.costo), 0);
+            const costoHistoricas = peticionesHistoricas.reduce((sum, p) => sum + Number(p.costo), 0);
+            const costoTotal = costoActivas + costoHistoricas;
+            return {
+                total_peticiones: totalPeticiones,
+                por_estado: {
+                    pendientes,
+                    en_progreso: enProgreso,
+                    resueltas,
+                    canceladas,
+                },
+                costo_total: costoTotal,
+                activas: peticionesActivas.length,
+                historicas: peticionesHistoricas.length,
+            };
+        });
+    }
+    // ====== MÉTODOS DE CONTROL DE TEMPORIZADOR ======
+    pausarTemporizador(id, usuarioActual) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const peticion = yield Peticion_1.default.findByPk(id);
+            if (!peticion)
+                throw new error_util_1.NotFoundError("Petición no encontrada");
+            if (peticion.asignado_a !== usuarioActual.uid) {
+                throw new error_util_1.ForbiddenError("Solo puedes pausar peticiones asignadas a ti");
+            }
+            if (!peticion.temporizador_activo) {
+                throw new error_util_1.ValidationError("El temporizador no está activo");
+            }
+            const ahora = new Date();
+            const tiempoTranscurridoSegundos = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
+            const nuevoTiempoTotal = peticion.tiempo_empleado_segundos + tiempoTranscurridoSegundos;
+            yield peticion.update({
+                temporizador_activo: false,
+                tiempo_empleado_segundos: nuevoTiempoTotal,
+                fecha_pausa_temporizador: ahora,
+            });
+            yield this.auditoriaService.registrarCambio({
+                tabla_afectada: "peticiones",
+                registro_id: id,
+                tipo_cambio: "UPDATE",
+                campo_modificado: "temporizador_activo",
+                valor_anterior: "true",
+                valor_nuevo: "false",
+                usuario_id: usuarioActual.uid,
+                descripcion: `Temporizador pausado`,
+            });
+            const peticionActualizada = yield this.obtenerPorId(id);
+            webSocket_service_1.webSocketService.emitCambioEstado(id, peticion.estado, usuarioActual.uid);
+            return peticionActualizada;
+        });
+    }
+    reanudarTemporizador(id, usuarioActual) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const peticion = yield Peticion_1.default.findByPk(id);
+            if (!peticion)
+                throw new error_util_1.NotFoundError("Petición no encontrada");
+            if (peticion.asignado_a !== usuarioActual.uid) {
+                throw new error_util_1.ForbiddenError("Solo puedes reanudar peticiones asignadas a ti");
+            }
+            if (peticion.temporizador_activo) {
+                throw new error_util_1.ValidationError("El temporizador ya está activo");
+            }
+            if (peticion.estado !== "En Progreso") {
+                throw new error_util_1.ValidationError("Solo se pueden reanudar peticiones en progreso");
+            }
+            const ahora = new Date();
+            yield peticion.update({
+                temporizador_activo: true,
+                fecha_inicio_temporizador: ahora,
+            });
+            yield this.auditoriaService.registrarCambio({
+                tabla_afectada: "peticiones",
+                registro_id: id,
+                tipo_cambio: "UPDATE",
+                campo_modificado: "temporizador_activo",
+                valor_anterior: "false",
+                valor_nuevo: "true",
+                usuario_id: usuarioActual.uid,
+                descripcion: `Temporizador reanudado`,
+            });
+            const peticionActualizada = yield this.obtenerPorId(id);
+            webSocket_service_1.webSocketService.emitCambioEstado(id, peticion.estado, usuarioActual.uid);
+            return peticionActualizada;
+        });
+    }
+    obtenerTiempoEmpleado(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const peticion = yield Peticion_1.default.findByPk(id);
+            if (!peticion)
+                throw new error_util_1.NotFoundError("Petición no encontrada");
+            let tiempoTotal = peticion.tiempo_empleado_segundos;
+            if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+                const ahora = new Date();
+                const tiempoTranscurrido = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
+                tiempoTotal += tiempoTranscurrido;
+            }
+            return {
+                tiempo_empleado_segundos: tiempoTotal,
+                tiempo_empleado_formato: this.formatearTiempo(tiempoTotal),
+                temporizador_activo: peticion.temporizador_activo,
+            };
+        });
+    }
+    formatearTiempo(segundos) {
+        const horas = Math.floor(segundos / 3600);
+        const minutos = Math.floor((segundos % 3600) / 60);
+        const segs = segundos % 60;
+        return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
     }
 }
 exports.PeticionService = PeticionService;

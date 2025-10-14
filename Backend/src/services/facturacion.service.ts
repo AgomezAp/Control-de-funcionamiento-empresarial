@@ -265,4 +265,119 @@ export class FacturacionService {
 
     return resultados;
   }
+
+  /**
+   * Genera facturación automática para TODAS las peticiones resueltas del periodo
+   * que no tengan un periodo de facturación asociado
+   */
+  async generarFacturacionAutomatica(año: number, mes: number) {
+    const fechaInicio = new Date(año, mes - 1, 1);
+    const fechaFin = new Date(año, mes, 0, 23, 59, 59);
+
+    // 1. Buscar TODAS las peticiones resueltas del periodo en el histórico
+    const peticionesResueltas = await PeticionHistorico.findAll({
+      where: {
+        estado: "Resuelta",
+        fecha_resolucion: {
+          [Op.between]: [fechaInicio, fechaFin],
+        },
+      },
+      include: [
+        {
+          model: Cliente,
+          as: "cliente",
+          attributes: ["id", "nombre", "pais"],
+        },
+        {
+          model: Categoria,
+          as: "categoria",
+          attributes: ["nombre", "area_tipo"],
+        },
+      ],
+    });
+
+    if (peticionesResueltas.length === 0) {
+      return {
+        mensaje: "No hay peticiones resueltas para este periodo",
+        periodos_generados: 0,
+        total_peticiones: 0,
+        costo_total: 0,
+      };
+    }
+
+    // 2. Agrupar por cliente_id
+    const peticionesPorCliente: any = {};
+
+    peticionesResueltas.forEach((peticion) => {
+      const clienteId = peticion.cliente_id;
+
+      if (!peticionesPorCliente[clienteId]) {
+        peticionesPorCliente[clienteId] = {
+          cliente: (peticion as any).cliente,
+          peticiones: [],
+          costo_total: 0,
+        };
+      }
+
+      peticionesPorCliente[clienteId].peticiones.push(peticion);
+      peticionesPorCliente[clienteId].costo_total += Number(peticion.costo);
+    });
+
+    // 3. Crear/actualizar periodo de facturación para cada cliente
+    const periodosGenerados = [];
+    let totalPeticiones = 0;
+    let costoTotal = 0;
+
+    for (const clienteId in peticionesPorCliente) {
+      const data = peticionesPorCliente[clienteId];
+
+      // Buscar si ya existe un periodo
+      const [periodo, created] = await PeriodoFacturacion.findOrCreate({
+        where: {
+          cliente_id: Number(clienteId),
+          año,
+          mes,
+        },
+        defaults: {
+          cliente_id: Number(clienteId),
+          año,
+          mes,
+          total_peticiones: data.peticiones.length,
+          costo_total: data.costo_total,
+          estado: "Abierto",
+        },
+      });
+
+      if (!created) {
+        // Si ya existía, actualizar con los nuevos totales
+        await periodo.update({
+          total_peticiones: data.peticiones.length,
+          costo_total: data.costo_total,
+        });
+      }
+
+      periodosGenerados.push({
+        periodo_id: periodo.id,
+        cliente: data.cliente.nombre,
+        peticiones: data.peticiones.length,
+        costo: data.costo_total,
+        estado: created ? "Creado" : "Actualizado",
+      });
+
+      totalPeticiones += data.peticiones.length;
+      costoTotal += data.costo_total;
+    }
+
+    console.log(
+      `✅ Facturación automática generada: ${periodosGenerados.length} clientes, ${totalPeticiones} peticiones, $${costoTotal}`
+    );
+
+    return {
+      mensaje: "Facturación automática generada exitosamente",
+      periodos_generados: periodosGenerados.length,
+      total_peticiones: totalPeticiones,
+      costo_total: costoTotal,
+      detalle: periodosGenerados,
+    };
+  }
 }

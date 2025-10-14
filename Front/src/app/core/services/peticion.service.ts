@@ -104,11 +104,11 @@ export class PeticionService {
     );
   }
 
-  // Aceptar petición
-  accept(id: number, data: PeticionAceptar): Observable<ApiResponse<Peticion>> {
+  // Aceptar petición (ya no necesita tiempo_limite_horas)
+  accept(id: number): Observable<ApiResponse<Peticion>> {
     return this.http.post<ApiResponse<Peticion>>(
       API_ENDPOINTS.PETICIONES.ACEPTAR(id),
-      data
+      {}
     );
   }
 
@@ -120,6 +120,31 @@ export class PeticionService {
     );
   }
 
+  // ====== CONTROL DE TEMPORIZADOR ======
+
+  // Pausar temporizador
+  pausarTemporizador(id: number): Observable<ApiResponse<Peticion>> {
+    return this.http.post<ApiResponse<Peticion>>(
+      API_ENDPOINTS.PETICIONES.PAUSAR_TEMPORIZADOR(id),
+      {}
+    );
+  }
+
+  // Reanudar temporizador
+  reanudarTemporizador(id: number): Observable<ApiResponse<Peticion>> {
+    return this.http.post<ApiResponse<Peticion>>(
+      API_ENDPOINTS.PETICIONES.REANUDAR_TEMPORIZADOR(id),
+      {}
+    );
+  }
+
+  // Obtener tiempo empleado
+  obtenerTiempoEmpleado(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
+      API_ENDPOINTS.PETICIONES.TIEMPO_EMPLEADO(id)
+    );
+  }
+
   // Marcar como resuelta
   markAsResolved(id: number): Observable<ApiResponse<Peticion>> {
     return this.changeStatus(id, { estado: 'Resuelta' as any });
@@ -128,5 +153,12 @@ export class PeticionService {
   // Marcar como cancelada
   markAsCancelled(id: number): Observable<ApiResponse<Peticion>> {
     return this.changeStatus(id, { estado: 'Cancelada' as any });
+  }
+
+  // Obtener resumen global (activas + históricas)
+  getResumenGlobal(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
+      API_ENDPOINTS.PETICIONES.RESUMEN_GLOBAL
+    );
   }
 }

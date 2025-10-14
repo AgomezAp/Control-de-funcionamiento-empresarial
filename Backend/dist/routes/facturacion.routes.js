@@ -13,6 +13,8 @@ router.use((0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo"));
 router.post("/generar", facturacionController.generarPeriodoFacturacion);
 // Generar periodos para todos los clientes
 router.post("/generar-todos", (0, roleAuth_middleware_1.roleAuth)("Admin"), facturacionController.generarPeriodosParaTodosLosClientes);
+// Generar facturación automática para peticiones resueltas
+router.post("/generar-automatica", facturacionController.generarFacturacionAutomatica);
 // Obtener resumen de facturación mensual
 router.get("/resumen", facturacionController.obtenerResumenFacturacionMensual);
 // Obtener detalle de un periodo específico

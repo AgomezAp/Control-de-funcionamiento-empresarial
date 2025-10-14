@@ -50,7 +50,7 @@ export class DashboardDirectivoComponent implements OnInit {
   loadDashboardData(): void {
     const fecha = new Date();
 
-    // Cargar estadísticas del área
+    // Cargar estadísticas del área (esto YA incluye peticiones resueltas correctamente)
     this.estadisticaService
       .getPorArea(this.areaUsuario, fecha.getFullYear(), fecha.getMonth() + 1)
       .subscribe({
@@ -70,17 +70,22 @@ export class DashboardDirectivoComponent implements OnInit {
               0
             );
 
+            // Calcular total de peticiones creadas (suma de todos los usuarios)
+            this.totalPeticionesArea = response.data.reduce(
+              (sum, stat) => sum + stat.peticiones_creadas,
+              0
+            );
+
             this.setupChart(response.data);
           }
         },
       });
 
-    // Cargar peticiones del área
+    // Cargar peticiones ACTIVAS del área para contar pendientes y en progreso
     this.peticionService.getAll({ area: this.areaUsuario }).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           const peticiones = response.data;
-          this.totalPeticionesArea = peticiones.length;
           this.peticionesPendientes = peticiones.filter(
             (p) => p.estado === 'Pendiente'
           ).length;

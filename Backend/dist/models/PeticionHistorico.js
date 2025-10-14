@@ -60,10 +60,6 @@ PeticionHistorico.init({
         type: sequelize_1.DataTypes.DATE,
         allowNull: true,
     },
-    fecha_limite: {
-        type: sequelize_1.DataTypes.DATE,
-        allowNull: true,
-    },
     fecha_resolucion: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false,
@@ -73,9 +69,11 @@ PeticionHistorico.init({
         allowNull: false,
         defaultValue: sequelize_1.DataTypes.NOW,
     },
-    tiempo_limite_horas: {
+    tiempo_empleado_segundos: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: 0,
+        comment: "Tiempo total empleado en la petición en segundos",
     },
 }, {
     sequelize: connection_1.default,
