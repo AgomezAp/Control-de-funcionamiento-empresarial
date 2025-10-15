@@ -195,7 +195,12 @@
   border: 2px solid var(--color-gray-medium);
 }
 
-:host ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-number {
+:host
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item.p-highlight
+  .p-steps-number {
   background-color: var(--color-yellow);
   color: var(--color-black);
   border-color: var(--color-yellow);
@@ -207,29 +212,54 @@
   margin-top: 0.35rem;
 }
 
-:host ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-title {
+:host
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item.p-highlight
+  .p-steps-title {
   color: var(--color-black);
   font-weight: 600;
 }
 
 /* Modo Oscuro - Steps */
-:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-number {
+:host-context(.dark-mode)
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item
+  .p-steps-number {
   background-color: #2a2a2a;
   color: var(--color-white);
   border-color: #555555;
 }
 
-:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-number {
+:host-context(.dark-mode)
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item.p-highlight
+  .p-steps-number {
   background-color: var(--color-yellow);
   color: var(--color-black);
   border-color: var(--color-yellow);
 }
 
-:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item .p-steps-title {
+:host-context(.dark-mode)
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item
+  .p-steps-title {
   color: var(--color-gray-medium);
 }
 
-:host-context(.dark-mode) ::ng-deep .custom-steps .p-steps .p-steps-item.p-highlight .p-steps-title {
+:host-context(.dark-mode)
+  ::ng-deep
+  .custom-steps
+  .p-steps
+  .p-steps-item.p-highlight
+  .p-steps-title {
   color: var(--color-white);
 }
 
@@ -636,7 +666,11 @@
   color: var(--color-black);
 }
 
-:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+:host
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight {
   background-color: var(--color-yellow);
   color: var(--color-black);
 }
@@ -669,15 +703,26 @@
   border-color: var(--color-yellow);
 }
 
-:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item {
   color: var(--color-white);
 }
 
-:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item:hover {
   background-color: rgba(255, 215, 0, 0.2);
 }
 
-:host-context(.dark-mode) ::ng-deep .p-dropdown-panel .p-dropdown-empty-message {
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-dropdown-panel
+  .p-dropdown-empty-message {
   color: var(--color-gray-medium);
 }
 
@@ -967,4 +1012,554 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================
+   CUSTOM STEPS (Sin PrimeNG)
+   ============================================ */
+.custom-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 1rem 0;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  z-index: 1;
+}
+
+.step-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--color-gray-medium);
+  border: 3px solid var(--color-gray-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.step-circle i {
+  font-size: 1.25rem;
+  color: var(--color-gray-dark);
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-dark);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.step-line {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-gray-medium);
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+/* Active Step */
+.step-item.active .step-circle {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.step-item.active .step-circle i {
+  color: var(--color-black);
+}
+
+.step-item.active .step-label {
+  color: var(--color-black);
+  font-weight: 700;
+}
+
+/* Completed Step */
+.step-item.completed .step-circle {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.step-item.completed .step-circle i {
+  color: var(--color-white);
+}
+
+.step-item.completed .step-label {
+  color: var(--color-success);
+}
+
+.step-item.completed .step-line {
+  background-color: var(--color-success);
+}
+
+/* Dark Mode - Steps */
+:host-context(.dark-mode) .step-circle {
+  background-color: #2a2a2a;
+  border-color: #555555;
+}
+
+:host-context(.dark-mode) .step-circle i {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .step-label {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .step-line {
+  background-color: #555555;
+}
+
+:host-context(.dark-mode) .step-item.active .step-circle {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .step-item.active .step-circle i {
+  color: var(--color-black);
+}
+
+:host-context(.dark-mode) .step-item.active .step-label {
+  color: var(--color-white);
+}
+
+/* ============================================
+   FORM SELECT (Reemplazo de PrimeNG Dropdown)
+   ============================================ */
+.form-select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.5rem;
+}
+
+.form-select:hover {
+  border-color: var(--color-yellow);
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.form-select option {
+  padding: 0.5rem;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* Dark Mode - Select */
+:host-context(.dark-mode) .form-select {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+:host-context(.dark-mode) .form-select:hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .form-select:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) .form-select option {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+}
+
+/* ============================================
+   FORM INPUT (Reemplazo de PrimeNG InputNumber)
+   ============================================ */
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 4px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  transition: all 0.3s ease;
+}
+
+.form-input:hover {
+  border-color: var(--color-yellow);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--color-gray-dark);
+  opacity: 0.7;
+}
+
+/* Dark Mode - Input */
+:host-context(.dark-mode) .form-input {
+  background-color: #2a2a2a;
+  border-color: #555555;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .form-input:hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .form-input:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+:host-context(.dark-mode) .form-input::placeholder {
+  color: var(--color-gray-medium);
+}
+
+/* ============================================
+   TOAST (Reemplazo de PrimeNG Toast)
+   ============================================ */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  animation: slideInRight 0.3s ease;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid;
+  animation: slideInRight 0.3s ease;
+}
+
+.toast i {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-content strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--color-black);
+}
+
+.toast-content p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--color-gray-dark);
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--color-gray-dark);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  color: var(--color-black);
+  transform: scale(1.1);
+}
+
+.toast-close i {
+  font-size: 1rem;
+}
+
+/* Toast Variants */
+.toast-success {
+  border-left-color: var(--color-success);
+}
+
+.toast-success i {
+  color: var(--color-success);
+}
+
+.toast-error {
+  border-left-color: var(--color-error);
+}
+
+.toast-error i {
+  color: var(--color-error);
+}
+
+.toast-warn {
+  border-left-color: var(--color-warning);
+}
+
+.toast-warn i {
+  color: var(--color-warning);
+}
+
+.toast-info {
+  border-left-color: var(--color-info);
+}
+
+.toast-info i {
+  color: var(--color-info);
+}
+
+/* Dark Mode - Toast */
+:host-context(.dark-mode) .toast {
+  background-color: var(--color-gray-dark);
+}
+
+:host-context(.dark-mode) .toast-content strong {
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .toast-content p {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .toast-close {
+  color: var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .toast-close:hover {
+  color: var(--color-white);
+}
+
+/* ============================================
+   FORM HINT
+   ============================================ */
+.form-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-info);
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(23, 162, 184, 0.1);
+  border-left: 3px solid var(--color-info);
+  border-radius: 4px;
+}
+
+.form-hint i {
+  font-size: 0.9rem;
+  color: var(--color-info);
+}
+
+:host-context(.dark-mode) .form-hint {
+  background-color: rgba(23, 162, 184, 0.15);
+}
+
+/* ============================================
+   RESPONSIVE - STEPS
+   ============================================ */
+@media (max-width: 768px) {
+  .custom-steps {
+    padding: 0.75rem 0;
+  }
+
+  .step-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .step-circle i {
+    font-size: 1.1rem;
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+  }
+
+  .step-line {
+    top: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-steps {
+    padding: 0.5rem 0;
+  }
+
+  .step-circle {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .step-circle i {
+    font-size: 0.9rem;
+  }
+
+  .step-label {
+    font-size: 0.65rem;
+    max-width: 60px;
+  }
+
+  .step-line {
+    top: 1rem;
+    height: 2px;
+  }
+
+  .step-item.active .step-circle {
+    transform: scale(1.05);
+  }
+
+  /* Toast en móvil */
+  .toast-container {
+    top: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+/* ============================================
+   SPINNER ANIMATION
+   ============================================ */
+.pi-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   FOCUS VISIBLE (Accessibility)
+   ============================================ */
+.form-select:focus-visible,
+.form-input:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+.toast-close:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================
+   SCROLLBAR (Optional)
+   ============================================ */
+.peticion-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.peticion-content::-webkit-scrollbar-track {
+  background: var(--color-gray-light);
+  border-radius: 4px;
+}
+
+.peticion-content::-webkit-scrollbar-thumb {
+  background: var(--color-gray-medium);
+  border-radius: 4px;
+}
+
+.peticion-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-dark);
+}
+
+:host-context(.dark-mode) .peticion-content::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+:host-context(.dark-mode) .peticion-content::-webkit-scrollbar-thumb {
+  background: #555555;
+}
+
+:host-context(.dark-mode) .peticion-content::-webkit-scrollbar-thumb:hover {
+  background: #666666;
 }

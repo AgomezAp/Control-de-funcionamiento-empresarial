@@ -1,5 +1,4 @@
 <div class="crear-peticion-page">
-  
   <!-- Header -->
   <div class="page-header">
     <div class="header-left">
@@ -14,12 +13,20 @@
 
   <!-- Steps -->
   <div class="steps-container">
-    <p-steps 
-      [model]="items" 
-      [activeIndex]="activeIndex" 
-      [readonly]="true"
-      styleClass="custom-steps"
-    ></p-steps>
+    <div class="custom-steps">
+      <div
+        class="step-item"
+        *ngFor="let item of items; let i = index"
+        [class.active]="i === activeIndex"
+        [class.completed]="i < activeIndex"
+      >
+        <div class="step-circle">
+          <i [class]="item.icon"></i>
+        </div>
+        <span class="step-label">{{ item.label }}</span>
+        <div class="step-line" *ngIf="i < items.length - 1"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Loader -->
@@ -27,30 +34,26 @@
 
   <!-- Contenido Principal -->
   <div class="peticion-content" *ngIf="!loading">
-
     <!-- PASO 1: Seleccionar Cliente -->
     <div *ngIf="activeIndex === 0" class="step-content">
       <form [formGroup]="formCliente" class="step-form">
-        
         <div class="form-field">
           <label for="cliente_id" class="form-label">
             <i class="pi pi-building"></i>
-            Seleccionar Cliente 
+            Seleccionar Cliente
             <span class="required">*</span>
           </label>
-          <p-dropdown
+          <select
             id="cliente_id"
             formControlName="cliente_id"
-            [options]="clientes"
-            optionLabel="nombre"
-            optionValue="id"
-            placeholder="Seleccione un cliente"
-            [filter]="true"
-            filterBy="nombre"
-            [showClear]="true"
-            (onChange)="onClienteChange($event)"
-            styleClass="form-dropdown"
-          ></p-dropdown>
+            class="form-select"
+            (change)="onClienteChange($event)"
+          >
+            <option value="">Seleccione un cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">
+              {{ cliente.nombre }}
+            </option>
+          </select>
         </div>
 
         <!-- Info del Cliente Seleccionado -->
@@ -70,58 +73,54 @@
             </div>
           </div>
         </div>
-
       </form>
     </div>
 
     <!-- PASO 2: Seleccionar Categoría -->
     <div *ngIf="activeIndex === 1" class="step-content">
       <form [formGroup]="formCategoria" class="step-form">
-        
         <!-- Seleccionar Área -->
         <div class="form-field">
           <label for="area" class="form-label">
             <i class="pi pi-briefcase"></i>
-            Área 
+            Área
             <span class="required">*</span>
           </label>
-          <p-dropdown
-            id="area"
-            formControlName="area"
-            [options]="[
-              { label: 'Diseño', value: 'Diseño' },
-              { label: 'Pautas', value: 'Pautas' }
-            ]"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Seleccione el área"
-            styleClass="form-dropdown"
-          ></p-dropdown>
-          <small class="form-hint" *ngIf="formCategoria.value.area === 'Pautas'">
+          <select id="area" formControlName="area" class="form-select">
+            <option value="">Seleccione el área</option>
+            <option value="Diseño">Diseño</option>
+            <option value="Pautas">Pautas</option>
+          </select>
+          <small
+            class="form-hint"
+            *ngIf="formCategoria.value.area === 'Pautas'"
+          >
             <i class="pi pi-info-circle"></i>
-            Las peticiones de Pautas se asignan automáticamente al pautador del cliente
+            Las peticiones de Pautas se asignan automáticamente al pautador del
+            cliente
           </small>
         </div>
 
         <div class="form-field">
           <label for="categoria_id" class="form-label">
             <i class="pi pi-tag"></i>
-            Seleccionar Categoría 
+            Seleccionar Categoría
             <span class="required">*</span>
           </label>
-          <p-dropdown
+          <select
             id="categoria_id"
             formControlName="categoria_id"
-            [options]="categoriasFiltradas"
-            optionLabel="nombre"
-            optionValue="id"
-            placeholder="Seleccione una categoría"
-            [filter]="true"
-            filterBy="nombre"
-            [showClear]="true"
-            (onChange)="onCategoriaChange($event)"
-            styleClass="form-dropdown"
-          ></p-dropdown>
+            class="form-select"
+            (change)="onCategoriaChange($event)"
+          >
+            <option value="">Seleccione una categoría</option>
+            <option
+              *ngFor="let categoria of categoriasFiltradas"
+              [value]="categoria.id"
+            >
+              {{ categoria.nombre }}
+            </option>
+          </select>
         </div>
 
         <!-- Info de la Categoría Seleccionada -->
@@ -133,11 +132,15 @@
           <div class="info-box-content">
             <div class="info-item">
               <span class="info-label">Área:</span>
-              <span class="info-value">{{ categoriaSeleccionada.area_tipo }}</span>
+              <span class="info-value">{{
+                categoriaSeleccionada.area_tipo
+              }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Costo:</span>
-              <span class="info-value highlight">{{ categoriaSeleccionada.costo | currencyCop }}</span>
+              <span class="info-value highlight">{{
+                categoriaSeleccionada.costo | currencyCop
+              }}</span>
             </div>
           </div>
         </div>
@@ -146,36 +149,31 @@
         <div *ngIf="categoriaSeleccionada?.es_variable" class="form-field">
           <label for="costo_custom" class="form-label">
             <i class="pi pi-money-bill"></i>
-            Costo Personalizado 
+            Costo Personalizado
             <span class="required">*</span>
           </label>
-          <p-inputNumber
+          <input
+            type="number"
             id="costo_custom"
             formControlName="costo_custom"
-            mode="currency"
-            currency="COP"
-            locale="es-CO"
-            [min]="1"
+            class="form-input"
             placeholder="Ingrese el costo"
-            styleClass="form-input-number"
-          ></p-inputNumber>
+            min="1"
+          />
         </div>
-
       </form>
     </div>
 
     <!-- PASO 3: Descripción -->
     <div *ngIf="activeIndex === 2" class="step-content">
       <form [formGroup]="formDescripcion" class="step-form">
-        
         <div class="form-field">
           <label for="descripcion" class="form-label">
             <i class="pi pi-file-edit"></i>
-            Descripción 
+            Descripción
             <span class="required">*</span>
           </label>
           <textarea
-            pInputTextarea
             id="descripcion"
             formControlName="descripcion"
             rows="4"
@@ -186,14 +184,16 @@
         </div>
 
         <!-- Descripción Extra (si es requerida) -->
-        <div *ngIf="categoriaSeleccionada?.requiere_descripcion_extra" class="form-field">
+        <div
+          *ngIf="categoriaSeleccionada?.requiere_descripcion_extra"
+          class="form-field"
+        >
           <label for="descripcion_extra" class="form-label">
             <i class="pi pi-align-left"></i>
-            Descripción Extra 
+            Descripción Extra
             <span class="required">*</span>
           </label>
           <textarea
-            pInputTextarea
             id="descripcion_extra"
             formControlName="descripcion_extra"
             rows="3"
@@ -201,7 +201,6 @@
             class="form-textarea"
           ></textarea>
         </div>
-
       </form>
     </div>
 
@@ -211,10 +210,9 @@
         <i class="pi pi-check-circle"></i>
         Resumen de la Petición
       </h3>
-      
+
       <div class="summary-box">
         <div class="summary-grid">
-          
           <div class="summary-item">
             <label class="summary-label">
               <i class="pi pi-building"></i>
@@ -244,7 +242,9 @@
               <i class="pi pi-align-left"></i>
               Descripción Extra
             </label>
-            <p class="summary-value description">{{ resumen.descripcionExtra }}</p>
+            <p class="summary-value description">
+              {{ resumen.descripcionExtra }}
+            </p>
           </div>
 
           <div class="summary-item full-width cost-item">
@@ -254,11 +254,9 @@
             </label>
             <p class="summary-cost">{{ resumen.costo | currencyCop }}</p>
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- Botones de Navegación -->
@@ -271,7 +269,7 @@
       <i class="pi pi-arrow-left"></i>
       Anterior
     </button>
-    
+
     <button
       class="btn btn-primary"
       (click)="nextStep()"
@@ -280,7 +278,7 @@
       Siguiente
       <i class="pi pi-arrow-right"></i>
     </button>
-    
+
     <button
       class="btn btn-success"
       (click)="crearPeticion()"
@@ -288,10 +286,21 @@
       [disabled]="submitting"
     >
       <i [class]="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></i>
-      {{ submitting ? 'Creando...' : 'Crear Petición' }}
+      {{ submitting ? "Creando..." : "Crear Petición" }}
     </button>
   </div>
 
+  <!-- Toast Messages -->
+  <div class="toast-container" *ngIf="toastMessage">
+    <div class="toast" [class]="'toast-' + toastMessage.severity">
+      <i [class]="getToastIcon()"></i>
+      <div class="toast-content">
+        <strong>{{ toastMessage.summary }}</strong>
+        <p>{{ toastMessage.detail }}</p>
+      </div>
+      <button class="toast-close" (click)="closeToast()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </div>
 </div>
-
-<p-toast></p-toast>
