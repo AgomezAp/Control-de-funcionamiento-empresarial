@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import { BadgeComponent } from '../../../shared/components/badge/badge/badge.component';
 import { TimerComponent } from '../../../shared/components/timer/timer/timer.component';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
@@ -23,6 +24,7 @@ import { EstadoPeticion } from '../../../core/models/peticion.model';
     ButtonModule,
     TableModule,
     TagModule,
+    TooltipModule,
     BadgeComponent,
     TimerComponent,
     TimeAgoPipe,
@@ -36,13 +38,16 @@ export class DashboardUsuarioComponent implements OnInit {
   misEstadisticas: any = null;
   peticionesAsignadas: any[] = [];
   peticionesPendientes: any[] = [];
+  currentUser: any = null;
 
   constructor(
     private peticionService: PeticionService,
     private estadisticaService: EstadisticaService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.currentUser = this.authService.getCurrentUser();
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -62,11 +67,15 @@ export class DashboardUsuarioComponent implements OnInit {
         },
       });
 
-    // Cargar peticiones asignadas (En Progreso)
-    this.peticionService.getAll({ estado: EstadoPeticion.EN_PROGRESO }).subscribe({
+    // Cargar peticiones asignadas (En Progreso y Pausadas)
+    this.peticionService.getAll({}).subscribe({
       next: (response: any) => {
         if (response.success && response.data) {
-          this.peticionesAsignadas = response.data;
+          // Filtrar solo En Progreso y Pausadas asignadas al usuario
+          this.peticionesAsignadas = response.data.filter((p: any) => 
+            (p.estado === 'En Progreso' || p.estado === 'Pausada') && 
+            p.asignado_a === this.currentUser?.uid
+          );
         }
       },
     });
@@ -90,6 +99,43 @@ export class DashboardUsuarioComponent implements OnInit {
 
   aceptarPeticion(id: number): void {
     this.router.navigate(['/peticiones', id, 'aceptar']);
+  }
+
+  pausarTemporizador(peticion: any): void {
+    this.peticionService
+      .pausarTemporizador(peticion.id)
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            console.log('Temporizador pausado correctamente');
+            this.loadData(); // Recargar datos
+          }
+        },
+        error: (err) => console.error('Error al pausar temporizador:', err),
+      });
+  }
+
+  reanudarTemporizador(peticion: any): void {
+    this.peticionService
+      .reanudarTemporizador(peticion.id)
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            console.log('Temporizador reanudado correctamente');
+            this.loadData(); // Recargar datos
+          }
+        },
+        error: (err) => console.error('Error al reanudar temporizador:', err),
+      });
+  }
+
+  canPauseOrResume(peticion: any): boolean {
+    if (!this.currentUser) return false;
+    
+    const esAsignado = peticion.asignado_a === this.currentUser.uid;
+    const tienePemisoEspecial = ['Admin', 'Directivo', 'Líder'].includes(this.currentUser.rol);
+    
+    return esAsignado || tienePemisoEspecial;
   }
 
   // Método helper para convertir valores a número y formatear con decimales

@@ -1,7 +1,25 @@
 <div class="dashboard-admin">
   <div class="dashboard-header">
-    <h1>Dashboard - Administrador</h1>
-    <p class="subtitle">Vista general del sistema</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1>Dashboard - Administrador</h1>
+        <p class="subtitle">Vista general del sistema</p>
+      </div>
+      
+      <!-- Selector de Área -->
+      <div style="min-width: 250px;">
+        <p-dropdown 
+          [(ngModel)]="areaSeleccionada" 
+          [options]="areasDisponibles" 
+          (onChange)="onAreaChange()"
+          placeholder="Filtrar por área"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{'width': '100%'}"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+    </div>
   </div>
 
   <!-- KPIs -->

@@ -36,10 +36,12 @@ class WebSocketService {
         this.io.use((socket, next) => {
             const token = socket.handshake.auth.token;
             if (!token) {
+                console.error('❌ WebSocket: No token provided');
                 return next(new Error('Authentication error: No token provided'));
             }
             try {
                 const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || 'secret');
+                // Asignar propiedades al socket
                 socket.userId = decoded.id;
                 socket.userEmail = decoded.email;
                 socket.userRole = decoded.rol;
@@ -48,7 +50,7 @@ class WebSocketService {
             }
             catch (error) {
                 console.error('❌ Error de autenticación WebSocket:', error);
-                next(new Error('Authentication error: Invalid token'));
+                return next(new Error('Authentication error: Invalid token'));
             }
         });
     }

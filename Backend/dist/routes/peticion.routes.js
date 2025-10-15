@@ -13,8 +13,8 @@ router.use(auth_middleware_1.authMiddleware);
 // ⚠️ IMPORTANTE: Rutas específicas ANTES de rutas con parámetros
 // Obtener peticiones pendientes
 router.get("/pendientes", peticionController.obtenerPendientes);
-// Obtener histórico de peticiones
-router.get("/historico", peticionController.obtenerHistorico);
+// Obtener histórico de peticiones (Admin, Líder, Usuario)
+router.get("/historico", (0, roleAuth_middleware_1.roleAuth)("Admin", "Líder", "Usuario"), peticionController.obtenerHistorico);
 // Obtener resumen global (Admin, Directivo, Líder)
 router.get("/resumen/global", (0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo", "Líder"), peticionController.obtenerResumenGlobal);
 // Obtener peticiones por cliente y mes

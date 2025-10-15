@@ -6,8 +6,16 @@ import { BadgeComponent } from '../../../shared/components/badge/badge/badge.com
 import { CurrencycopPipe } from '../../../shared/pipes/currency-cop.pipe';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 import { PeticionService } from '../../../core/services/peticion.service';
 import { EstadisticaService } from '../../../core/services/estadistica.service';
+
+interface AreaOption {
+  label: string;
+  value: string | null;
+}
+
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
@@ -17,6 +25,8 @@ import { EstadisticaService } from '../../../core/services/estadistica.service';
     ChartModule,
     ButtonModule,
     TableModule,
+    DropdownModule,
+    FormsModule,
     CurrencycopPipe,
     BadgeComponent,
   ],
@@ -24,6 +34,15 @@ import { EstadisticaService } from '../../../core/services/estadistica.service';
   styleUrl: './dashboard-admin.component.css',
 })
 export class DashboardAdminComponent implements OnInit {
+  // Filtro por área
+  areaSeleccionada: string | null = null;
+  areasDisponibles: AreaOption[] = [
+    { label: 'Todas las áreas', value: null },
+    { label: 'Pautas', value: 'Pautas' },
+    { label: 'Diseño', value: 'Diseño' },
+    { label: 'Gestión Administrativa', value: 'Gestión Administrativa' },
+  ];
+
   // Estadísticas generales
   totalPeticiones: number = 0;
   peticionesPendientes: number = 0;
@@ -55,7 +74,26 @@ export class DashboardAdminComponent implements OnInit {
     this.setupChartOptions();
   }
 
+  onAreaChange(): void {
+    console.log('📊 Área seleccionada:', this.areaSeleccionada);
+    this.loadDashboardData();
+  }
+
   loadDashboardData(): void {
+    const fecha = new Date();
+    const año = fecha.getFullYear();
+    const mes = fecha.getMonth() + 1;
+
+    // Si se seleccionó un área específica, cargar estadísticas de esa área
+    if (this.areaSeleccionada) {
+      this.loadEstadisticasPorArea(this.areaSeleccionada, año, mes);
+    } else {
+      // Cargar resumen global (activas + históricas)
+      this.loadResumenGlobal();
+    }
+  }
+
+  loadResumenGlobal(): void {
     // Cargar resumen global (activas + históricas)
     this.peticionService.getResumenGlobal().subscribe({
       next: (response: any) => {
@@ -230,7 +268,62 @@ export class DashboardAdminComponent implements OnInit {
     });
   }
 
-  // M�todo helper para convertir valores a n�mero y formatear con decimales
+  loadEstadisticasPorArea(area: string, año: number, mes: number): void {
+    console.log(`📊 Cargando estadísticas del área: ${area}`);
+    
+    // Cargar estadísticas del área seleccionada
+    this.estadisticaService.getPorArea(area, año, mes).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const stats = response.data;
+
+          // Calcular totales del área
+          this.totalPeticiones = stats.reduce((sum, stat) => sum + stat.peticiones_creadas, 0);
+          this.peticionesResueltas = stats.reduce((sum, stat) => sum + stat.peticiones_resueltas, 0);
+          this.costoTotalMes = stats.reduce((sum, stat) => sum + Number(stat.costo_total_generado), 0);
+
+          // Cargar estadísticas globales para obtener por_usuario
+          this.estadisticaService.getGlobales(año, mes).subscribe({
+            next: (globalResponse) => {
+              if (globalResponse.success && globalResponse.data) {
+                const porUsuario = globalResponse.data.por_usuario.filter(
+                  (u: any) => u.area === area
+                );
+                
+                // Top diseñadores del área
+                this.setupTopDiseñadores(porUsuario);
+              }
+            }
+          });
+
+          console.log(`✅ Estadísticas del área ${area} cargadas:`, {
+            totalPeticiones: this.totalPeticiones,
+            peticionesResueltas: this.peticionesResueltas,
+            costoTotalMes: this.costoTotalMes
+          });
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error al cargar estadísticas por área:', error);
+      }
+    });
+
+    // Cargar peticiones activas del área
+    this.peticionService.getAll({ area }).subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          const peticiones = response.data;
+          this.peticionesPendientes = peticiones.filter((p: any) => p.estado === 'Pendiente').length;
+          this.peticionesEnProgreso = peticiones.filter((p: any) => p.estado === 'En Progreso').length;
+          
+          // Detectar peticiones vencidas
+          this.detectPeticionesVencidas(peticiones);
+        }
+      }
+    });
+  }
+
+  // Método helper para convertir valores a número y formatear con decimales
   formatNumber(value: any, decimals: number = 2): string {
     const num = parseFloat(value) || 0;
     return num.toFixed(decimals);

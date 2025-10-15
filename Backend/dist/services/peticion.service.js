@@ -21,12 +21,14 @@ const Usuario_1 = __importDefault(require("../models/Usuario"));
 const Area_1 = __importDefault(require("../models/Area"));
 const error_util_1 = require("../utils/error.util");
 const auditoria_service_1 = require("./auditoria.service");
+const estadistica_service_1 = require("./estadistica.service");
 const webSocket_service_1 = require("./webSocket.service");
 const notificacion_service_1 = __importDefault(require("./notificacion.service"));
 const sequelize_1 = require("sequelize");
 class PeticionService {
     constructor() {
         this.auditoriaService = new auditoria_service_1.AuditoriaService();
+        this.estadisticaService = new estadistica_service_1.EstadisticaService();
     }
     crear(data, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -401,6 +403,9 @@ class PeticionService {
             if (["Resuelta", "Cancelada"].includes(peticion.estado)) {
                 throw new error_util_1.ValidationError("No se puede actualizar una petición resuelta o cancelada");
             }
+            // Detectar si se está asignando a un usuario (asignación manual)
+            const asignacionManual = data.asignado_a && peticion.asignado_a !== data.asignado_a;
+            const usuarioAsignado = asignacionManual ? yield Usuario_1.default.findByPk(data.asignado_a) : null;
             yield peticion.update(data);
             // Registrar en auditoría
             yield this.auditoriaService.registrarCambio({
@@ -410,8 +415,19 @@ class PeticionService {
                 valor_anterior: JSON.stringify(peticion),
                 valor_nuevo: JSON.stringify(data),
                 usuario_id: usuarioActual.uid,
-                descripcion: "Actualización de petición",
+                descripcion: asignacionManual ? "Asignación manual de petición" : "Actualización de petición",
             });
+            // Si fue asignación manual, enviar notificación
+            if (asignacionManual && usuarioAsignado) {
+                const peticionCompleta = yield this.obtenerPorId(id);
+                yield notificacion_service_1.default.notificarAsignacion(peticionCompleta, usuarioAsignado, usuarioActual);
+                // Emitir evento WebSocket - usar emitPeticionAceptada porque es similar
+                webSocket_service_1.webSocketService.emitPeticionAceptada(id, usuarioAsignado.uid, {
+                    uid: usuarioAsignado.uid,
+                    nombre_completo: usuarioAsignado.nombre_completo,
+                    correo: usuarioAsignado.correo,
+                }, new Date(), null, 0);
+            }
             return yield this.obtenerPorId(id);
         });
     }
@@ -489,19 +505,48 @@ class PeticionService {
             // Eliminar de la tabla de peticiones activas
             yield peticion.destroy();
             console.log(`✅ Petición ${peticion.id} movida al histórico`);
+            // Recalcular estadísticas del usuario asignado y del creador
+            const fechaResolucion = peticion.fecha_resolucion;
+            const año = fechaResolucion.getFullYear();
+            const mes = fechaResolucion.getMonth() + 1;
+            // Recalcular para el usuario asignado (si existe)
+            if (peticion.asignado_a) {
+                try {
+                    yield this.estadisticaService.calcularEstadisticasUsuario(peticion.asignado_a, año, mes);
+                    console.log(`✅ Estadísticas actualizadas para usuario ${peticion.asignado_a}`);
+                }
+                catch (error) {
+                    console.error(`❌ Error al actualizar estadísticas del usuario ${peticion.asignado_a}:`, error);
+                }
+            }
+            // Recalcular para el creador
+            if (peticion.creador_id) {
+                try {
+                    yield this.estadisticaService.calcularEstadisticasUsuario(peticion.creador_id, año, mes);
+                    console.log(`✅ Estadísticas actualizadas para creador ${peticion.creador_id}`);
+                }
+                catch (error) {
+                    console.error(`❌ Error al actualizar estadísticas del creador ${peticion.creador_id}:`, error);
+                }
+            }
         });
     }
     obtenerHistorico(filtros, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
             const whereClause = {};
-            // Si el usuario no es Admin, solo puede ver:
-            // - Peticiones que él creó (creador_id)
-            // - Peticiones que le fueron asignadas (asignado_a)
-            if (usuarioActual && usuarioActual.role !== "Admin") {
-                whereClause[sequelize_1.Op.or] = [
-                    { creador_id: usuarioActual.uid },
-                    { asignado_a: usuarioActual.uid },
-                ];
+            // Admin puede ver todo el histórico
+            if (usuarioActual && usuarioActual.rol !== "Admin") {
+                // Líder puede ver todas las peticiones históricas de su área
+                if (usuarioActual.rol === "Líder") {
+                    whereClause.area = usuarioActual.area;
+                }
+                else {
+                    // Usuario solo puede ver peticiones que creó o que le fueron asignadas
+                    whereClause[sequelize_1.Op.or] = [
+                        { creador_id: usuarioActual.uid },
+                        { asignado_a: usuarioActual.uid },
+                    ];
+                }
             }
             if (filtros === null || filtros === void 0 ? void 0 : filtros.cliente_id) {
                 whereClause.cliente_id = filtros.cliente_id;
@@ -569,16 +614,33 @@ class PeticionService {
             const peticion = yield Peticion_1.default.findByPk(id);
             if (!peticion)
                 throw new error_util_1.NotFoundError("Petición no encontrada");
-            if (peticion.asignado_a !== usuarioActual.uid) {
-                throw new error_util_1.ForbiddenError("Solo puedes pausar peticiones asignadas a ti");
+            // Validar permisos: Solo el asignado, Admin, Directivo o Líder pueden pausar
+            const esAsignado = peticion.asignado_a === usuarioActual.uid;
+            const tienePemisoEspecial = ["Admin", "Directivo", "Líder"].includes(usuarioActual.rol);
+            console.log('🔍 pausarTemporizador - Verificación de permisos:', {
+                peticionId: id,
+                asignado_a: peticion.asignado_a,
+                usuarioActual: {
+                    uid: usuarioActual.uid,
+                    rol: usuarioActual.rol
+                },
+                esAsignado,
+                tienePemisoEspecial
+            });
+            if (!esAsignado && !tienePemisoEspecial) {
+                throw new error_util_1.ForbiddenError("No tienes permiso para pausar esta petición");
             }
             if (!peticion.temporizador_activo) {
                 throw new error_util_1.ValidationError("El temporizador no está activo");
+            }
+            if (peticion.estado !== "En Progreso") {
+                throw new error_util_1.ValidationError("Solo se pueden pausar peticiones en progreso");
             }
             const ahora = new Date();
             const tiempoTranscurridoSegundos = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
             const nuevoTiempoTotal = peticion.tiempo_empleado_segundos + tiempoTranscurridoSegundos;
             yield peticion.update({
+                estado: "Pausada",
                 temporizador_activo: false,
                 tiempo_empleado_segundos: nuevoTiempoTotal,
                 fecha_pausa_temporizador: ahora,
@@ -587,14 +649,14 @@ class PeticionService {
                 tabla_afectada: "peticiones",
                 registro_id: id,
                 tipo_cambio: "UPDATE",
-                campo_modificado: "temporizador_activo",
-                valor_anterior: "true",
-                valor_nuevo: "false",
+                campo_modificado: "estado",
+                valor_anterior: "En Progreso",
+                valor_nuevo: "Pausada",
                 usuario_id: usuarioActual.uid,
-                descripcion: `Temporizador pausado`,
+                descripcion: `Temporizador pausado - Estado cambiado a Pausada`,
             });
             const peticionActualizada = yield this.obtenerPorId(id);
-            webSocket_service_1.webSocketService.emitCambioEstado(id, peticion.estado, usuarioActual.uid);
+            webSocket_service_1.webSocketService.emitCambioEstado(id, "Pausada", usuarioActual.uid);
             return peticionActualizada;
         });
     }
@@ -603,17 +665,31 @@ class PeticionService {
             const peticion = yield Peticion_1.default.findByPk(id);
             if (!peticion)
                 throw new error_util_1.NotFoundError("Petición no encontrada");
-            if (peticion.asignado_a !== usuarioActual.uid) {
-                throw new error_util_1.ForbiddenError("Solo puedes reanudar peticiones asignadas a ti");
+            // Validar permisos: Solo el asignado, Admin, Directivo o Líder pueden reanudar
+            const esAsignado = peticion.asignado_a === usuarioActual.uid;
+            const tienePemisoEspecial = ["Admin", "Directivo", "Líder"].includes(usuarioActual.rol);
+            console.log('🔍 reanudarTemporizador - Verificación de permisos:', {
+                peticionId: id,
+                asignado_a: peticion.asignado_a,
+                usuarioActual: {
+                    uid: usuarioActual.uid,
+                    rol: usuarioActual.rol
+                },
+                esAsignado,
+                tienePemisoEspecial
+            });
+            if (!esAsignado && !tienePemisoEspecial) {
+                throw new error_util_1.ForbiddenError("No tienes permiso para reanudar esta petición");
             }
             if (peticion.temporizador_activo) {
                 throw new error_util_1.ValidationError("El temporizador ya está activo");
             }
-            if (peticion.estado !== "En Progreso") {
-                throw new error_util_1.ValidationError("Solo se pueden reanudar peticiones en progreso");
+            if (peticion.estado !== "Pausada") {
+                throw new error_util_1.ValidationError("Solo se pueden reanudar peticiones pausadas");
             }
             const ahora = new Date();
             yield peticion.update({
+                estado: "En Progreso",
                 temporizador_activo: true,
                 fecha_inicio_temporizador: ahora,
             });
@@ -621,14 +697,14 @@ class PeticionService {
                 tabla_afectada: "peticiones",
                 registro_id: id,
                 tipo_cambio: "UPDATE",
-                campo_modificado: "temporizador_activo",
-                valor_anterior: "false",
-                valor_nuevo: "true",
+                campo_modificado: "estado",
+                valor_anterior: "Pausada",
+                valor_nuevo: "En Progreso",
                 usuario_id: usuarioActual.uid,
-                descripcion: `Temporizador reanudado`,
+                descripcion: `Temporizador reanudado - Estado cambiado a En Progreso`,
             });
             const peticionActualizada = yield this.obtenerPorId(id);
-            webSocket_service_1.webSocketService.emitCambioEstado(id, peticion.estado, usuarioActual.uid);
+            webSocket_service_1.webSocketService.emitCambioEstado(id, "En Progreso", usuarioActual.uid);
             return peticionActualizada;
         });
     }

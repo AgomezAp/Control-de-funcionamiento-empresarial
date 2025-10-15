@@ -51,7 +51,7 @@ Peticion.init({
         comment: "Área a la que pertenece la petición: Pautas o Diseño",
     },
     estado: {
-        type: sequelize_1.DataTypes.ENUM("Pendiente", "En Progreso", "Resuelta", "Cancelada"),
+        type: sequelize_1.DataTypes.ENUM("Pendiente", "En Progreso", "Pausada", "Resuelta", "Cancelada"),
         allowNull: false,
         defaultValue: "Pendiente",
     },

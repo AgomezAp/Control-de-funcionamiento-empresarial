@@ -9,7 +9,7 @@ export class Peticion extends Model {
   public descripcion_extra!: string | null;
   public costo!: number;
   public area!: "Pautas" | "Diseño";
-  public estado!: "Pendiente" | "En Progreso" | "Resuelta" | "Cancelada";
+  public estado!: "Pendiente" | "En Progreso" | "Pausada" | "Resuelta" | "Cancelada";
   public creador_id!: number;
   public asignado_a!: number | null;
   public fecha_creacion!: Date;
@@ -65,7 +65,7 @@ Peticion.init(
       comment: "Área a la que pertenece la petición: Pautas o Diseño",
     },
     estado: {
-      type: DataTypes.ENUM("Pendiente", "En Progreso", "Resuelta", "Cancelada"),
+      type: DataTypes.ENUM("Pendiente", "En Progreso", "Pausada", "Resuelta", "Cancelada"),
       allowNull: false,
       defaultValue: "Pendiente",
     },

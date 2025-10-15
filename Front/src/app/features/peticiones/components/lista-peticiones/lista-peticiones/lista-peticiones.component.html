@@ -297,7 +297,7 @@
                 </button>
                 <!-- Botones pausar/reanudar temporizador -->
                 <button
-                  *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && peticion.temporizador_activo"
+                  *ngIf="peticion.estado === 'En Progreso' && canPauseOrResume(peticion) && peticion.temporizador_activo"
                   class="action-btn pause-btn"
                   (click)="pausarTemporizador(peticion)"
                   pTooltip="Pausar temporizador"
@@ -307,7 +307,7 @@
                   <i class="pi pi-pause"></i>
                 </button>
                 <button
-                  *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && !peticion.temporizador_activo"
+                  *ngIf="peticion.estado === 'Pausada' && canPauseOrResume(peticion)"
                   class="action-btn resume-btn"
                   (click)="reanudarTemporizador(peticion)"
                   pTooltip="Reanudar temporizador"
@@ -452,7 +452,7 @@
         </button>
         <!-- Botones pausar/reanudar -->
         <button
-          *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && peticion.temporizador_activo"
+          *ngIf="peticion.estado === 'En Progreso' && canPauseOrResume(peticion) && peticion.temporizador_activo"
           class="card-btn btn-warning"
           (click)="pausarTemporizador(peticion)"
           [disabled]="loadingAccion"
@@ -461,7 +461,7 @@
           Pausar
         </button>
         <button
-          *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && !peticion.temporizador_activo"
+          *ngIf="peticion.estado === 'Pausada' && canPauseOrResume(peticion)"
           class="card-btn btn-success"
           (click)="reanudarTemporizador(peticion)"
           [disabled]="loadingAccion"

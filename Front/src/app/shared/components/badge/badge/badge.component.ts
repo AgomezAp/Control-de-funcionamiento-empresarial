@@ -32,6 +32,11 @@ import { Component, Input } from '@angular/core';
         color: var(--color-en-progreso);
       }
 
+      &.badge-pausada {
+        background-color: rgba(255, 152, 0, 0.1);
+        color: var(--color-warning);
+      }
+
       &.badge-resuelta {
         background-color: rgba(139, 195, 74, 0.1);
         color: var(--color-resuelta);

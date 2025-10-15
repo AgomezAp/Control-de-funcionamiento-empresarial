@@ -30,6 +30,22 @@
         Aceptar
       </button>
       <button
+        *ngIf="peticion.estado === 'En Progreso' && peticion.temporizador_activo && canPauseOrResume()"
+        class="btn btn-warning"
+        (click)="pausarTemporizador()"
+      >
+        <i class="pi pi-pause"></i>
+        Pausar Temporizador
+      </button>
+      <button
+        *ngIf="peticion.estado === 'Pausada' && canPauseOrResume()"
+        class="btn btn-success"
+        (click)="reanudarTemporizador()"
+      >
+        <i class="pi pi-play"></i>
+        Reanudar Temporizador
+      </button>
+      <button
         *ngIf="peticion.estado === 'En Progreso'"
         class="btn btn-success"
         (click)="marcarResuelta()"

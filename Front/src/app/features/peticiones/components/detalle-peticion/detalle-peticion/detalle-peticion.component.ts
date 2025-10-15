@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 // Services
 import { PeticionService } from '../../../../../core/services/peticion.service';
 import { WebsocketService } from '../../../../../core/services/websocket.service';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 // Models
 import {
@@ -54,6 +55,7 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
   peticion: Peticion | null = null;
   loading = false;
   peticionId: number = 0;
+  currentUser: any = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -61,8 +63,11 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
     private router: Router,
     private peticionService: PeticionService,
     private websocketService: WebsocketService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private authService: AuthService
+  ) {
+    this.currentUser = this.authService.getCurrentUser();
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -233,6 +238,88 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  pausarTemporizador(): void {
+    if (!this.peticion) return;
+
+    this.peticionService.pausarTemporizador(this.peticion.id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadPeticion();
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Temporizador Pausado',
+            detail: 'El temporizador de la petición ha sido pausado',
+            life: 3000,
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al pausar temporizador:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo pausar el temporizador',
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  reanudarTemporizador(): void {
+    if (!this.peticion) return;
+
+    this.peticionService.reanudarTemporizador(this.peticion.id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadPeticion();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Temporizador Reanudado',
+            detail: 'El temporizador de la petición ha sido reanudado',
+            life: 3000,
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al reanudar temporizador:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo reanudar el temporizador',
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  /**
+   * Verifica si el usuario puede pausar/reanudar la petición
+   */
+  canPauseOrResume(): boolean {
+    if (!this.peticion || !this.currentUser) {
+      console.log('⚠️ canPauseOrResume - Sin petición o usuario:', {
+        peticion: !!this.peticion,
+        currentUser: !!this.currentUser
+      });
+      return false;
+    }
+    
+    const esAsignado = this.peticion.asignado_a === this.currentUser.uid;
+    const tienePemisoEspecial = ['Admin', 'Directivo', 'Líder'].includes(this.currentUser.rol);
+    
+    console.log('🔍 canPauseOrResume - Verificación:', {
+      peticionId: this.peticion.id,
+      asignado_a: this.peticion.asignado_a,
+      currentUserUid: this.currentUser.uid,
+      currentUserRol: this.currentUser.rol,
+      esAsignado,
+      tienePemisoEspecial,
+      resultado: esAsignado || tienePemisoEspecial
+    });
+    
+    return esAsignado || tienePemisoEspecial;
   }
 
   formatearTiempo(segundos: number): string {

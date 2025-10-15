@@ -299,6 +299,76 @@ async function initData() {
 
     console.log("✅ Categorías creadas");
 
+    // Crear categorías de Gestión Administrativa
+    console.log("📝 Creando categorías de Gestión Administrativa...");
+    const categoriasGestionAdmin = [
+      {
+        nombre: "Revisión de documentos",
+        area_tipo: "Gestión Administrativa",
+        costo: 50000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Gestión de contratos",
+        area_tipo: "Gestión Administrativa",
+        costo: 100000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Elaboración de informes",
+        area_tipo: "Gestión Administrativa",
+        costo: 75000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Archivo y organización",
+        area_tipo: "Gestión Administrativa",
+        costo: 30000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Gestión de correspondencia",
+        area_tipo: "Gestión Administrativa",
+        costo: 40000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Actualización de base de datos",
+        area_tipo: "Gestión Administrativa",
+        costo: 60000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Coordinación de reuniones",
+        area_tipo: "Gestión Administrativa",
+        costo: 35000,
+        es_variable: false,
+        requiere_descripcion_extra: false,
+      },
+      {
+        nombre: "Soporte administrativo general",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: true,
+        requiere_descripcion_extra: true,
+      },
+    ];
+
+    for (const cat of categoriasGestionAdmin) {
+      await Categoria.findOrCreate({
+        where: { nombre: cat.nombre },
+        defaults: cat,
+      });
+    }
+
+    console.log("✅ Categorías de Gestión Administrativa creadas");
+
     // Crear usuarios de prueba
     console.log("📝 Creando usuarios de prueba...");
     const passwordHash = await bcrypt.hash("123456", 10);
@@ -566,6 +636,7 @@ async function initData() {
     console.log(`   - ${areas.length} Áreas`);
     console.log(`   - ${categoriasDiseño.length} Categorías de Diseño`);
     console.log(`   - ${categoriasPautas.length} Categorías de Pautas`);
+    console.log(`   - 8 Categorías de Gestión Administrativa`);
     console.log(`   - ${usuarios.length} Usuarios`);
     console.log(`   - ${clientes.length} Clientes`);
     console.log(`   - ${peticiones.length} Peticiones`);

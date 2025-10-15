@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { PeticionService } from '../../../../../core/services/peticion.service';
 import { ClienteService } from '../../../../../core/services/cliente.service';
 import { CategoriaService } from '../../../../../core/services/categoria.service';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 // Models
 import { Cliente } from '../../../../../core/models/cliente.model';
@@ -93,6 +94,7 @@ export class CrearPeticionComponent implements OnInit {
     private peticionService: PeticionService,
     private clienteService: ClienteService,
     private categoriaService: CategoriaService,
+    private authService: AuthService,
     private messageService: MessageService,
     private router: Router
   ) {}
@@ -154,8 +156,25 @@ export class CrearPeticionComponent implements OnInit {
   loadCategorias(): void {
     this.categoriaService.getAll().subscribe({
       next: (categorias) => {
-        this.categorias = categorias;
-        this.categoriasFiltradas = categorias;
+        const currentUser = this.authService.getCurrentUser();
+        
+        // Admin puede ver todas las categorías
+        if (currentUser?.rol === 'Admin') {
+          this.categorias = categorias;
+          this.categoriasFiltradas = categorias;
+        } else {
+          // Otros usuarios solo ven categorías de su área
+          const areaUsuario = currentUser?.area || '';
+          
+          // Filtrar por area_tipo (comparar como strings)
+          this.categorias = categorias.filter(cat => {
+            const catArea = String(cat.area_tipo);
+            return catArea === areaUsuario;
+          });
+          this.categoriasFiltradas = this.categorias;
+          
+          console.log(`📋 Categorías filtradas para área ${areaUsuario}:`, this.categorias.length);
+        }
       },
       error: (error) => {
         console.error('Error al cargar categorías:', error);

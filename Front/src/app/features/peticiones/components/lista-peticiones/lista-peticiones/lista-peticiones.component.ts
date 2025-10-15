@@ -114,6 +114,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
   estadosOptions = [
     { label: 'Pendiente', value: 'Pendiente' },
     { label: 'En Progreso', value: 'En Progreso' },
+    { label: 'Pausada', value: 'Pausada' },
     { label: 'Resuelta', value: 'Resuelta' },
     { label: 'Cancelada', value: 'Cancelada' },
   ];
@@ -525,6 +526,19 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
           this.loadingAccion = false;
         },
       });
+  }
+
+  /**
+   * Verifica si el usuario puede pausar/reanudar una petición
+   * Solo el asignado, Admin, Directivo o Líder pueden hacerlo
+   */
+  canPauseOrResume(peticion: Peticion): boolean {
+    if (!this.currentUser) return false;
+    
+    const esAsignado = peticion.asignado_a === this.currentUser.uid;
+    const tienePemisoEspecial = ['Admin', 'Directivo', 'Líder'].includes(this.currentUser.rol);
+    
+    return esAsignado || tienePemisoEspecial;
   }
 
   // Filtros

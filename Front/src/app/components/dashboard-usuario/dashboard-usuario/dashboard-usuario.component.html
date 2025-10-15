@@ -72,6 +72,26 @@
             class="p-button-outlined p-button-sm"
             (click)="verPeticion(peticion.id)"
           ></button>
+          
+          <button 
+            *ngIf="peticion.estado === 'En Progreso' && peticion.temporizador_activo && canPauseOrResume(peticion)"
+            pButton 
+            icon="pi pi-pause"
+            class="p-button-warning p-button-sm"
+            pTooltip="Pausar Temporizador"
+            tooltipPosition="top"
+            (click)="pausarTemporizador(peticion)"
+          ></button>
+          
+          <button 
+            *ngIf="peticion.estado === 'Pausada' && canPauseOrResume(peticion)"
+            pButton 
+            icon="pi pi-play"
+            class="p-button-success p-button-sm"
+            pTooltip="Reanudar Temporizador"
+            tooltipPosition="top"
+            (click)="reanudarTemporizador(peticion)"
+          ></button>
         </div>
       </div>
     </div>

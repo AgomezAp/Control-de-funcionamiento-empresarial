@@ -6,7 +6,7 @@ export enum AreaTipo {
 export interface Categoria {
   id: number;
   nombre: string;
-  area_tipo: AreaTipo;
+  area_tipo: AreaTipo | string; // Permitir string para flexibilidad
   costo: number;
   es_variable: boolean;
   requiere_descripcion_extra: boolean;

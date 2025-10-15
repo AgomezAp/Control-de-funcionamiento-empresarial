@@ -5,6 +5,7 @@ import { Usuario } from './usuario.model';
 export enum EstadoPeticion {
   PENDIENTE = 'Pendiente',
   EN_PROGRESO = 'En Progreso',
+  PAUSADA = 'Pausada',
   RESUELTA = 'Resuelta',
   CANCELADA = 'Cancelada'
 }
