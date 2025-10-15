@@ -20,6 +20,8 @@ export class WebsocketService {
   private usuarioOnline$ = new Subject<any>();
   private usuarioOffline$ = new Subject<any>();
   private usuarioEscribiendo$ = new Subject<any>();
+  private nuevaNotificacion$ = new Subject<any>();
+  private contadorNotificaciones$ = new Subject<number>();
 
   constructor(private authService: AuthService) {}
 
@@ -102,6 +104,17 @@ export class WebsocketService {
     this.socket.on(WS_EVENTS.USUARIO_ESCRIBIENDO, (data: any) => {
       this.usuarioEscribiendo$.next(data);
     });
+
+    // Eventos de notificaciones
+    this.socket.on(WS_EVENTS.NUEVA_NOTIFICACION, (data: any) => {
+      console.log('📬 Nueva notificación recibida:', data);
+      this.nuevaNotificacion$.next(data);
+    });
+
+    this.socket.on(WS_EVENTS.CONTADOR_NOTIFICACIONES, (count: number) => {
+      console.log('🔔 Contador de notificaciones actualizado:', count);
+      this.contadorNotificaciones$.next(count);
+    });
   }
 
   // Emitir eventos al servidor
@@ -166,6 +179,15 @@ export class WebsocketService {
 
   onUsuarioEscribiendo(): Observable<any> {
     return this.usuarioEscribiendo$.asObservable();
+  }
+
+  // Observables para notificaciones
+  onNuevaNotificacion(): Observable<any> {
+    return this.nuevaNotificacion$.asObservable();
+  }
+
+  onContadorNotificaciones(): Observable<number> {
+    return this.contadorNotificaciones$.asObservable();
   }
 
   // Verificar si está conectado

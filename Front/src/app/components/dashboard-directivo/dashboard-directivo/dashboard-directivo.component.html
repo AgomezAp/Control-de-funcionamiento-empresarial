@@ -81,7 +81,7 @@
           <td>
             <app-badge [label]="stat.peticionesResueltas.toString()" severity="success"></app-badge>
           </td>
-          <td>{{ stat.tiempoPromedio?.toFixed(2) || 'N/A' }} horas</td>
+          <td>{{ formatNumber(stat.tiempoPromedio) }} horas</td>
           <td>{{ stat.costoGenerado | currencyCop }}</td>
         </tr>
       </ng-template>

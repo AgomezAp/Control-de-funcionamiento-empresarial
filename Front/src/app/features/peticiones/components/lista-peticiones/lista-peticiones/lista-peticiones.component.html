@@ -250,7 +250,7 @@
                   class="tiempo-empleado-badge"
                 >
                   <i class="pi pi-clock"></i>
-                  {{ formatearTiempo(peticion.tiempo_empleado_segundos || 0) }}
+                  {{ formatearTiempo(peticion.tiempo_empleado_actual || peticion.tiempo_empleado_segundos || 0) }}
                 </div>
               </div>
             </td>
@@ -294,6 +294,27 @@
                   tooltipPosition="top"
                 >
                   <i class="pi pi-print"></i>
+                </button>
+                <!-- Botones pausar/reanudar temporizador -->
+                <button
+                  *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && peticion.temporizador_activo"
+                  class="action-btn pause-btn"
+                  (click)="pausarTemporizador(peticion)"
+                  pTooltip="Pausar temporizador"
+                  tooltipPosition="top"
+                  [disabled]="loadingAccion"
+                >
+                  <i class="pi pi-pause"></i>
+                </button>
+                <button
+                  *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && !peticion.temporizador_activo"
+                  class="action-btn resume-btn"
+                  (click)="reanudarTemporizador(peticion)"
+                  pTooltip="Reanudar temporizador"
+                  tooltipPosition="top"
+                  [disabled]="loadingAccion"
+                >
+                  <i class="pi pi-play"></i>
                 </button>
                 <button
                   *ngIf="canAcceptPeticion(peticion)"
@@ -405,7 +426,7 @@
 
         <div *ngIf="peticion.estado === 'En Progreso'" class="card-time-employed">
           <i class="pi pi-clock"></i>
-          <span>Tiempo: {{ formatearTiempo(peticion.tiempo_empleado_segundos || 0) }}</span>
+          <span>Tiempo: {{ formatearTiempo(peticion.tiempo_empleado_actual || peticion.tiempo_empleado_segundos || 0) }}</span>
           <span *ngIf="peticion.temporizador_activo" class="active-indicator">●</span>
         </div>
 
@@ -428,6 +449,25 @@
         <button class="card-btn btn-outline" (click)="imprimirPeticion(peticion)">
           <i class="pi pi-print"></i>
           Imprimir
+        </button>
+        <!-- Botones pausar/reanudar -->
+        <button
+          *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && peticion.temporizador_activo"
+          class="card-btn btn-warning"
+          (click)="pausarTemporizador(peticion)"
+          [disabled]="loadingAccion"
+        >
+          <i class="pi pi-pause"></i>
+          Pausar
+        </button>
+        <button
+          *ngIf="peticion.estado === 'En Progreso' && peticion.asignado_a === currentUser?.uid && !peticion.temporizador_activo"
+          class="card-btn btn-success"
+          (click)="reanudarTemporizador(peticion)"
+          [disabled]="loadingAccion"
+        >
+          <i class="pi pi-play"></i>
+          Reanudar
         </button>
         <button
           *ngIf="canAcceptPeticion(peticion)"

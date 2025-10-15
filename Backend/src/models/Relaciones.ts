@@ -8,6 +8,7 @@ import PeticionHistorico from "./PeticionHistorico";
 import PeriodoFacturacion from "./PeriodoFacturacion";
 import AuditoriaCambios from "./AuditoriaCambio";
 import EstadisticaUsuario from "./EstadisticasUsuario";
+import Notificacion from "./Notificacion";
 
 // ========================================
 // RELACIONES DE USUARIO
@@ -162,6 +163,29 @@ Usuario.hasMany(EstadisticaUsuario, {
 });
 
 // ========================================
+// RELACIONES DE NOTIFICACIONES
+// ========================================
+Notificacion.belongsTo(Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario",
+});
+
+Notificacion.belongsTo(Peticion, {
+  foreignKey: "peticion_id",
+  as: "peticion",
+});
+
+Usuario.hasMany(Notificacion, {
+  foreignKey: "usuario_id",
+  as: "notificaciones",
+});
+
+Peticion.hasMany(Notificacion, {
+  foreignKey: "peticion_id",
+  as: "notificaciones",
+});
+
+// ========================================
 // EXPORTAR TODOS LOS MODELOS
 // ========================================
 export {
@@ -175,4 +199,5 @@ export {
   PeriodoFacturacion,
   AuditoriaCambios,
   EstadisticaUsuario,
+  Notificacion,
 };

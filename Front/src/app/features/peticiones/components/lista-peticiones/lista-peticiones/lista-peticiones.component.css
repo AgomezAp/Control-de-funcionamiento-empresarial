@@ -724,6 +724,29 @@
   transform: scale(1.1);
 }
 
+/* Botones de pausar/reanudar temporizador */
+.pause-btn {
+  color: #ff9800;
+  border-color: #ff9800;
+}
+
+.pause-btn:hover {
+  background-color: #ff9800;
+  color: var(--color-white);
+  transform: scale(1.1);
+}
+
+.resume-btn {
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.resume-btn:hover {
+  background-color: #4caf50;
+  color: var(--color-white);
+  transform: scale(1.1);
+}
+
 .pdf-btn {
   color: #dc3545;
   border-color: #dc3545;
@@ -1003,6 +1026,18 @@
 .btn-success:hover {
   background-color: #218838;
   border-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background-color: #ff9800;
+  color: var(--color-white);
+  border-color: #ff9800;
+}
+
+.btn-warning:hover {
+  background-color: #e68900;
+  border-color: #e68900;
   transform: translateY(-2px);
 }
 

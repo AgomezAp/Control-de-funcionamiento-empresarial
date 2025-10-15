@@ -128,6 +128,7 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   private destroy$ = new Subject<void>();
+  private tiempoInterval: any;
 
   constructor(
     private peticionService: PeticionService,
@@ -153,14 +154,41 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     this.loadClientes();
     this.loadPeticiones();
     this.setupWebSocketListeners();
+    this.iniciarActualizacionTiempo();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
 
+    // Limpiar interval del tiempo
+    if (this.tiempoInterval) {
+      clearInterval(this.tiempoInterval);
+    }
+
     // Desconectar WebSocket al destruir el componente
     // this.websocketService.disconnect();
+  }
+
+  /**
+   * Actualiza el tiempo empleado cada segundo para peticiones con temporizador activo
+   */
+  iniciarActualizacionTiempo(): void {
+    this.tiempoInterval = setInterval(() => {
+      this.peticiones = this.peticiones.map(peticion => {
+        if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+          const ahora = new Date();
+          const inicio = new Date(peticion.fecha_inicio_temporizador);
+          const tiempoTranscurrido = Math.floor((ahora.getTime() - inicio.getTime()) / 1000);
+          
+          return {
+            ...peticion,
+            tiempo_empleado_actual: peticion.tiempo_empleado_segundos + tiempoTranscurrido
+          };
+        }
+        return peticion;
+      });
+    }, 1000); // Actualizar cada segundo
   }
 
   loadClientes(): void {
@@ -188,6 +216,12 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     }
     if (this.filtroCliente) {
       filtros.cliente_id = this.filtroCliente;
+    }
+
+    // FILTRO POR ÁREA: Los diseñadores solo ven peticiones de Diseño, 
+    // los de Pautas solo ven de Pautas
+    if (this.currentUser && (this.currentUser.area === 'Diseño' || this.currentUser.area === 'Pautas')) {
+      filtros.area = this.currentUser.area;
     }
 
     this.peticionService
@@ -429,6 +463,70 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Pausar temporizador de una petición
+   */
+  pausarTemporizador(peticion: Peticion): void {
+    this.loadingAccion = true;
+    this.peticionService
+      .pausarTemporizador(peticion.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Temporizador pausado',
+              detail: 'El temporizador se ha pausado correctamente',
+            });
+            this.loadPeticiones();
+          }
+          this.loadingAccion = false;
+        },
+        error: (error: any) => {
+          console.error('Error al pausar temporizador:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.message || 'No se pudo pausar el temporizador',
+          });
+          this.loadingAccion = false;
+        },
+      });
+  }
+
+  /**
+   * Reanudar temporizador de una petición
+   */
+  reanudarTemporizador(peticion: Peticion): void {
+    this.loadingAccion = true;
+    this.peticionService
+      .reanudarTemporizador(peticion.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Temporizador reanudado',
+              detail: 'El temporizador se ha reanudado correctamente',
+            });
+            this.loadPeticiones();
+          }
+          this.loadingAccion = false;
+        },
+        error: (error: any) => {
+          console.error('Error al reanudar temporizador:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.message || 'No se pudo reanudar el temporizador',
+          });
+          this.loadingAccion = false;
+        },
+      });
+  }
+
   // Filtros
   aplicarFiltros(): void {
     this.loadPeticiones();
@@ -481,13 +579,22 @@ export class ListaPeticionesComponent implements OnInit, OnDestroy {
   canAcceptPeticion(peticion: Peticion): boolean {
     if (!this.currentUser) return false;
 
-    // Solo usuarios de Pautas o Diseño pueden aceptar peticiones pendientes
-    const areasPermitidas = ['Pautas', 'Diseño'];
-    return (
-      peticion.estado === 'Pendiente' &&
-      areasPermitidas.includes(this.currentUser.area) &&
-      !peticion.asignado_a
-    );
+    // La petición debe estar pendiente y no asignada
+    if (peticion.estado !== 'Pendiente' || peticion.asignado_a) {
+      return false;
+    }
+
+    // REGLA DE NEGOCIO: Las peticiones de Diseño solo las pueden aceptar Diseñadores
+    if (peticion.area === 'Diseño') {
+      return this.currentUser.area === 'Diseño';
+    }
+
+    // Las peticiones de Pautas solo las pueden aceptar usuarios del área de Pautas
+    if (peticion.area === 'Pautas') {
+      return this.currentUser.area === 'Pautas';
+    }
+
+    return false;
   }
 
   canCancelPeticion(peticion: Peticion): boolean {

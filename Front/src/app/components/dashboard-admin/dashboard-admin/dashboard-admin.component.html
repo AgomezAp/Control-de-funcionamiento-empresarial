@@ -110,7 +110,7 @@
             <app-badge [label]="disenador.peticionesResueltas.toString()" severity="success"></app-badge>
           </td>
           <td>{{ disenador.costoGenerado | currencyCop }}</td>
-          <td>{{ disenador.tiempoPromedio?.toFixed(2) || 'N/A' }} horas</td>
+          <td>{{ formatNumber(disenador.tiempoPromedio) }} horas</td>
         </tr>
       </ng-template>
     </p-table>

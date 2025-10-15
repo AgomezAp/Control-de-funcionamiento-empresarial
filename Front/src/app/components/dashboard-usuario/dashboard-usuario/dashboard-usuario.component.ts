@@ -91,4 +91,10 @@ export class DashboardUsuarioComponent implements OnInit {
   aceptarPeticion(id: number): void {
     this.router.navigate(['/peticiones', id, 'aceptar']);
   }
+
+  // Método helper para convertir valores a número y formatear con decimales
+  formatNumber(value: any, decimals: number = 1): string {
+    const num = parseFloat(value) || 0;
+    return num.toFixed(decimals);
+  }
 }

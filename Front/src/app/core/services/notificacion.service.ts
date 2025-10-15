@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { StorageUtil } from '../utils/storage.util';
+import { Injectable, Injector } from '@angular/core';
 import { Notificacion, TipoNotificacion } from '../models/notificacion.model';
-import { STORAGE_KEYS } from '../constants/storage.constants';
 import { BehaviorSubject } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { NotificacionApiService } from './notificacion-api.service';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,46 @@ export class NotificacionService {
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
-  constructor(private messageService: MessageService) {
-    this.loadNotificaciones();
+  private notificacionApiService!: NotificacionApiService;
+  private websocketService!: WebsocketService;
+  private messageService!: MessageService;
+
+  constructor(private injector: Injector) {
+    // Lazy initialization para evitar dependencias circulares
+    setTimeout(() => {
+      this.notificacionApiService = this.injector.get(NotificacionApiService);
+      this.websocketService = this.injector.get(WebsocketService);
+      this.messageService = this.injector.get(MessageService);
+      
+      this.initializeWebSocketListeners();
+      this.loadNotificaciones();
+    });
   }
 
-  // Mostrar toast de éxito
-  success(mensaje: string, titulo: string = 'Éxito'): void {
+  private initializeWebSocketListeners(): void {
+    if (!this.websocketService) return;
+    
+    this.websocketService.onNuevaNotificacion().subscribe((data) => {
+      console.log('Nueva notificacion WebSocket:', data);
+      const notificacion = data.notificacion as Notificacion;
+      this.agregarNotificacion(notificacion);
+      this.showToastFromNotificacion(notificacion);
+      this.showBrowserNotification(notificacion);
+    });
+
+    this.websocketService.onContadorNotificaciones().subscribe((count) => {
+      console.log('Contador actualizado:', count);
+      this.unreadCountSubject.next(count);
+    });
+  }
+
+  private agregarNotificacion(notificacion: Notificacion): void {
+    this.notificaciones.unshift(notificacion);
+    this.updateNotificaciones();
+  }
+
+  success(mensaje: string, titulo: string = 'Exito'): void {
+    if (!this.messageService) return;
     this.messageService.add({
       severity: 'success',
       summary: titulo,
@@ -30,8 +64,8 @@ export class NotificacionService {
     });
   }
 
-  // Mostrar toast de error
   error(mensaje: string, titulo: string = 'Error'): void {
+    if (!this.messageService) return;
     this.messageService.add({
       severity: 'error',
       summary: titulo,
@@ -40,8 +74,8 @@ export class NotificacionService {
     });
   }
 
-  // Mostrar toast de advertencia
   warning(mensaje: string, titulo: string = 'Advertencia'): void {
+    if (!this.messageService) return;
     this.messageService.add({
       severity: 'warn',
       summary: titulo,
@@ -50,8 +84,8 @@ export class NotificacionService {
     });
   }
 
-  // Mostrar toast de información
-  info(mensaje: string, titulo: string = 'Información'): void {
+  info(mensaje: string, titulo: string = 'Informacion'): void {
+    if (!this.messageService) return;
     this.messageService.add({
       severity: 'info',
       summary: titulo,
@@ -60,68 +94,118 @@ export class NotificacionService {
     });
   }
 
-  // Agregar notificación
-  add(notificacion: Omit<Notificacion, 'id' | 'fecha' | 'leida'>): void {
-    const nuevaNotificacion: Notificacion = {
-      ...notificacion,
-      id: this.generateId(),
-      fecha: new Date(),
-      leida: false
-    };
-
-    this.notificaciones.unshift(nuevaNotificacion);
-    this.updateNotificaciones();
-    this.updateUnreadCount();
-    
-    // Mostrar toast
-    this.showToastFromNotificacion(nuevaNotificacion);
-    
-    // Mostrar notificación del navegador si está permitido
-    this.showBrowserNotification(nuevaNotificacion);
+  loadNotificaciones(): void {
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.getAll({ limit: 50 }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.notificaciones = response.data;
+          this.updateNotificaciones();
+          this.loadUnreadCount();
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar notificaciones:', error);
+      }
+    });
   }
 
-  // Marcar como leída
-  markAsRead(id: string): void {
-    const notificacion = this.notificaciones.find(n => n.id === id);
-    if (notificacion && !notificacion.leida) {
-      notificacion.leida = true;
-      this.updateNotificaciones();
-      this.updateUnreadCount();
-    }
+  loadUnreadCount(): void {
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.getUnreadCount().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.unreadCountSubject.next(response.data.count);
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar contador de notificaciones:', error);
+      }
+    });
   }
 
-  // Marcar todas como leídas
+  markAsRead(id: number): void {
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.markAsRead(id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          const notificacion = this.notificaciones.find(n => n.id === id);
+          if (notificacion) {
+            notificacion.leida = true;
+            this.updateNotificaciones();
+            this.loadUnreadCount();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al marcar notificacion como leida:', error);
+        this.error('No se pudo marcar la notificacion como leida');
+      }
+    });
+  }
+
   markAllAsRead(): void {
-    this.notificaciones.forEach(n => n.leida = true);
-    this.updateNotificaciones();
-    this.updateUnreadCount();
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.markAllAsRead().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notificaciones.forEach(n => n.leida = true);
+          this.updateNotificaciones();
+          this.unreadCountSubject.next(0);
+          this.success('Todas las notificaciones marcadas como leidas');
+        }
+      },
+      error: (error) => {
+        console.error('Error al marcar todas como leidas:', error);
+        this.error('No se pudieron marcar las notificaciones como leidas');
+      }
+    });
   }
 
-  // Eliminar notificación
-  delete(id: string): void {
-    this.notificaciones = this.notificaciones.filter(n => n.id !== id);
-    this.updateNotificaciones();
-    this.updateUnreadCount();
+  delete(id: number): void {
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.delete(id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notificaciones = this.notificaciones.filter(n => n.id !== id);
+          this.updateNotificaciones();
+          this.loadUnreadCount();
+          this.success('Notificacion eliminada');
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar notificacion:', error);
+        this.error('No se pudo eliminar la notificacion');
+      }
+    });
   }
 
-  // Limpiar todas las notificaciones
   clear(): void {
-    this.notificaciones = [];
-    this.updateNotificaciones();
-    this.updateUnreadCount();
+    if (!this.notificacionApiService) return;
+    this.notificacionApiService.deleteAll().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notificaciones = [];
+          this.updateNotificaciones();
+          this.unreadCountSubject.next(0);
+          this.success('Todas las notificaciones eliminadas');
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar todas las notificaciones:', error);
+        this.error('No se pudieron eliminar las notificaciones');
+      }
+    });
   }
 
-  // Obtener todas las notificaciones
   getAll(): Notificacion[] {
     return this.notificaciones;
   }
 
-  // Obtener notificaciones no leídas
   getUnread(): Notificacion[] {
     return this.notificaciones.filter(n => !n.leida);
   }
 
-  // Solicitar permiso para notificaciones del navegador
   async requestPermission(): Promise<boolean> {
     if (!('Notification' in window)) {
       console.warn('Este navegador no soporta notificaciones');
@@ -129,17 +213,14 @@ export class NotificacionService {
     }
 
     const permission = await Notification.requestPermission();
-    StorageUtil.setItem(STORAGE_KEYS.NOTIFICATION_PERMISSION, permission);
     return permission === 'granted';
   }
 
-  // Verificar si tiene permiso
   hasPermission(): boolean {
     if (!('Notification' in window)) return false;
     return Notification.permission === 'granted';
   }
 
-  // Mostrar notificación del navegador
   private showBrowserNotification(notificacion: Notificacion): void {
     if (!this.hasPermission()) return;
 
@@ -147,8 +228,8 @@ export class NotificacionService {
       body: notificacion.mensaje,
       icon: '/assets/icons/notification-icon.png',
       badge: '/assets/icons/badge-icon.png',
-      tag: notificacion.id,
-      requireInteraction: notificacion.tipo === TipoNotificacion.PETICION_VENCIDA,
+      tag: notificacion.id.toString(),
+      requireInteraction: false,
     });
 
     notification.onclick = () => {
@@ -156,24 +237,21 @@ export class NotificacionService {
       this.markAsRead(notificacion.id);
       notification.close();
       
-      // Navegar si hay peticion_id
       if (notificacion.peticion_id) {
-        // Aquí podrías usar Router para navegar
-        console.log('Navegar a petición:', notificacion.peticion_id);
+        console.log('Navegar a peticion:', notificacion.peticion_id);
       }
     };
   }
 
-  // Mostrar toast según tipo de notificación
   private showToastFromNotificacion(notificacion: Notificacion): void {
+    if (!this.messageService) return;
+    
     const severityMap: { [key in TipoNotificacion]: 'success' | 'info' | 'warn' | 'error' } = {
-      [TipoNotificacion.NUEVA_PETICION]: 'info',
-      [TipoNotificacion.PETICION_ACEPTADA]: 'success',
-      [TipoNotificacion.PETICION_RESUELTA]: 'success',
-      [TipoNotificacion.PETICION_VENCIDA]: 'error',
-      [TipoNotificacion.NUEVO_COMENTARIO]: 'info',
-      [TipoNotificacion.CAMBIO_ESTADO]: 'info',
       [TipoNotificacion.ASIGNACION]: 'info',
+      [TipoNotificacion.CAMBIO_ESTADO]: 'info',
+      [TipoNotificacion.COMENTARIO]: 'info',
+      [TipoNotificacion.MENCION]: 'warn',
+      [TipoNotificacion.SISTEMA]: 'info',
     };
 
     this.messageService.add({
@@ -184,37 +262,7 @@ export class NotificacionService {
     });
   }
 
-  // Actualizar subject de notificaciones
   private updateNotificaciones(): void {
     this.notificacionesSubject.next([...this.notificaciones]);
-    this.saveNotificaciones();
-  }
-
-  // Actualizar contador de no leídas
-  private updateUnreadCount(): void {
-    const count = this.notificaciones.filter(n => !n.leida).length;
-    this.unreadCountSubject.next(count);
-  }
-
-  // Guardar notificaciones en localStorage
-  private saveNotificaciones(): void {
-    // Guardar solo las últimas 50 notificaciones
-    const toSave = this.notificaciones.slice(0, 50);
-    StorageUtil.setItem('notificaciones', toSave);
-  }
-
-  // Cargar notificaciones desde localStorage
-  private loadNotificaciones(): void {
-    const saved = StorageUtil.getItem<Notificacion[]>('notificaciones');
-    if (saved && Array.isArray(saved)) {
-      this.notificaciones = saved;
-      this.updateNotificaciones();
-      this.updateUnreadCount();
-    }
-  }
-
-  // Generar ID único
-  private generateId(): string {
-    return `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 }

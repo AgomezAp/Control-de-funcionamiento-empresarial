@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EstadisticaUsuario = exports.AuditoriaCambios = exports.PeriodoFacturacion = exports.PeticionHistorico = exports.Peticion = exports.Categoria = exports.Cliente = exports.Area = exports.Role = exports.Usuario = void 0;
+exports.Notificacion = exports.EstadisticaUsuario = exports.AuditoriaCambios = exports.PeriodoFacturacion = exports.PeticionHistorico = exports.Peticion = exports.Categoria = exports.Cliente = exports.Area = exports.Role = exports.Usuario = void 0;
 const Usuario_1 = __importDefault(require("./Usuario"));
 exports.Usuario = Usuario_1.default;
 const Role_1 = __importDefault(require("./Role"));
@@ -24,6 +24,8 @@ const AuditoriaCambio_1 = __importDefault(require("./AuditoriaCambio"));
 exports.AuditoriaCambios = AuditoriaCambio_1.default;
 const EstadisticasUsuario_1 = __importDefault(require("./EstadisticasUsuario"));
 exports.EstadisticaUsuario = EstadisticasUsuario_1.default;
+const Notificacion_1 = __importDefault(require("./Notificacion"));
+exports.Notificacion = Notificacion_1.default;
 // ========================================
 // RELACIONES DE USUARIO
 // ========================================
@@ -148,4 +150,23 @@ EstadisticasUsuario_1.default.belongsTo(Usuario_1.default, {
 Usuario_1.default.hasMany(EstadisticasUsuario_1.default, {
     foreignKey: "usuario_id",
     as: "estadisticas",
+});
+// ========================================
+// RELACIONES DE NOTIFICACIONES
+// ========================================
+Notificacion_1.default.belongsTo(Usuario_1.default, {
+    foreignKey: "usuario_id",
+    as: "usuario",
+});
+Notificacion_1.default.belongsTo(Peticion_1.default, {
+    foreignKey: "peticion_id",
+    as: "peticion",
+});
+Usuario_1.default.hasMany(Notificacion_1.default, {
+    foreignKey: "usuario_id",
+    as: "notificaciones",
+});
+Peticion_1.default.hasMany(Notificacion_1.default, {
+    foreignKey: "peticion_id",
+    as: "notificaciones",
 });

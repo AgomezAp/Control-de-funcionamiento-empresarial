@@ -37,12 +37,14 @@ class PeticionController {
     obtenerTodos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { estado, cliente_id } = req.query;
+                const { estado, cliente_id, area } = req.query;
                 const filtros = {};
                 if (estado)
                     filtros.estado = estado;
                 if (cliente_id)
                     filtros.cliente_id = Number(cliente_id);
+                if (area)
+                    filtros.area = area;
                 const peticiones = yield peticionService.obtenerTodos(req.usuario, filtros);
                 return response_util_1.ApiResponse.success(res, peticiones, "Peticiones obtenidas exitosamente");
             }

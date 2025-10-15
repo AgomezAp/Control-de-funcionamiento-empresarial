@@ -1,29 +1,32 @@
 export enum TipoNotificacion {
-  NUEVA_PETICION = 'NUEVA_PETICION',
-  PETICION_ACEPTADA = 'PETICION_ACEPTADA',
-  PETICION_RESUELTA = 'PETICION_RESUELTA',
-  PETICION_VENCIDA = 'PETICION_VENCIDA',
-  NUEVO_COMENTARIO = 'NUEVO_COMENTARIO',
-  CAMBIO_ESTADO = 'CAMBIO_ESTADO',
-  ASIGNACION = 'ASIGNACION'
+  ASIGNACION = 'asignacion',
+  CAMBIO_ESTADO = 'cambio_estado',
+  COMENTARIO = 'comentario',
+  MENCION = 'mencion',
+  SISTEMA = 'sistema'
 }
 
 export interface Notificacion {
-  id: string;
+  id: number;
+  usuario_id: number;
   tipo: TipoNotificacion;
   titulo: string;
   mensaje: string;
   peticion_id?: number;
-  usuario_id: number;
   leida: boolean;
-  fecha: Date;
-  data?: any;
+  fecha_creacion: Date;
+  fecha_lectura?: Date;
+  peticion?: any; // Datos de la petición si se incluyen
 }
 
-export interface NotificacionPush {
-  title: string;
-  body: string;
-  icon?: string;
-  badge?: string;
-  data?: any;
+export interface NotificacionCreate {
+  tipo: TipoNotificacion;
+  titulo: string;
+  mensaje: string;
+  peticion_id?: number;
+}
+
+export interface NotificacionFiltros {
+  leida?: boolean;
+  limit?: number;
 }

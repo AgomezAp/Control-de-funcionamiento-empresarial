@@ -7,6 +7,7 @@ import Area from "../models/Area";
 import { NotFoundError, ValidationError, ForbiddenError } from "../utils/error.util";
 import { AuditoriaService } from "./auditoria.service";
 import { webSocketService } from "./webSocket.service";
+import notificacionService from "./notificacion.service";
 import { Op } from "sequelize";
 
 export class PeticionService {
@@ -124,6 +125,13 @@ export class PeticionService {
         null,
         0
       );
+
+      // Enviar notificación al pautador
+      await notificacionService.notificarAsignacion(
+        peticionCompleta,
+        usuarioPautador!,
+        usuarioActual
+      );
     } else {
       // Si es de Diseño, emitir evento de nueva petición
       webSocketService.emitNuevaPeticion(peticionCompleta);
@@ -143,6 +151,11 @@ export class PeticionService {
     // Aplicar filtros de cliente si vienen
     if (filtros?.cliente_id) {
       whereClause.cliente_id = filtros.cliente_id;
+    }
+
+    // Aplicar filtro por área si viene (para filtrar Pautas vs Diseño)
+    if (filtros?.area) {
+      whereClause.area = filtros.area;
     }
 
     // Permisos según rol
@@ -206,7 +219,24 @@ export class PeticionService {
       order: [["fecha_creacion", "DESC"]],
     });
 
-    return peticiones;
+    // Calcular tiempo empleado dinámicamente para peticiones con temporizador activo
+    const peticionesConTiempo = peticiones.map((peticion) => {
+      const peticionJSON = peticion.toJSON() as any;
+
+      if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+        const ahora = new Date();
+        const tiempoTranscurrido = Math.floor(
+          (ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000
+        );
+        peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+      } else {
+        peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos;
+      }
+
+      return peticionJSON;
+    });
+
+    return peticionesConTiempo;
   }
 
   async obtenerPorId(id: number) {
@@ -241,7 +271,20 @@ export class PeticionService {
       throw new NotFoundError("Petición no encontrada");
     }
 
-    return peticion;
+    // Calcular tiempo empleado dinámicamente
+    const peticionJSON = peticion.toJSON() as any;
+
+    if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+      const ahora = new Date();
+      const tiempoTranscurrido = Math.floor(
+        (ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000
+      );
+      peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+    } else {
+      peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos;
+    }
+
+    return peticionJSON;
   }
 
   async obtenerPendientes(area?: string) {
@@ -341,6 +384,20 @@ export class PeticionService {
       null, // ya no hay fecha_limite
       0 // ya no hay tiempo_limite_horas
     );
+
+    // Enviar notificación al creador de la petición
+    const cliente = await Cliente.findByPk(peticion.cliente_id);
+    const creador = await Usuario.findByPk(peticion.creador_id);
+    
+    if (creador) {
+      await notificacionService.crear({
+        usuario_id: creador.uid,
+        tipo: "cambio_estado",
+        titulo: "Petición aceptada",
+        mensaje: `${usuarioActual.nombre_completo} ha aceptado la petición de ${cliente?.nombre || "un cliente"}`,
+        peticion_id: peticion.id,
+      });
+    }
 
     return peticionActualizada;
   }

@@ -42,11 +42,12 @@ export class PeticionController {
 
   async obtenerTodos(req: Request, res: Response) {
     try {
-      const { estado, cliente_id } = req.query;
+      const { estado, cliente_id, area } = req.query;
 
       const filtros: any = {};
       if (estado) filtros.estado = estado;
       if (cliente_id) filtros.cliente_id = Number(cliente_id);
+      if (area) filtros.area = area;
 
       const peticiones = await peticionService.obtenerTodos(req.usuario, filtros);
 

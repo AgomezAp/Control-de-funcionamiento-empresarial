@@ -67,6 +67,15 @@ export const API_ENDPOINTS = {
     POR_CLIENTE: (clienteId: number) =>
       `${environment.apiUrl}/facturacion/cliente/${clienteId}`,
   },
+
+  // Notificaciones
+  NOTIFICACIONES: {
+    BASE: `${environment.apiUrl}/notificaciones`,
+    NO_LEIDAS_COUNT: `${environment.apiUrl}/notificaciones/no-leidas/count`,
+    MARCAR_LEIDA: (id: number) => `${environment.apiUrl}/notificaciones/${id}/leida`,
+    MARCAR_TODAS_LEIDAS: `${environment.apiUrl}/notificaciones/todas/leidas`,
+    BY_ID: (id: number) => `${environment.apiUrl}/notificaciones/${id}`,
+  },
 };
 
 export const WS_EVENTS = {
@@ -79,6 +88,10 @@ export const WS_EVENTS = {
   USUARIO_ONLINE: 'usuarioOnline',
   USUARIO_OFFLINE: 'usuarioOffline',
   USUARIO_ESCRIBIENDO: 'usuarioEscribiendo',
+  
+  // Eventos de notificaciones
+  NUEVA_NOTIFICACION: 'nuevaNotificacion',
+  CONTADOR_NOTIFICACIONES: 'contadorNotificaciones',
 
   // Eventos del cliente
   JOIN_ROOM: 'joinRoom',

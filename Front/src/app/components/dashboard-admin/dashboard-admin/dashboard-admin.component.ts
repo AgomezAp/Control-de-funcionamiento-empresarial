@@ -229,4 +229,10 @@ export class DashboardAdminComponent implements OnInit {
       return false;
     });
   }
+
+  // Método helper para convertir valores a número y formatear con decimales
+  formatNumber(value: any, decimals: number = 2): string {
+    const num = parseFloat(value) || 0;
+    return num.toFixed(decimals);
+  }
 }

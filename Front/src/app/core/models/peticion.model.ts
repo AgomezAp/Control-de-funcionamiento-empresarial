@@ -26,6 +26,7 @@ export interface Peticion {
   
   // Campos del temporizador
   tiempo_empleado_segundos: number;
+  tiempo_empleado_actual?: number; // Tiempo calculado en tiempo real (incluye temporizador activo)
   temporizador_activo: boolean;
   fecha_inicio_temporizador?: Date | null;
   fecha_pausa_temporizador?: Date | null;

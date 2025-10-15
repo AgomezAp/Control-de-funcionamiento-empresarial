@@ -22,6 +22,7 @@ const Area_1 = __importDefault(require("../models/Area"));
 const error_util_1 = require("../utils/error.util");
 const auditoria_service_1 = require("./auditoria.service");
 const webSocket_service_1 = require("./webSocket.service");
+const notificacion_service_1 = __importDefault(require("./notificacion.service"));
 const sequelize_1 = require("sequelize");
 class PeticionService {
     constructor() {
@@ -107,6 +108,8 @@ class PeticionService {
                     nombre_completo: usuarioPautador.nombre_completo,
                     correo: usuarioPautador.correo,
                 }, fechaAceptacion, null, 0);
+                // Enviar notificación al pautador
+                yield notificacion_service_1.default.notificarAsignacion(peticionCompleta, usuarioPautador, usuarioActual);
             }
             else {
                 // Si es de Diseño, emitir evento de nueva petición
@@ -125,6 +128,10 @@ class PeticionService {
             // Aplicar filtros de cliente si vienen
             if (filtros === null || filtros === void 0 ? void 0 : filtros.cliente_id) {
                 whereClause.cliente_id = filtros.cliente_id;
+            }
+            // Aplicar filtro por área si viene (para filtrar Pautas vs Diseño)
+            if (filtros === null || filtros === void 0 ? void 0 : filtros.area) {
+                whereClause.area = filtros.area;
             }
             // Permisos según rol
             if (usuarioActual.rol === "Usuario") {
@@ -181,7 +188,20 @@ class PeticionService {
                 ],
                 order: [["fecha_creacion", "DESC"]],
             });
-            return peticiones;
+            // Calcular tiempo empleado dinámicamente para peticiones con temporizador activo
+            const peticionesConTiempo = peticiones.map((peticion) => {
+                const peticionJSON = peticion.toJSON();
+                if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+                    const ahora = new Date();
+                    const tiempoTranscurrido = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
+                    peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+                }
+                else {
+                    peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos;
+                }
+                return peticionJSON;
+            });
+            return peticionesConTiempo;
         });
     }
     obtenerPorId(id) {
@@ -215,7 +235,17 @@ class PeticionService {
             if (!peticion) {
                 throw new error_util_1.NotFoundError("Petición no encontrada");
             }
-            return peticion;
+            // Calcular tiempo empleado dinámicamente
+            const peticionJSON = peticion.toJSON();
+            if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+                const ahora = new Date();
+                const tiempoTranscurrido = Math.floor((ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000);
+                peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos + tiempoTranscurrido;
+            }
+            else {
+                peticionJSON.tiempo_empleado_actual = peticion.tiempo_empleado_segundos;
+            }
+            return peticionJSON;
         });
     }
     obtenerPendientes(area) {
@@ -298,6 +328,18 @@ class PeticionService {
             }, fecha_aceptacion, null, // ya no hay fecha_limite
             0 // ya no hay tiempo_limite_horas
             );
+            // Enviar notificación al creador de la petición
+            const cliente = yield Cliente_1.default.findByPk(peticion.cliente_id);
+            const creador = yield Usuario_1.default.findByPk(peticion.creador_id);
+            if (creador) {
+                yield notificacion_service_1.default.crear({
+                    usuario_id: creador.uid,
+                    tipo: "cambio_estado",
+                    titulo: "Petición aceptada",
+                    mensaje: `${usuarioActual.nombre_completo} ha aceptado la petición de ${(cliente === null || cliente === void 0 ? void 0 : cliente.nombre) || "un cliente"}`,
+                    peticion_id: peticion.id,
+                });
+            }
             return peticionActualizada;
         });
     }

@@ -31,7 +31,7 @@
         <i class="pi pi-clock stat-icon" style="color: #FF9800;"></i>
         <div class="stat-details">
           <p class="stat-label">Tiempo Promedio</p>
-          <h3 class="stat-value">{{ misEstadisticas.tiempo_promedio_resolucion_horas?.toFixed(1) || 'N/A' }}h</h3>
+          <h3 class="stat-value">{{ formatNumber(misEstadisticas.tiempo_promedio_resolucion_horas) }}h</h3>
         </div>
       </div>
     </p-card>
