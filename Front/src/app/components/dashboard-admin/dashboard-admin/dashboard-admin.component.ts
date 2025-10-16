@@ -47,6 +47,7 @@ export class DashboardAdminComponent implements OnInit {
   totalPeticiones: number = 0;
   peticionesPendientes: number = 0;
   peticionesEnProgreso: number = 0;
+  peticionesPausadas: number = 0;  // ✅ NUEVO: Peticiones pausadas
   peticionesResueltas: number = 0;
   costoTotalMes: number = 0;
 
@@ -104,6 +105,7 @@ export class DashboardAdminComponent implements OnInit {
           this.totalPeticiones = resumen.total_peticiones;
           this.peticionesPendientes = resumen.por_estado.pendientes;
           this.peticionesEnProgreso = resumen.por_estado.en_progreso;
+          this.peticionesPausadas = resumen.por_estado.pausadas || 0;  // ✅ NUEVO
           this.peticionesResueltas = resumen.por_estado.resueltas;
 
           // Setup chart con los datos correctos
@@ -315,6 +317,7 @@ export class DashboardAdminComponent implements OnInit {
           const peticiones = response.data;
           this.peticionesPendientes = peticiones.filter((p: any) => p.estado === 'Pendiente').length;
           this.peticionesEnProgreso = peticiones.filter((p: any) => p.estado === 'En Progreso').length;
+          this.peticionesPausadas = peticiones.filter((p: any) => p.estado === 'Pausada').length;  // ✅ NUEVO
           
           // Detectar peticiones vencidas
           this.detectPeticionesVencidas(peticiones);

@@ -1,66 +1,379 @@
-/* ==========================================
-   VARIABLES DE COLOR - Modo Claro y Oscuro
-   ========================================== */
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
 :root {
-  /* Modo Claro */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-card: #ffffff;
-  --text-primary: #000000;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --border-color: #e0e0e0;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --shadow-hover: rgba(0, 0, 0, 0.15);
-
-  /* Colores Institucionales */
-  --yellow-primary: #ffd700;
-  --yellow-dark: #ffc700;
-  --yellow-light: #ffe44d;
-  --black: #000000;
-  --white: #ffffff;
-
-  /* Estados */
-  --error-color: #dc3545;
-  --success-color: #28a745;
-  --hover-bg: #f5f5f5;
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
 }
 
-[data-theme="dark"],
-.dark-mode {
-  /* Modo Oscuro */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-card: #252525;
-  --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-muted: #808080;
-  --border-color: #404040;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --shadow-hover: rgba(0, 0, 0, 0.5);
-  --hover-bg: #333333;
-
-  /* Ajuste de amarillo para modo oscuro */
-  --yellow-primary: #ffd700;
-  --yellow-dark: #e6c200;
-  --yellow-light: #ffed4e;
-}
-
-/* ==========================================
-   CONTENEDOR PRINCIPAL
-   ========================================== */
+/* ============================================
+   CONTAINER PRINCIPAL
+   ============================================ */
 .crear-usuario-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 1rem auto;
-  padding: 0 1rem;
-  animation: fadeIn 0.3s ease-in;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
 }
 
-@keyframes fadeIn {
+/* ============================================
+   CARD PRINCIPAL
+   ============================================ */
+.usuario-card {
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--color-white);
+  overflow: hidden;
+}
+
+:host-context(.dark-mode) .usuario-card {
+  background-color: #1e1e1e;
+  border-color: #444444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   HEADER DE LA CARD
+   ============================================ */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-yellow) 0%,
+    var(--color-yellow-dark) 100%
+  );
+  border-bottom: 3px solid var(--color-yellow-dark);
+}
+
+.card-header .title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.card-header .title i {
+  font-size: 1.75rem;
+}
+
+/* Botón Volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background-color: var(--color-black);
+  color: var(--color-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-volver i {
+  font-size: 1rem;
+}
+
+/* ============================================
+   FORMULARIO
+   ============================================ */
+.usuario-form {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+/* ============================================
+   CAMPOS DEL FORMULARIO
+   ============================================ */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+:host-context(.dark-mode) .field-label {
+  color: var(--color-white);
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+/* ============================================
+   INPUTS DE TEXTO
+   ============================================ */
+.field-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: inherit;
+}
+
+.field-input::placeholder {
+  color: #999999;
+}
+
+.field-input:hover {
+  border-color: var(--color-yellow);
+}
+
+.field-input:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+  outline: none;
+}
+
+.field-input.ng-invalid.ng-touched {
+  border-color: var(--color-error);
+}
+
+.field-input.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.2);
+}
+
+:host-context(.dark-mode) .field-input {
+  background-color: #2a2a2a;
+  border-color: #444444;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .field-input::placeholder {
+  color: #666666;
+}
+
+:host-context(.dark-mode) .field-input:hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .field-input:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3);
+}
+
+/* ============================================
+   PASSWORD FIELD - OJO DENTRO DEL INPUT
+   ============================================ */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  padding-right: 3rem !important;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3rem;
+  background: none;
+  border: none;
+  color: var(--color-yellow-dark);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.password-toggle:hover {
+  color: var(--color-yellow);
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+.password-toggle:active {
+  transform: scale(0.95);
+}
+
+:host-context(.dark-mode) .password-toggle {
+  color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .password-toggle:hover {
+  background-color: rgba(255, 215, 0, 0.15);
+}
+
+/* ============================================
+   SELECT DROPDOWN MEJORADO
+   ============================================ */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.field-select {
+  width: 100%;
+  padding: 0.875rem 3rem 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+  font-weight: 500;
+  background-image: none;
+}
+
+.field-select:hover {
+  border-color: var(--color-yellow);
+}
+
+.field-select:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+  outline: none;
+}
+
+/* Placeholder cuando no hay selección */
+.field-select option[value=""] {
+  color: #999999;
+}
+
+.field-select:invalid {
+  color: #999999;
+}
+
+.field-select option {
+  padding: 0.75rem;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-weight: 500;
+}
+
+.field-select option:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* Modo Oscuro - Select */
+:host-context(.dark-mode) .field-select {
+  background-color: #2a2a2a;
+  border-color: #444444;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .field-select:hover {
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .field-select:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3);
+}
+
+:host-context(.dark-mode) .field-select:invalid {
+  color: #666666;
+}
+
+:host-context(.dark-mode) .field-select option {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+}
+
+:host-context(.dark-mode) .field-select option[value=""] {
+  color: #666666;
+}
+
+/* Icono del Select */
+.select-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-yellow-dark);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.select-wrapper:hover .select-icon {
+  color: var(--color-yellow);
+}
+
+.field-select:focus ~ .select-icon {
+  color: var(--color-yellow);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+:host-context(.dark-mode) .select-icon {
+  color: var(--color-yellow);
+}
+
+/* ============================================
+   MENSAJES DE ERROR
+   ============================================ */
+.field-error {
+  display: block;
+  color: var(--color-error);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  animation: slideDown 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.field-error::before {
+  content: "⚠";
+  font-size: 1rem;
+}
+
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-5px);
   }
   to {
     opacity: 1;
@@ -68,556 +381,95 @@
   }
 }
 
-/* ==========================================
-   CARD
-   ========================================== */
-::ng-deep .usuario-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px var(--shadow);
-  transition: all 0.3s ease;
-}
-
-::ng-deep .usuario-card .p-card-body {
-  padding: 0;
-}
-
-::ng-deep .usuario-card .p-card-content {
-  padding: 0;
-}
-
-::ng-deep .p-card-header {
-  padding: 0 !important;
-}
-
-/* ==========================================
-   HEADER
-   ========================================== */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  background: linear-gradient(
-    135deg,
-    var(--yellow-primary) 0%,
-    var(--yellow-dark) 100%
-  );
-  border-radius: 8px 8px 0 0;
-  border-bottom: 2px solid var(--black);
-}
-
-.title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0;
-  color: var(--black);
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.title i {
-  font-size: 1.5rem;
-}
-
-.btn-volver {
-  background-color: var(--black) !important;
-  border-color: var(--black) !important;
-  color: var(--white) !important;
-  padding: 0.5rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-volver:hover {
-  background-color: #333333 !important;
-  transform: translateX(-3px);
-}
-
-/* ==========================================
-   FORMULARIO - LAYOUT EN GRID
-   ========================================== */
-.usuario-form {
-  padding: 1.5rem;
-  background-color: var(--bg-card);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem 1.5rem;
-  grid-template-areas:
-    "nombre nombre"
-    "correo correo"
-    "contrasena confirmar"
-    "rol area"
-    "actions actions";
-}
-
-/* Asignación de áreas del grid */
-.form-field:nth-child(1) {
-  grid-area: nombre;
-}
-.form-field:nth-child(2) {
-  grid-area: correo;
-}
-.form-field:nth-child(3) {
-  grid-area: contrasena;
-}
-.form-field:nth-child(4) {
-  grid-area: confirmar;
-}
-.form-field:nth-child(5) {
-  grid-area: rol;
-}
-.form-field:nth-child(6) {
-  grid-area: area;
-}
-.form-actions {
-  grid-area: actions;
-}
-
-.form-field {
-  margin-bottom: 0;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.field-label {
-  display: block;
-  margin-bottom: 0.4rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.required {
-  color: var(--error-color);
-  font-weight: 700;
-}
-
-/* ==========================================
-   INPUTS
-   ========================================== */
-::ng-deep .field-input {
-  width: 100%;
-  padding: 0.65rem;
-  border: 2px solid var(--border-color);
-  border-radius: 6px;
-  background-color: var(--bg-card);
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-::ng-deep .field-input:hover {
-  border-color: var(--yellow-dark);
-}
-
-::ng-deep .field-input:focus {
-  outline: none;
-  border-color: var(--yellow-primary);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
-  background-color: var(--bg-card);
-}
-
-::ng-deep .field-input::placeholder {
-  color: var(--text-muted);
-}
-
-/* ==========================================
-   PASSWORD INPUT - AJUSTE COMPLETO
-   ========================================== */
-::ng-deep .field-password {
-  width: 100%;
-}
-
-::ng-deep .field-password .p-password {
-  width: 100%;
-  display: block;
-  position: relative;
-}
-
-::ng-deep .field-password .p-password-input {
-  width: 100%;
-}
-
-::ng-deep .field-password .p-input-icon-right {
-  width: 100%;
-}
-
-::ng-deep .field-password .p-inputtext {
-  width: 100%;
-  padding: 0.65rem 2.75rem 0.65rem 0.65rem;
-  border: 2px solid var(--border-color);
-  border-radius: 6px;
-  background-color: var(--bg-card);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-}
-
-::ng-deep .field-password .p-inputtext:hover {
-  border-color: var(--yellow-dark);
-}
-
-::ng-deep .field-password .p-inputtext:focus {
-  border-color: var(--yellow-primary);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
-}
-
-/* Botón del ojo para mostrar/ocultar contraseña */
-::ng-deep .p-password {
-  position: relative;
-  display: inline-flex;
-  width: 100%;
-}
-
-::ng-deep .p-password .p-password-input {
-  width: 100%;
-  padding-right: 2.75rem;
-}
-
-::ng-deep .p-password > i {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-  font-size: 1.1rem;
-}
-
-::ng-deep .p-password > i:hover {
-  color: var(--yellow-primary);
-  transform: translateY(-50%) scale(1.1);
-}
-
-::ng-deep .p-password-toggle-icon {
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-::ng-deep .p-password .p-icon {
-  color: var(--text-secondary);
-  width: 1.2rem;
-  height: 1.2rem;
-}
-
-::ng-deep .p-password-toggle-icon:hover,
-::ng-deep .p-password .p-icon:hover {
-  color: var(--yellow-primary);
-  transform: scale(1.1);
-}
-
-::ng-deep .p-password > .p-input-icon-right > .p-input-icon {
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-::ng-deep .p-password > .p-input-icon-right > .p-input-icon:hover {
-  color: var(--yellow-primary);
-}
-
-/* Panel de fuerza de contraseña */
-::ng-deep .p-password-panel {
-  background-color: var(--bg-card);
-  border: 2px solid var(--yellow-primary);
-  border-radius: 6px;
-  box-shadow: 0 4px 8px var(--shadow);
-  margin-top: 0.5rem;
-  padding: 0.75rem;
-}
-
-::ng-deep .p-password-meter {
-  height: 8px;
-  margin-top: 0.5rem;
-  background-color: var(--border-color);
-  border-radius: 4px;
-}
-
-::ng-deep .p-password-strength {
-  height: 100%;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-/* Colores de fuerza de contraseña */
-::ng-deep .p-password-strength.weak {
-  background-color: var(--error-color);
-}
-
-::ng-deep .p-password-strength.medium {
-  background-color: #ffc107;
-}
-
-::ng-deep .p-password-strength.strong {
-  background-color: var(--success-color);
-}
-
-::ng-deep .p-password-info {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-/* Ajuste específico para modo oscuro */
-[data-theme="dark"] ::ng-deep .p-password-toggle-icon,
-[data-theme="dark"] ::ng-deep .p-password .p-icon,
-[data-theme="dark"] ::ng-deep .p-password > i {
-  color: var(--text-secondary);
-}
-
-[data-theme="dark"] ::ng-deep .p-password-toggle-icon:hover,
-[data-theme="dark"] ::ng-deep .p-password .p-icon:hover,
-[data-theme="dark"] ::ng-deep .p-password > i:hover {
-  color: var(--yellow-primary);
-}
-
-/* ==========================================
-   DROPDOWN
-   ========================================== */
-::ng-deep .field-dropdown {
-  width: 100%;
-}
-
-::ng-deep .field-dropdown .p-dropdown {
-  width: 100%;
-  border: 2px solid var(--border-color);
-  border-radius: 6px;
-  background-color: var(--bg-card);
-  transition: all 0.3s ease;
-}
-
-::ng-deep .field-dropdown .p-dropdown:hover {
-  border-color: var(--yellow-dark);
-}
-
-::ng-deep .field-dropdown .p-dropdown:focus,
-::ng-deep .field-dropdown .p-dropdown.p-focus {
-  border-color: var(--yellow-primary);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
-}
-
-::ng-deep .field-dropdown .p-dropdown-label {
-  padding: 0.65rem;
-  color: var(--text-primary);
-}
-
-::ng-deep .field-dropdown .p-dropdown-trigger {
-  color: var(--text-primary);
-}
-
-::ng-deep .p-dropdown-panel {
-  background-color: var(--bg-card);
-  border: 2px solid var(--yellow-primary);
-  border-radius: 6px;
-  box-shadow: 0 4px 8px var(--shadow);
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item {
-  color: var(--text-primary);
-  padding: 0.65rem 1rem;
-  transition: all 0.2s ease;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: var(--yellow-light);
-  color: var(--black);
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: var(--yellow-primary);
-  color: var(--black);
-}
-
-/* ==========================================
-   MENSAJES DE ERROR
-   ========================================== */
-.field-error {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--error-color);
-  font-size: 0.8rem;
-  font-weight: 500;
-  animation: shake 0.3s ease;
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-3px);
-  }
-  75% {
-    transform: translateX(3px);
-  }
-}
-
-/* ==========================================
+/* ============================================
    BOTONES DE ACCIÓN
-   ========================================== */
+   ============================================ */
 .form-actions {
+  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 0.5rem;
   padding-top: 1rem;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--color-gray-medium);
+  margin-top: 1rem;
 }
 
+:host-context(.dark-mode) .form-actions {
+  border-top-color: #444444;
+}
+
+/* Botón Cancelar */
 .btn-cancelar {
-  background-color: var(--bg-secondary) !important;
-  border: 2px solid var(--border-color) !important;
-  color: var(--text-primary) !important;
-  padding: 0.65rem 1.5rem !important;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--color-black);
+  border: 2px solid var(--color-gray-medium);
+  border-radius: 8px;
   font-weight: 600;
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn-cancelar:hover {
-  background-color: var(--hover-bg) !important;
-  border-color: var(--text-secondary) !important;
+  background-color: var(--color-gray-light);
+  border-color: var(--color-gray-dark);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+:host-context(.dark-mode) .btn-cancelar {
+  color: var(--color-white);
+  border-color: #666666;
+}
+
+:host-context(.dark-mode) .btn-cancelar:hover {
+  background-color: #2a2a2a;
+  border-color: var(--color-white);
+}
+
+/* Botón Guardar */
 .btn-guardar {
-  background-color: var(--yellow-primary) !important;
-  border: 2px solid var(--yellow-primary) !important;
-  color: var(--black) !important;
-  padding: 0.65rem 1.5rem !important;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-yellow) 0%,
+    var(--color-yellow-dark) 100%
+  );
+  color: var(--color-black);
+  border: none;
+  border-radius: 8px;
   font-weight: 700;
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
 
 .btn-guardar:hover:not(:disabled) {
-  background-color: var(--yellow-dark) !important;
-  border-color: var(--yellow-dark) !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
 }
 
 .btn-guardar:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.btn-guardar .pi-save {
+.btn-guardar i {
   font-size: 1rem;
 }
 
-/* ==========================================
-   ESTADOS DE VALIDACIÓN
-   ========================================== */
-::ng-deep .ng-invalid.ng-touched .field-input,
-::ng-deep .ng-invalid.ng-touched .p-inputtext,
-::ng-deep .ng-invalid.ng-touched .p-dropdown {
-  border-color: var(--error-color);
-}
-
-::ng-deep .ng-valid.ng-touched .field-input,
-::ng-deep .ng-valid.ng-touched .p-inputtext {
-  border-color: var(--success-color);
-}
-
-/* ==========================================
-   RESPONSIVE
-   ========================================== */
-@media (max-width: 992px) {
-  .usuario-form {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    grid-template-areas:
-      "nombre"
-      "correo"
-      "contrasena"
-      "confirmar"
-      "rol"
-      "area"
-      "actions";
-  }
-}
-
-@media (max-width: 768px) {
-  .crear-usuario-container {
-    margin: 0.5rem auto;
-    padding: 0 0.5rem;
-  }
-
-  .card-header {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem;
-  }
-
-  .title {
-    font-size: 1.25rem;
-  }
-
-  .btn-volver {
-    width: 100%;
-  }
-
-  .usuario-form {
-    padding: 1rem;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-
-  .btn-cancelar,
-  .btn-guardar {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* ==========================================
-   OPTIMIZACIÓN PARA NO TENER SCROLL
-   ========================================== */
-@media (min-width: 1024px) and (min-height: 768px) {
-  .crear-usuario-container {
-    height: calc(100vh - 2rem);
-    display: flex;
-    align-items: center;
-  }
-
-  ::ng-deep .usuario-card {
-    width: 100%;
-  }
-}
-
-/* ==========================================
-   LOADING STATE
-   ========================================== */
-::ng-deep .p-button-loading .p-button-icon {
-  animation: spin 1s linear infinite;
-}
-
+/* Spinner animation */
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -627,25 +479,180 @@
   }
 }
 
-/* ==========================================
+.pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE - TABLET
+   ============================================ */
+@media (max-width: 1024px) {
+  .crear-usuario-container {
+    padding: 1.5rem;
+  }
+
+  .usuario-form {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .card-header .title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .crear-usuario-container {
+    padding: 1rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .card-header .title {
+    font-size: 1.35rem;
+  }
+
+  .btn-volver {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .usuario-form {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .btn-cancelar,
+  .btn-guardar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .crear-usuario-container {
+    padding: 0.75rem;
+  }
+
+  .card-header {
+    padding: 0.875rem;
+  }
+
+  .card-header .title {
+    font-size: 1.2rem;
+  }
+
+  .card-header .title i {
+    font-size: 1.2rem;
+  }
+
+  .usuario-form {
+    padding: 0.875rem;
+    gap: 1rem;
+  }
+
+  .field-label {
+    font-size: 0.875rem;
+  }
+
+  .field-input,
+  .field-select {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .password-input {
+    padding-right: 2.75rem !important;
+  }
+
+  .password-toggle {
+    width: 2.75rem;
+  }
+
+  .field-select {
+    padding-right: 2.75rem;
+  }
+}
+
+/* ============================================
    ACCESIBILIDAD
-   ========================================== */
-.field-input:focus-visible,
-.btn-volver:focus-visible,
-.btn-cancelar:focus-visible,
-.btn-guardar:focus-visible {
-  outline: 3px solid var(--yellow-primary);
+   ============================================ */
+*:focus-visible {
+  outline: 2px solid var(--color-yellow);
   outline-offset: 2px;
 }
 
-/* ==========================================
-   AJUSTES FINOS
-   ========================================== */
-::ng-deep .p-inputtext,
-::ng-deep .p-dropdown {
-  font-size: 0.95rem;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-::ng-deep .p-password-strength {
-  font-size: 0.8rem;
+/* ============================================
+   FIREFOX - SELECT ARROW FIX
+   ============================================ */
+.field-select {
+  -moz-appearance: none;
+}
+
+@supports (-moz-appearance: none) {
+  .field-select {
+    padding-right: 3rem;
+  }
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+.usuario-form::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.usuario-form::-webkit-scrollbar-track {
+  background-color: var(--color-gray-light);
+  border-radius: 4px;
+}
+
+.usuario-form::-webkit-scrollbar-thumb {
+  background-color: var(--color-yellow);
+  border-radius: 4px;
+}
+
+.usuario-form::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode) .usuario-form::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
 }

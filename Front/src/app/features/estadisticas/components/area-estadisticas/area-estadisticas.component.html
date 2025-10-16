@@ -6,10 +6,28 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-3xl font-bold text-gray-800">
         <i class="pi pi-building text-green-600 mr-2"></i>
-        Estadísticas por Área: {{ areaUsuario }}
+        Estadísticas por Área
       </h2>
 
       <div class="flex gap-3">
+        <!-- ✅ Selector de Área (solo para Admin/Directivo) -->
+        <p-dropdown
+          *ngIf="esAdmin"
+          [options]="areasDisponibles"
+          [(ngModel)]="areaSeleccionada"
+          placeholder="Seleccionar Área"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onAreaChange()"
+          [style]="{ width: '220px' }"
+        ></p-dropdown>
+
+        <!-- Mostrar área fija si no es Admin/Directivo -->
+        <div *ngIf="!esAdmin" class="flex items-center px-4 py-2 bg-blue-50 rounded-lg border border-blue-200">
+          <i class="pi pi-building text-blue-600 mr-2"></i>
+          <span class="font-semibold text-blue-800">{{ areaSeleccionada }}</span>
+        </div>
+
         <p-dropdown
           [options]="meses"
           [(ngModel)]="selectedMes"

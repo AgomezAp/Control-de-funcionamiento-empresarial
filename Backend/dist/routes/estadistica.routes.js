@@ -14,8 +14,8 @@ router.get("/mis-estadisticas", estadisticaController.obtenerMisEstadisticas);
 router.post("/calcular", (0, roleAuth_middleware_1.roleAuth)("Admin"), estadisticaController.calcularEstadisticasUsuario);
 // Recalcular todas las estadísticas (Solo Admin)
 router.post("/recalcular", (0, roleAuth_middleware_1.roleAuth)("Admin"), estadisticaController.recalcularTodasEstadisticas);
-// Obtener estadísticas globales (Admin)
-router.get("/globales", (0, roleAuth_middleware_1.roleAuth)("Admin"), estadisticaController.obtenerEstadisticasGlobales);
+// ✅ Obtener estadísticas globales (Admin y Directivo)
+router.get("/globales", (0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo"), estadisticaController.obtenerEstadisticasGlobales);
 // Obtener estadísticas por área (Admin, Directivo, Líder)
 router.get("/area/:area", (0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo", "Líder"), estadisticaController.obtenerEstadisticasPorArea);
 // Obtener estadísticas de un usuario (Admin, Directivo, Líder)

@@ -138,33 +138,57 @@
     </div>
   </div>
 
-  <!-- Métricas adicionales (grid con 2 o 1 cards según permisos) -->
-  <div *ngIf="!loading && estadisticaActual" class="metrics-grid" [class.metrics-single]="!puedeVerCostos()">
+  <!-- Métricas adicionales - Estado actual de peticiones asignadas -->
+  <div *ngIf="!loading && estadisticaActual" class="metrics-grid">
     <div class="metric-card">
       <div class="metric-content">
         <div class="metric-icon-wrapper metric-icon-orange">
           <i class="pi pi-clock"></i>
         </div>
         <div class="metric-info">
-          <p class="metric-label">Peticiones Pendientes</p>
+          <p class="metric-label">Pendientes Actuales</p>
           <p class="metric-value">
-            {{
-              (estadisticaActual.peticiones_creadas || 0) -
-                (estadisticaActual.peticiones_resueltas || 0) -
-                (estadisticaActual.peticiones_canceladas || 0)
-            }}
+            {{ estadisticaActual.peticiones_pendientes_actual || 0 }}
           </p>
         </div>
       </div>
     </div>
 
-    <div *ngIf="puedeVerCostos()" class="metric-card">
+    <div class="metric-card">
+      <div class="metric-content">
+        <div class="metric-icon-wrapper metric-icon-blue">
+          <i class="pi pi-spinner"></i>
+        </div>
+        <div class="metric-info">
+          <p class="metric-label">En Progreso Actuales</p>
+          <p class="metric-value">
+            {{ estadisticaActual.peticiones_en_progreso_actual || 0 }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-content">
+        <div class="metric-icon-wrapper metric-icon-purple">
+          <i class="pi pi-pause"></i>
+        </div>
+        <div class="metric-info">
+          <p class="metric-label">Pausadas Actuales</p>
+          <p class="metric-value">
+            {{ estadisticaActual.peticiones_pausadas_actual || 0 }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
       <div class="metric-content">
         <div class="metric-icon-wrapper metric-icon-red">
           <i class="pi pi-times-circle"></i>
         </div>
         <div class="metric-info">
-          <p class="metric-label">Peticiones Canceladas</p>
+          <p class="metric-label">Canceladas (Este Mes)</p>
           <p class="metric-value">
             {{ estadisticaActual.peticiones_canceladas || 0 }}
           </p>

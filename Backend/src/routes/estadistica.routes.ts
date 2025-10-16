@@ -26,10 +26,10 @@ router.post(
   estadisticaController.recalcularTodasEstadisticas
 );
 
-// Obtener estadísticas globales (Admin)
+// ✅ Obtener estadísticas globales (Admin y Directivo)
 router.get(
   "/globales",
-  roleAuth("Admin"),
+  roleAuth("Admin", "Directivo"),
   estadisticaController.obtenerEstadisticasGlobales
 );
 

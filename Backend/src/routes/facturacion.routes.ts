@@ -6,12 +6,11 @@ import { roleAuth } from "../middleware/roleAuth.middleware";
 const router = Router();
 const facturacionController = new FacturacionController();
 
-// Todas las rutas requieren autenticación y roles elevados
+// ✅ CORREGIDO: Solo autenticación general, permisos específicos por ruta
 router.use(authMiddleware);
-router.use(roleAuth("Admin", "Directivo"));
 
-// Generar periodo de facturación para un cliente
-router.post("/generar", facturacionController.generarPeriodoFacturacion);
+// Generar periodo de facturación para un cliente (SOLO ADMIN)
+router.post("/generar", roleAuth("Admin"), facturacionController.generarPeriodoFacturacion);
 
 // Generar periodos para todos los clientes
 router.post(
@@ -20,28 +19,29 @@ router.post(
   facturacionController.generarPeriodosParaTodosLosClientes
 );
 
-// Generar facturación automática para peticiones resueltas
+// Generar facturación automática para peticiones resueltas (SOLO ADMIN)
 router.post(
   "/generar-automatica",
+  roleAuth("Admin"),
   facturacionController.generarFacturacionAutomatica
 );
 
-// Obtener resumen de facturación mensual
-router.get("/resumen", facturacionController.obtenerResumenFacturacionMensual);
+// ✅ Obtener resumen de facturación mensual (Admin y Directivo pueden VER)
+router.get("/resumen", roleAuth("Admin", "Directivo"), facturacionController.obtenerResumenFacturacionMensual);
 
-// Obtener detalle de un periodo específico
-router.get("/detalle", facturacionController.obtenerDetallePeriodo);
+// ✅ Obtener detalle de un periodo específico (Admin y Directivo pueden VER)
+router.get("/detalle", roleAuth("Admin", "Directivo"), facturacionController.obtenerDetallePeriodo);
 
-// Obtener periodo por ID
-router.get("/:id", facturacionController.obtenerPeriodoPorId);
+// ✅ Obtener periodo por ID (Admin y Directivo pueden VER)
+router.get("/:id", roleAuth("Admin", "Directivo"), facturacionController.obtenerPeriodoPorId);
 
-// Cerrar periodo
-router.patch("/:id/cerrar", facturacionController.cerrarPeriodo);
+// Cerrar periodo (SOLO ADMIN puede MODIFICAR)
+router.patch("/:id/cerrar", roleAuth("Admin"), facturacionController.cerrarPeriodo);
 
-// Facturar periodo
-router.patch("/:id/facturar", facturacionController.facturarPeriodo);
+// Facturar periodo (SOLO ADMIN puede MODIFICAR)
+router.patch("/:id/facturar", roleAuth("Admin"), facturacionController.facturarPeriodo);
 
-// Obtener periodos de un cliente
-router.get("/cliente/:cliente_id", facturacionController.obtenerPeriodosPorCliente);
+// ✅ Obtener periodos de un cliente (Admin y Directivo pueden VER)
+router.get("/cliente/:cliente_id", roleAuth("Admin", "Directivo"), facturacionController.obtenerPeriodosPorCliente);
 
 export default router;

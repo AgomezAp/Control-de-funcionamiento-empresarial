@@ -7,11 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { PasswordModule } from 'primeng/password';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { NotificacionService } from '../../../../core/services/notificacion.service';
 import { UsuarioCreate } from '../../../../core/models/usuario.model';
@@ -22,17 +17,9 @@ import { MENSAJES } from '../../../../core/constants/mensajes.constants';
 @Component({
   selector: 'app-crear-usuario',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CardModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule,
-    PasswordModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear-usuario.component.html',
-  styleUrls:  ['./crear-usuario.component.css'],
+  styleUrls: ['./crear-usuario.component.css'],
 })
 export class CrearUsuarioComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -42,6 +29,10 @@ export class CrearUsuarioComponent implements OnInit {
 
   usuarioForm!: FormGroup;
   loading = false;
+
+  // ⭐ AGREGAR ESTAS PROPIEDADES PARA PASSWORD TOGGLE
+  showPassword = false;
+  showConfirmPassword = false;
 
   roles = [
     { label: RoleEnum.ADMIN, value: 1 },
@@ -103,6 +94,15 @@ export class CrearUsuarioComponent implements OnInit {
       return 'Ingrese un correo válido';
     }
     return '';
+  }
+
+  // ⭐ AGREGAR ESTOS MÉTODOS PARA TOGGLE PASSWORD
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit(): void {

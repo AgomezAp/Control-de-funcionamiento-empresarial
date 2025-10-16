@@ -12,6 +12,10 @@ export class EstadisticaUsuario extends Model {
   public tiempo_promedio_resolucion_horas!: number | null;
   public costo_total_generado!: number;
   public fecha_calculo!: Date;
+  // ✅ Nuevos campos para estado actual de peticiones asignadas
+  public peticiones_pendientes_actual!: number;
+  public peticiones_en_progreso_actual!: number;
+  public peticiones_pausadas_actual!: number;
 }
 
 EstadisticaUsuario.init(
@@ -69,6 +73,22 @@ EstadisticaUsuario.init(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+    },
+    // ✅ Nuevos campos: Peticiones actuales asignadas (independiente del periodo)
+    peticiones_pendientes_actual: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    peticiones_en_progreso_actual: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    peticiones_pausadas_actual: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
   },
   {

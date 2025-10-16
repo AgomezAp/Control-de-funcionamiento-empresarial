@@ -39,6 +39,18 @@ export class AreaEstadisticasComponent implements OnInit {
   areaUsuario: string = '';
   esAdmin: boolean = false;
 
+  // ✅ Lista de áreas disponibles para el selector
+  areasDisponibles = [
+    { label: 'Gestión Administrativa', value: 'Gestión Administrativa' },
+    { label: 'Pautas', value: 'Pautas' },
+    { label: 'Diseño', value: 'Diseño' },
+    { label: 'Contabilidad', value: 'Contabilidad' },
+    { label: 'Programación', value: 'Programación' }
+  ];
+
+  // ✅ Área seleccionada en el dropdown (para Admin/Directivo)
+  areaSeleccionada: string = '';
+
   // Filtros
   anios: { label: string; value: number }[] = [];
   meses = [
@@ -87,11 +99,19 @@ export class AreaEstadisticasComponent implements OnInit {
   loadAreaUsuario(): void {
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        // Verificar si es Admin
-        this.esAdmin = user.rol === 'Admin';
+        // Verificar si es Admin o Directivo
+        this.esAdmin = user.rol === 'Admin' || user.rol === 'Directivo';
         
         if (user.area) {
           this.areaUsuario = user.area;
+          
+          // ✅ Si es Admin/Directivo, puede seleccionar área, sino usar la suya
+          if (this.esAdmin) {
+            this.areaSeleccionada = this.areasDisponibles[0].value; // Primera área por defecto
+          } else {
+            this.areaSeleccionada = this.areaUsuario;
+          }
+          
           this.loadEstadisticas();
         }
       }
@@ -123,15 +143,16 @@ export class AreaEstadisticasComponent implements OnInit {
   }
 
   loadEstadisticas(): void {
-    if (!this.areaUsuario && !this.esAdmin) return;
+    // ✅ Validar que haya un área seleccionada
+    if (!this.areaSeleccionada) {
+      console.warn('No hay área seleccionada');
+      return;
+    }
 
     this.loading = true;
 
-    // Si es Admin, pasar null para obtener todas las áreas
-    const area = this.esAdmin ? null : this.areaUsuario;
-
     this.estadisticaService
-      .getPorArea(area as any, this.selectedAnio, this.selectedMes)
+      .getPorArea(this.areaSeleccionada, this.selectedAnio, this.selectedMes)
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
@@ -217,6 +238,11 @@ export class AreaEstadisticasComponent implements OnInit {
   }
 
   onFiltroChange(): void {
+    this.loadEstadisticas();
+  }
+
+  // ✅ Nuevo método para cuando cambia el área seleccionada
+  onAreaChange(): void {
     this.loadEstadisticas();
   }
 

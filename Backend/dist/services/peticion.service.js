@@ -208,32 +208,36 @@ class PeticionService {
     }
     obtenerPorId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const peticion = yield Peticion_1.default.findByPk(id, {
-                include: [
-                    {
-                        model: Cliente_1.default,
-                        as: "cliente",
-                        attributes: ["id", "nombre", "pais"],
-                    },
-                    {
-                        model: Categoria_1.default,
-                        as: "categoria",
-                        attributes: ["id", "nombre", "area_tipo", "costo", "es_variable"],
-                    },
-                    {
-                        model: Usuario_1.default,
-                        as: "creador",
-                        attributes: ["uid", "nombre_completo", "correo"],
-                        include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
-                    },
-                    {
-                        model: Usuario_1.default,
-                        as: "asignado",
-                        attributes: ["uid", "nombre_completo", "correo"],
-                        include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
-                    },
-                ],
-            });
+            const includeOptions = [
+                {
+                    model: Cliente_1.default,
+                    as: "cliente",
+                    attributes: ["id", "nombre", "pais", "tipo_cliente"], // ✅ Nombre correcto de la columna
+                },
+                {
+                    model: Categoria_1.default,
+                    as: "categoria",
+                    attributes: ["id", "nombre", "area_tipo", "costo", "es_variable"],
+                },
+                {
+                    model: Usuario_1.default,
+                    as: "creador",
+                    attributes: ["uid", "nombre_completo", "correo"],
+                    include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
+                },
+                {
+                    model: Usuario_1.default,
+                    as: "asignado",
+                    attributes: ["uid", "nombre_completo", "correo"],
+                    include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
+                },
+            ];
+            // ✅ Buscar primero en peticiones activas
+            let peticion = yield Peticion_1.default.findByPk(id, { include: includeOptions });
+            // ✅ Si no se encuentra, buscar en histórico
+            if (!peticion) {
+                peticion = (yield PeticionHistorico_1.default.findByPk(id, { include: includeOptions }));
+            }
             if (!peticion) {
                 throw new error_util_1.NotFoundError("Petición no encontrada");
             }
@@ -588,6 +592,7 @@ class PeticionService {
             // Por estado
             const pendientes = peticionesActivas.filter((p) => p.estado === "Pendiente").length;
             const enProgreso = peticionesActivas.filter((p) => p.estado === "En Progreso").length;
+            const pausadas = peticionesActivas.filter((p) => p.estado === "Pausada").length; // ✅ NUEVO
             const resueltas = peticionesHistoricas.filter((p) => p.estado === "Resuelta").length;
             const canceladas = peticionesHistoricas.filter((p) => p.estado === "Cancelada").length;
             // Costo total
@@ -599,6 +604,7 @@ class PeticionService {
                 por_estado: {
                     pendientes,
                     en_progreso: enProgreso,
+                    pausadas, // ✅ NUEVO
                     resueltas,
                     canceladas,
                 },

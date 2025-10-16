@@ -1,22 +1,31 @@
 <div class="dashboard-admin">
   <div class="dashboard-header">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      "
+    >
       <div>
         <h1>Dashboard - Administrador</h1>
         <p class="subtitle">Vista general del sistema</p>
       </div>
-      
+
       <!-- Selector de Área -->
-      <div style="min-width: 250px;">
-        <p-dropdown 
-          [(ngModel)]="areaSeleccionada" 
-          [options]="areasDisponibles" 
+      <div style="min-width: 250px">
+        <p-dropdown
+          [(ngModel)]="areaSeleccionada"
+          [options]="areasDisponibles"
           (onChange)="onAreaChange()"
           placeholder="Filtrar por área"
           optionLabel="label"
           optionValue="value"
-          [style]="{'width': '100%'}"
-          [showClear]="true">
+          [style]="{ width: '100%' }"
+          [showClear]="true"
+        >
         </p-dropdown>
       </div>
     </div>
@@ -26,8 +35,8 @@
   <div class="kpi-grid">
     <p-card styleClass="kpi-card">
       <div class="kpi-content">
-        <div class="kpi-icon" style="background-color: rgba(33, 150, 243, 0.1);">
-          <i class="pi pi-file" style="color: #2196F3;"></i>
+        <div class="kpi-icon" style="background-color: rgba(33, 150, 243, 0.1)">
+          <i class="pi pi-file" style="color: #2196f3"></i>
         </div>
         <div class="kpi-details">
           <p class="kpi-label">Total Peticiones</p>
@@ -38,8 +47,8 @@
 
     <p-card styleClass="kpi-card">
       <div class="kpi-content">
-        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1);">
-          <i class="pi pi-clock" style="color: #FFC107;"></i>
+        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1)">
+          <i class="pi pi-clock" style="color: #ffc107"></i>
         </div>
         <div class="kpi-details">
           <p class="kpi-label">Pendientes</p>
@@ -50,8 +59,8 @@
 
     <p-card styleClass="kpi-card">
       <div class="kpi-content">
-        <div class="kpi-icon" style="background-color: rgba(76, 175, 80, 0.1);">
-          <i class="pi pi-spin pi-spinner" style="color: #4CAF50;"></i>
+        <div class="kpi-icon" style="background-color: rgba(76, 175, 80, 0.1)">
+          <i class="pi pi-spin pi-spinner" style="color: #4caf50"></i>
         </div>
         <div class="kpi-details">
           <p class="kpi-label">En Progreso</p>
@@ -62,8 +71,20 @@
 
     <p-card styleClass="kpi-card">
       <div class="kpi-content">
-        <div class="kpi-icon" style="background-color: rgba(139, 195, 74, 0.1);">
-          <i class="pi pi-check-circle" style="color: #8BC34A;"></i>
+        <div class="kpi-icon" style="background-color: rgba(255, 152, 0, 0.1)">
+          <i class="pi pi-pause" style="color: #ff9800"></i>
+        </div>
+        <div class="kpi-details">
+          <p class="kpi-label">Pausadas</p>
+          <h2 class="kpi-value">{{ peticionesPausadas }}</h2>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-icon" style="background-color: rgba(139, 195, 74, 0.1)">
+          <i class="pi pi-check-circle" style="color: #8bc34a"></i>
         </div>
         <div class="kpi-details">
           <p class="kpi-label">Resueltas</p>
@@ -74,8 +95,8 @@
 
     <p-card styleClass="kpi-card">
       <div class="kpi-content">
-        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1);">
-          <i class="pi pi-dollar" style="color: #FFC107;"></i>
+        <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1)">
+          <i class="pi pi-dollar" style="color: #ffc107"></i>
         </div>
         <div class="kpi-details">
           <p class="kpi-label">Costo Total (Este mes)</p>
@@ -91,26 +112,42 @@
       <i class="pi pi-exclamation-triangle alert-icon"></i>
       <div class="alert-details">
         <h3>⚠️ Peticiones Vencidas</h3>
-        <p>Hay {{ peticionesVencidas.length }} peticiones vencidas que requieren atención</p>
+        <p>
+          Hay {{ peticionesVencidas.length }} peticiones vencidas que requieren
+          atención
+        </p>
       </div>
-      <button pButton label="Ver detalles" icon="pi pi-arrow-right" class="p-button-warning"></button>
+      <button
+        pButton
+        label="Ver detalles"
+        icon="pi pi-arrow-right"
+        class="p-button-warning"
+      ></button>
     </div>
   </p-card>
 
   <!-- Gráficas -->
   <div class="charts-grid">
     <p-card header="Peticiones por Estado">
-      <p-chart type="doughnut" [data]="chartPeticionesPorEstado" [options]="chartOptions"></p-chart>
+      <p-chart
+        type="doughnut"
+        [data]="chartPeticionesPorEstado"
+        [options]="chartOptions"
+      ></p-chart>
     </p-card>
 
     <p-card header="Peticiones por Área">
-      <p-chart type="bar" [data]="chartPeticionesPorArea" [options]="chartOptions"></p-chart>
+      <p-chart
+        type="bar"
+        [data]="chartPeticionesPorArea"
+        [options]="chartOptions"
+      ></p-chart>
     </p-card>
   </div>
 
   <!-- Top Diseñadores -->
   <p-card header="Top 5 Diseñadores Más Productivos">
-    <p-table [value]="topDisenadores" [tableStyle]="{'min-width': '50rem'}">
+    <p-table [value]="topDisenadores" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
           <th>#</th>
@@ -125,7 +162,10 @@
           <td>{{ i + 1 }}</td>
           <td>{{ disenador.nombre }}</td>
           <td>
-            <app-badge [label]="disenador.peticionesResueltas.toString()" severity="success"></app-badge>
+            <app-badge
+              [label]="disenador.peticionesResueltas.toString()"
+              severity="success"
+            ></app-badge>
           </td>
           <td>{{ disenador.costoGenerado | currencyCop }}</td>
           <td>{{ formatNumber(disenador.tiempoPromedio) }} horas</td>

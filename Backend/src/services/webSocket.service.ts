@@ -3,9 +3,10 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import jwt from 'jsonwebtoken';
 
 interface AuthToken {
-  id: number;
-  email: string;
+  uid: number;  // ✅ CORREGIDO: era "id"
+  correo: string;  // ✅ CORREGIDO: era "email"
   rol: string;
+  area: string;
 }
 
 interface SocketWithUser extends Socket {
@@ -54,12 +55,12 @@ class WebSocketService {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as AuthToken;
         
-        // Asignar propiedades al socket
-        socket.userId = decoded.id;
-        socket.userEmail = decoded.email;
+        // ✅ CORREGIDO: Usar nombres correctos del JWT
+        socket.userId = decoded.uid;  // era decoded.id
+        socket.userEmail = decoded.correo;  // era decoded.email
         socket.userRole = decoded.rol;
 
-        console.log(`🔐 Usuario autenticado: ${decoded.email} (ID: ${decoded.id})`);
+        console.log(`🔐 Usuario autenticado: ${decoded.correo} (ID: ${decoded.uid})`);
         next();
       } catch (error) {
         console.error('❌ Error de autenticación WebSocket:', error);
@@ -181,15 +182,9 @@ class WebSocketService {
    * Emitir cambio de estado de petición
    */
   public emitCambioEstado(peticionId: number, nuevoEstado: string, fecha_resolucion?: Date): void {
+    // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
+    // La mayoría de componentes escuchan globalmente, no por room
     this.emit('cambioEstado', {
-      peticionId,
-      nuevoEstado,
-      fecha_resolucion,
-      timestamp: new Date(),
-    });
-
-    // También emitir a la sala específica de la petición
-    this.emitToRoom(`peticion_${peticionId}`, 'cambioEstado', {
       peticionId,
       nuevoEstado,
       fecha_resolucion,
@@ -218,8 +213,8 @@ class WebSocketService {
       timestamp: new Date(),
     };
 
+    // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
     this.emit('peticionAceptada', data);
-    this.emitToRoom(`peticion_${peticionId}`, 'peticionAceptada', data);
   }
 
   /**
@@ -232,8 +227,8 @@ class WebSocketService {
       timestamp: new Date(),
     };
 
+    // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
     this.emit('peticionVencida', data);
-    this.emitToRoom(`peticion_${peticionId}`, 'peticionVencida', data);
   }
 
   /**

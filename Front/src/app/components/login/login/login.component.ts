@@ -5,6 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
+import { ToastModule } from 'primeng/toast'; // ⭐ AGREGAR ESTO
+import { MessageService } from 'primeng/api'; // ⭐ AGREGAR ESTO
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MENSAJES } from '../../../core/constants/mensajes.constants';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificacionService } from '../../../core/services/notificacion.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -27,7 +30,9 @@ import { NotificacionService } from '../../../core/services/notificacion.service
     PasswordModule,
     ButtonModule,
     CheckboxModule,
+    ToastModule, // ⭐ AGREGAR ESTO
   ],
+  providers: [MessageService], // ⭐ AGREGAR ESTO
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -35,6 +40,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loading: boolean = false;
   showPassword = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -49,16 +55,11 @@ export class LoginComponent implements OnInit {
       recordar: [false],
     });
   }
-  initForm(): void {
-    this.loginForm = this.fb.group({
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(6)]],
-      recordar: [false],
-    });
-  }
+
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
+
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();

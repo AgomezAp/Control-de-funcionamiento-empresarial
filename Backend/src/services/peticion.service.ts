@@ -242,32 +242,38 @@ export class PeticionService {
   }
 
   async obtenerPorId(id: number) {
-    const peticion = await Peticion.findByPk(id, {
-      include: [
-        {
-          model: Cliente,
-          as: "cliente",
-          attributes: ["id", "nombre", "pais"],
-        },
-        {
-          model: Categoria,
-          as: "categoria",
-          attributes: ["id", "nombre", "area_tipo", "costo", "es_variable"],
-        },
-        {
-          model: Usuario,
-          as: "creador",
-          attributes: ["uid", "nombre_completo", "correo"],
-          include: [{ model: Area, as: "area", attributes: ["nombre"] }],
-        },
-        {
-          model: Usuario,
-          as: "asignado",
-          attributes: ["uid", "nombre_completo", "correo"],
-          include: [{ model: Area, as: "area", attributes: ["nombre"] }],
-        },
-      ],
-    });
+    const includeOptions = [
+      {
+        model: Cliente,
+        as: "cliente",
+        attributes: ["id", "nombre", "pais", "tipo_cliente"],  // ✅ Nombre correcto de la columna
+      },
+      {
+        model: Categoria,
+        as: "categoria",
+        attributes: ["id", "nombre", "area_tipo", "costo", "es_variable"],
+      },
+      {
+        model: Usuario,
+        as: "creador",
+        attributes: ["uid", "nombre_completo", "correo"],
+        include: [{ model: Area, as: "area", attributes: ["nombre"] }],
+      },
+      {
+        model: Usuario,
+        as: "asignado",
+        attributes: ["uid", "nombre_completo", "correo"],
+        include: [{ model: Area, as: "area", attributes: ["nombre"] }],
+      },
+    ];
+
+    // ✅ Buscar primero en peticiones activas
+    let peticion = await Peticion.findByPk(id, { include: includeOptions });
+
+    // ✅ Si no se encuentra, buscar en histórico
+    if (!peticion) {
+      peticion = await PeticionHistorico.findByPk(id, { include: includeOptions }) as any;
+    }
 
     if (!peticion) {
       throw new NotFoundError("Petición no encontrada");
@@ -697,6 +703,7 @@ export class PeticionService {
     // Por estado
     const pendientes = peticionesActivas.filter((p) => p.estado === "Pendiente").length;
     const enProgreso = peticionesActivas.filter((p) => p.estado === "En Progreso").length;
+    const pausadas = peticionesActivas.filter((p) => p.estado === "Pausada").length;  // ✅ NUEVO
     const resueltas = peticionesHistoricas.filter((p) => p.estado === "Resuelta").length;
     const canceladas = peticionesHistoricas.filter((p) => p.estado === "Cancelada").length;
 
@@ -710,6 +717,7 @@ export class PeticionService {
       por_estado: {
         pendientes,
         en_progreso: enProgreso,
+        pausadas,  // ✅ NUEVO
         resueltas,
         canceladas,
       },

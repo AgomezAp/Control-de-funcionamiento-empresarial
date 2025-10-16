@@ -179,9 +179,6 @@
         <!-- Header -->
         <thead>
           <tr>
-            <th class="col-checkbox">
-              <input type="checkbox" class="table-checkbox" />
-            </th>
             <th class="col-id">ID</th>
             <th class="col-cliente">Cliente</th>
             <th class="col-categoria">Categoría</th>
@@ -195,11 +192,6 @@
         <!-- Body -->
         <tbody>
           <tr *ngFor="let peticion of peticionesFiltradas" class="table-row">
-            <!-- Checkbox -->
-            <td>
-              <input type="checkbox" class="table-checkbox" />
-            </td>
-
             <!-- ID -->
             <td>
               <span class="id-badge" [appTooltip]="'Petición ID: ' + peticion.id">#{{ peticion.id }}</span>

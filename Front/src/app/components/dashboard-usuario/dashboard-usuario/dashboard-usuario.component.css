@@ -1,100 +1,659 @@
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
+}
+
+/* ============================================
+   DASHBOARD CONTAINER
+   ============================================ */
 .dashboard-usuario {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 1.5rem;
+  max-width: 100%;
+  animation: fadeIn 0.5s ease;
 }
 
+/* ============================================
+   DASHBOARD HEADER
+   ============================================ */
 .dashboard-header {
-  margin-bottom: var(--spacing-2xl);
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 var(--spacing-xs) 0;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--color-yellow);
 }
 
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0 0 0.5rem 0;
+}
+
+:host-context(.dark-mode) .dashboard-header h1 {
+  color: var(--color-white);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666666;
+  margin: 0;
+}
+
+:host-context(.dark-mode) .subtitle {
+  color: #aaaaaa;
+}
+
+/* ============================================
+   STATS GRID
+   ============================================ */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.stat-card {
-  ::ng-deep .p-card-body {
-    padding: var(--spacing-lg);
-  }
+/* Estilos para las cards de estadísticas */
+::ng-deep .stat-card {
+  border-radius: 12px;
+  border: 2px solid var(--color-gray-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+::ng-deep .stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) ::ng-deep .stat-card {
+  background-color: #1e1e1e;
+  border-color: #444444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) ::ng-deep .stat-card:hover {
+  border-color: var(--color-yellow);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+::ng-deep .stat-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .stat-card .p-card-content {
+  padding: 0;
 }
 
 .stat-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 1.25rem;
 }
 
 .stat-icon {
-  font-size: 2rem;
+  font-size: 3rem;
+  flex-shrink: 0;
+  opacity: 0.9;
 }
 
 .stat-details {
-  .stat-label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin: 0 0 var(--spacing-xs) 0;
-  }
-
-  .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-  }
+  flex: 1;
 }
 
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5rem 0;
+}
+
+:host-context(.dark-mode) .stat-label {
+  color: #aaaaaa;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+}
+
+:host-context(.dark-mode) .stat-value {
+  color: var(--color-white);
+}
+
+/* ============================================
+   CARDS PRINCIPALES
+   ============================================ */
+::ng-deep p-card {
+  margin-bottom: 2.5rem; /* Aumentado de 2rem a 2.5rem */
+}
+
+/* Separación adicional entre cards específicas */
+::ng-deep p-card + p-card {
+  margin-top: 1.5rem;
+}
+
+::ng-deep .p-card {
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-medium);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: var(--color-white);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-card {
+  background-color: #1e1e1e;
+  border-color: #444444;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+::ng-deep .p-card .p-card-header {
+  background-color: var(--color-yellow);
+  padding: 1.25rem 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-black);
+  border-bottom: 3px solid var(--color-yellow-dark);
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+::ng-deep .p-card .p-card-content {
+  padding: 0;
+}
+
+/* ============================================
+   TABLA PRIMENG - ESTILOS MEJORADOS
+   ============================================ */
+::ng-deep .p-datatable {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem 1.25rem;
+  border: none;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background-color: #2a2a2a;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datatable
+  .p-datatable-tbody
+  > tr:nth-child(even) {
+  background-color: #242424;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1rem 1.25rem;
+  border: none;
+  border-bottom: 1px solid var(--color-gray-medium);
+  color: var(--color-black);
+  font-size: 0.95rem;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  color: var(--color-white);
+  border-bottom-color: #444444;
+}
+
+/* Primera columna (ID) con estilo especial */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:first-child {
+  font-weight: 700;
+  color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datatable
+  .p-datatable-tbody
+  > tr
+  > td:first-child {
+  color: var(--color-yellow);
+}
+
+/* Bordes de la tabla */
+::ng-deep .p-datatable .p-datatable-wrapper {
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 8px;
+}
+
+:host-context(.dark-mode) ::ng-deep .p-datatable .p-datatable-wrapper {
+  border-color: #444444;
+}
+
+/* ============================================
+   PETICIONES GRID
+   ============================================ */
 .peticiones-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
 .peticion-card {
-  padding: var(--spacing-lg);
-  background-color: var(--bg-secondary);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-color);
-  transition: all var(--transition-fast);
+  padding: 1.5rem;
+  background-color: var(--color-gray-light);
+  border-radius: 12px;
+  border: 2px solid var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
 
-  &:hover {
-    box-shadow: var(--shadow-md);
-  }
+.peticion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .peticion-card {
+  background-color: #2a2a2a;
+  border-color: #444444;
+}
+
+:host-context(.dark-mode) .peticion-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-yellow);
 }
 
 .peticion-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
 
-  h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-  }
+.peticion-header h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+  flex: 1;
+}
+
+:host-context(.dark-mode) .peticion-header h4 {
+  color: var(--color-white);
 }
 
 .peticion-categoria {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-lg);
+  font-size: 0.9rem;
+  color: #666666;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+:host-context(.dark-mode) .peticion-categoria {
+  color: #aaaaaa;
 }
 
 .peticion-actions {
-  margin-top: var(--spacing-md);
   display: flex;
-  gap: var(--spacing-sm);
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   BOTONES DE PRIMENG - CORREGIDOS SIN BORDES
+   ============================================ */
+::ng-deep .p-button {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .p-button:focus {
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+}
+
+/* Botón Success */
+::ng-deep .p-button-success {
+  background-color: var(--color-success) !important;
+  color: var(--color-white) !important;
+}
+
+::ng-deep .p-button-success:hover {
+  background-color: #218838 !important;
+}
+
+::ng-deep .p-button-success:focus {
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Botón Warning - AMARILLO INSTITUCIONAL */
+::ng-deep .p-button-warning {
+  background-color: var(--color-yellow) !important;
+  color: var(--color-black) !important;
+}
+
+::ng-deep .p-button-warning:hover {
+  background-color: var(--color-yellow-dark) !important;
+}
+
+::ng-deep .p-button-warning:focus {
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3) !important;
+}
+
+/* Botón Outlined - SIN BORDES NEGROS */
+::ng-deep .p-button-outlined {
+  background-color: var(--color-white) !important;
+  color: var(--color-black) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+::ng-deep .p-button-outlined:hover {
+  background-color: var(--color-yellow) !important;
+  color: var(--color-black) !important;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+::ng-deep .p-button-outlined:focus {
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3) !important;
+}
+
+/* Modo Oscuro - Botón Outlined */
+:host-context(.dark-mode) ::ng-deep .p-button-outlined {
+  background-color: #2a2a2a !important;
+  color: var(--color-white) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) ::ng-deep .p-button-outlined:hover {
+  background-color: var(--color-yellow) !important;
+  color: var(--color-black) !important;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+/* Iconos de los botones */
+::ng-deep .p-button .p-button-icon {
+  font-size: 1rem;
+}
+
+/* Botones pequeños */
+::ng-deep .p-button-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+::ng-deep .p-button-sm .p-button-icon {
+  font-size: 0.875rem;
+}
+
+/* Botón solo con icono */
+::ng-deep .p-button.p-button-icon-only {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+}
+
+::ng-deep .p-button-sm.p-button-icon-only {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE - TABLET
+   ============================================ */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .peticiones-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .dashboard-usuario {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .stat-content {
+    gap: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .peticiones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  ::ng-deep .p-card .p-card-header {
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  ::ng-deep .p-card .p-card-body {
+    padding: 1rem;
+  }
+
+  /* Tabla responsive */
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Hacer scroll horizontal en la tabla */
+  ::ng-deep .p-datatable .p-datatable-wrapper {
+    overflow-x: auto;
+  }
+
+  ::ng-deep .p-datatable table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-usuario {
+    padding: 0.75rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .peticion-card {
+    padding: 1rem;
+  }
+
+  .peticion-header h4 {
+    font-size: 1rem;
+  }
+
+  .peticion-actions {
+    flex-direction: column;
+  }
+
+  .peticion-actions button {
+    width: 100%;
+  }
+
+  ::ng-deep .p-card .p-card-header {
+    font-size: 1rem;
+    padding: 0.875rem;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+*:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+.dashboard-usuario::-webkit-scrollbar,
+::ng-deep .p-datatable .p-datatable-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dashboard-usuario::-webkit-scrollbar-track,
+::ng-deep .p-datatable .p-datatable-wrapper::-webkit-scrollbar-track {
+  background-color: var(--color-gray-light);
+  border-radius: 4px;
+}
+
+.dashboard-usuario::-webkit-scrollbar-thumb,
+::ng-deep .p-datatable .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--color-yellow);
+  border-radius: 4px;
+}
+
+.dashboard-usuario::-webkit-scrollbar-thumb:hover,
+::ng-deep .p-datatable .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode) .dashboard-usuario::-webkit-scrollbar-track,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-datatable
+  .p-datatable-wrapper::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
 }

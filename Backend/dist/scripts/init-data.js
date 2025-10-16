@@ -378,7 +378,7 @@ function initData() {
                     correo: "admin@empresa.com",
                     contrasena: passwordHash,
                     rol_id: rolesCreados.Admin.id,
-                    area_id: areasCreadas["Gestión Administrativa"].id,
+                    area_id: areasCreadas["Diseño"].id,
                     status: true,
                 },
                 {
@@ -421,6 +421,14 @@ function initData() {
                     area_id: areasCreadas.Pautas.id,
                     status: true,
                 },
+                {
+                    nombre_completo: "Roberto Fernández - Directivo",
+                    correo: "roberto.directivo@empresa.com",
+                    contrasena: passwordHash,
+                    rol_id: rolesCreados.Directivo.id,
+                    area_id: areasCreadas["Pautas"].id,
+                    status: true,
+                },
             ];
             const usuariosCreados = [];
             for (const usuario of usuarios) {
@@ -433,6 +441,8 @@ function initData() {
             const pautador2 = usuariosCreados[2]; // María García
             const disenador1 = usuariosCreados[3]; // Carlos López
             const disenador2 = usuariosCreados[4]; // Ana Martínez
+            const lider = usuariosCreados[5]; // Luis Rodríguez
+            const directivo = usuariosCreados[6]; // Roberto Fernández
             const admin = usuariosCreados[0];
             // Crear clientes de prueba
             console.log("📝 Creando clientes de prueba...");
@@ -611,6 +621,48 @@ function initData() {
                     tiempo_empleado_segundos: 21600, // 6 horas
                     temporizador_activo: false,
                 },
+                // ✅ Peticiones PAUSADAS para probar KPI de Dashboard Admin
+                {
+                    cliente_id: clientesCreados[0].id,
+                    categoria_id: categoriaPautas2.id,
+                    area: "Pautas",
+                    descripcion: "Optimización de palabras clave - Esperando feedback del cliente",
+                    costo: categoriaPautas2.costo,
+                    estado: "Pausada",
+                    creador_id: admin.uid,
+                    asignado_a: pautador2.uid,
+                    fecha_aceptacion: new Date(ahora.getTime() - 2 * 24 * 60 * 60 * 1000),
+                    tiempo_empleado_segundos: 5400, // 1.5 horas antes de pausar
+                    temporizador_activo: false,
+                },
+                {
+                    cliente_id: clientesCreados[3].id,
+                    categoria_id: categoriaDiseño1.id,
+                    area: "Diseño",
+                    descripcion: "Diseño de catálogo digital - Cliente no ha enviado contenido",
+                    costo: categoriaDiseño1.costo,
+                    estado: "Pausada",
+                    creador_id: admin.uid,
+                    asignado_a: disenador1.uid,
+                    fecha_aceptacion: new Date(ahora.getTime() - 4 * 24 * 60 * 60 * 1000),
+                    tiempo_empleado_segundos: 3600, // 1 hora antes de pausar
+                    temporizador_activo: false,
+                },
+                // ✅ Petición CANCELADA para pruebas
+                {
+                    cliente_id: clientesCreados[4].id,
+                    categoria_id: categoriaPautas1.id,
+                    area: "Pautas",
+                    descripcion: "Campaña de Black Friday - Cliente canceló evento",
+                    costo: categoriaPautas1.costo,
+                    estado: "Cancelada",
+                    creador_id: admin.uid,
+                    asignado_a: pautador1.uid,
+                    fecha_aceptacion: new Date(ahora.getTime() - 5 * 24 * 60 * 60 * 1000),
+                    fecha_resolucion: new Date(ahora.getTime() - 4 * 24 * 60 * 60 * 1000),
+                    tiempo_empleado_segundos: 1800, // 30 minutos antes de cancelar
+                    temporizador_activo: false,
+                },
             ];
             for (const peticion of peticiones) {
                 yield Peticion_1.default.create(peticion);
@@ -637,6 +689,14 @@ function initData() {
             console.log("   📧 carlos.diseno@empresa.com (Diseñador) - Password: 123456");
             console.log("   📧 ana.diseno@empresa.com (Diseñadora) - Password: 123456");
             console.log("   📧 luis.lider@empresa.com (Líder) - Password: 123456");
+            console.log("   📧 roberto.directivo@empresa.com (Directivo) - Password: 123456");
+            console.log("");
+            console.log("📊 Estados de peticiones:");
+            console.log("   ✅ Resueltas: 3");
+            console.log("   🔄 En Progreso: 3");
+            console.log("   ⏸️ Pausadas: 2");
+            console.log("   ⏳ Pendientes: 2");
+            console.log("   ❌ Canceladas: 1");
             console.log("");
             console.log("🎉 ¡Listo! Ya puedes empezar a usar la aplicación");
             process.exit(0);

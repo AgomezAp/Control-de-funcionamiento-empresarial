@@ -1,22 +1,16 @@
 <div class="crear-usuario-container">
-  <p-card styleClass="usuario-card">
+  <div class="usuario-card">
     <!-- Header -->
-    <ng-template pTemplate="header">
-      <div class="card-header">
-        <h2 class="title">
-          <i class="pi pi-user-plus"></i>
-          <span>Crear Nuevo Usuario</span>
-        </h2>
-        <button
-          pButton
-          icon="pi pi-arrow-left"
-          label="Volver"
-          class="btn-volver"
-          (click)="volver()"
-          type="button"
-        ></button>
-      </div>
-    </ng-template>
+    <div class="card-header">
+      <h2 class="title">
+        <i class="pi pi-user-plus"></i>
+        <span>Crear Nuevo Usuario</span>
+      </h2>
+      <button class="btn-volver" (click)="volver()" type="button">
+        <i class="pi pi-arrow-left"></i>
+        <span>Volver</span>
+      </button>
+    </div>
 
     <!-- Formulario -->
     <form
@@ -30,7 +24,7 @@
           Nombre Completo <span class="required">*</span>
         </label>
         <input
-          pInputText
+          type="text"
           id="nombre"
           formControlName="nombre_completo"
           class="field-input"
@@ -53,9 +47,8 @@
           Correo Electrónico <span class="required">*</span>
         </label>
         <input
-          pInputText
-          id="correo"
           type="email"
+          id="correo"
           formControlName="correo"
           class="field-input"
           placeholder="usuario@ejemplo.com"
@@ -76,15 +69,22 @@
         <label for="contrasena" class="field-label">
           Contraseña <span class="required">*</span>
         </label>
-        <p-password
-          id="contrasena"
-          formControlName="contrasena"
-          [toggleMask]="true"
-          [feedback]="true"
-          placeholder="Ingrese una contraseña segura"
-          styleClass="field-password"
-          inputStyleClass="field-input"
-        ></p-password>
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="contrasena"
+            formControlName="contrasena"
+            class="field-input password-input"
+            placeholder="Ingrese una contraseña segura"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+          >
+            <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+          </button>
+        </div>
         <small
           *ngIf="
             usuarioForm.get('contrasena')?.invalid &&
@@ -101,15 +101,24 @@
         <label for="confirmar" class="field-label">
           Confirmar Contraseña <span class="required">*</span>
         </label>
-        <p-password
-          id="confirmar"
-          formControlName="confirmar_contrasena"
-          [toggleMask]="true"
-          [feedback]="false"
-          placeholder="Confirme la contraseña"
-          styleClass="field-password"
-          inputStyleClass="field-input"
-        ></p-password>
+        <div class="password-wrapper">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmar"
+            formControlName="confirmar_contrasena"
+            class="field-input password-input"
+            placeholder="Confirme la contraseña"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="toggleConfirmPassword()"
+          >
+            <i
+              [class]="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            ></i>
+          </button>
+        </div>
         <small
           *ngIf="
             usuarioForm.get('confirmar_contrasena')?.invalid &&
@@ -126,15 +135,15 @@
         <label for="rol" class="field-label">
           Rol <span class="required">*</span>
         </label>
-        <p-dropdown
-          id="rol"
-          formControlName="rol_id"
-          [options]="roles"
-          placeholder="Seleccione un rol"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="field-dropdown"
-        ></p-dropdown>
+        <div class="select-wrapper">
+          <select id="rol" formControlName="rol_id" class="field-select">
+            <option value="" disabled selected>Seleccione un rol</option>
+            <option *ngFor="let rol of roles" [value]="rol.value">
+              {{ rol.label }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
         <small
           *ngIf="
             usuarioForm.get('rol_id')?.invalid &&
@@ -151,15 +160,15 @@
         <label for="area" class="field-label">
           Área <span class="required">*</span>
         </label>
-        <p-dropdown
-          id="area"
-          formControlName="area_id"
-          [options]="areas"
-          placeholder="Seleccione un área"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="field-dropdown"
-        ></p-dropdown>
+        <div class="select-wrapper">
+          <select id="area" formControlName="area_id" class="field-select">
+            <option value="" disabled selected>Seleccione un área</option>
+            <option *ngFor="let area of areas" [value]="area.value">
+              {{ area.label }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
         <small
           *ngIf="
             usuarioForm.get('area_id')?.invalid &&
@@ -173,23 +182,19 @@
 
       <!-- Botones -->
       <div class="form-actions">
+        <button class="btn-cancelar" (click)="volver()" type="button">
+          Cancelar
+        </button>
         <button
-          pButton
-          label="Cancelar"
-          class="btn-cancelar"
-          (click)="volver()"
-          type="button"
-        ></button>
-        <button
-          pButton
-          label="Crear Usuario"
-          icon="pi pi-save"
           class="btn-guardar"
           [disabled]="usuarioForm.invalid || loading"
-          [loading]="loading"
           type="submit"
-        ></button>
+        >
+          <i class="pi pi-save" *ngIf="!loading"></i>
+          <i class="pi pi-spin pi-spinner" *ngIf="loading"></i>
+          <span>{{ loading ? "Guardando..." : "Crear Usuario" }}</span>
+        </button>
       </div>
     </form>
-  </p-card>
+  </div>
 </div>

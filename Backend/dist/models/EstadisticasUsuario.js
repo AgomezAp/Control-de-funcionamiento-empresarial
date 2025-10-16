@@ -64,6 +64,22 @@ EstadisticaUsuario.init({
         allowNull: false,
         defaultValue: sequelize_1.DataTypes.NOW,
     },
+    // ✅ Nuevos campos: Peticiones actuales asignadas (independiente del periodo)
+    peticiones_pendientes_actual: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    peticiones_en_progreso_actual: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    peticiones_pausadas_actual: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
 }, {
     sequelize: connection_1.default,
     tableName: "estadisticas_usuarios",

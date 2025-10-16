@@ -123,29 +123,36 @@ export class MisEstadisticasComponent implements OnInit {
   updateCharts(): void {
     if (!this.estadisticaActual) return;
 
-    const total =
-      this.estadisticaActual.peticiones_creadas;
+    const total = this.estadisticaActual.peticiones_creadas;
     const resueltas = this.estadisticaActual.peticiones_resueltas;
     const canceladas = this.estadisticaActual.peticiones_canceladas;
-    const pendientes = total - resueltas - canceladas;
+    
+    // ✅ Usar los campos actuales del backend en lugar de calcular incorrectamente
+    const pendientes = this.estadisticaActual.peticiones_pendientes_actual || 0;
+    const enProgreso = this.estadisticaActual.peticiones_en_progreso_actual || 0;
+    const pausadas = this.estadisticaActual.peticiones_pausadas_actual || 0;
 
     // Gráfico de peticiones por tipo
     this.chartDataPeticiones = {
-      labels: ['Total', 'Resueltas', 'Pendientes', 'Canceladas'],
+      labels: ['Total Creadas', 'Resueltas', 'En Progreso', 'Pendientes', 'Pausadas', 'Canceladas'],
       datasets: [
         {
           label: 'Peticiones',
-          data: [total, resueltas, pendientes, canceladas],
+          data: [total, resueltas, enProgreso, pendientes, pausadas, canceladas],
           backgroundColor: [
             'rgba(54, 162, 235, 0.6)',
             'rgba(75, 192, 192, 0.6)',
+            'rgba(33, 150, 243, 0.6)',
             'rgba(255, 206, 86, 0.6)',
+            'rgba(255, 152, 0, 0.6)',
             'rgba(255, 99, 132, 0.6)'
           ],
           borderColor: [
             'rgba(54, 162, 235, 1)',
             'rgba(75, 192, 192, 1)',
+            'rgba(33, 150, 243, 1)',
             'rgba(255, 206, 86, 1)',
+            'rgba(255, 152, 0, 1)',
             'rgba(255, 99, 132, 1)'
           ],
           borderWidth: 1

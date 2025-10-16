@@ -22,8 +22,8 @@ router.use(authMiddleware);
 // Obtener peticiones pendientes
 router.get("/pendientes", peticionController.obtenerPendientes);
 
-// Obtener histórico de peticiones (Admin, Líder, Usuario)
-router.get("/historico", roleAuth("Admin", "Líder", "Usuario"), peticionController.obtenerHistorico);
+// Obtener histórico de peticiones (Admin, Directivo, Líder, Usuario)
+router.get("/historico", roleAuth("Admin", "Directivo", "Líder", "Usuario"), peticionController.obtenerHistorico);
 
 // Obtener resumen global (Admin, Directivo, Líder)
 router.get(

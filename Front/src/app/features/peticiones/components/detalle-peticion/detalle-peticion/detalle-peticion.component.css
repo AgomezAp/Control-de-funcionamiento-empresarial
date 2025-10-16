@@ -105,7 +105,7 @@
 }
 
 /* ============================================
-   BUTTONS
+   BUTTONS - BASE
    ============================================ */
 .btn,
 .btn-back {
@@ -124,6 +124,9 @@
   white-space: nowrap;
 }
 
+/* ============================================
+   BTN-PRIMARY
+   ============================================ */
 .btn-primary {
   background-color: var(--color-yellow);
   color: var(--color-black);
@@ -137,6 +140,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* ============================================
+   BTN-SUCCESS
+   ============================================ */
 .btn-success {
   background-color: var(--color-success);
   color: var(--color-white);
@@ -150,6 +156,45 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* ============================================
+   BTN-WARNING - CORREGIDO PARA MODO OSCURO
+   ============================================ */
+.btn-warning {
+  background-color: var(--color-warning);
+  color: var(--color-black);
+  border-color: var(--color-warning);
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #e0a800;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* MODO OSCURO - Botón Warning con amarillo institucional vibrante */
+:host-context(.dark-mode) .btn-warning {
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+  font-weight: 700;
+}
+
+:host-context(.dark-mode) .btn-warning:hover {
+  background-color: var(--color-yellow-light);
+  border-color: var(--color-yellow-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.6);
+}
+
+:host-context(.dark-mode) .btn-warning i {
+  color: var(--color-black);
+  font-weight: bold;
+}
+
+/* ============================================
+   BTN-BACK
+   ============================================ */
 .btn-back {
   background-color: transparent;
   color: var(--color-gray-dark);
@@ -534,7 +579,7 @@
   .compact-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .descriptions-grid {
     grid-template-columns: 1fr;
   }
@@ -578,7 +623,8 @@
     display: none;
   }
 
-  .btn-success {
+  .btn-success,
+  .btn-warning {
     width: 100%;
     order: 3;
   }
@@ -723,13 +769,18 @@
 }
 
 .info-item::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 0, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -743,13 +794,18 @@
 }
 
 .description-box::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 0, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -783,6 +839,7 @@
 @media print {
   .page-header .btn-back,
   .page-header .btn-success,
+  .page-header .btn-warning,
   .timer-container {
     display: none !important;
   }
@@ -848,4 +905,452 @@
 
 :host-context(.dark-mode) .peticion-container::-webkit-scrollbar-track {
   background-color: #2a2a2a;
+}
+/* ============================================
+   PRIMENG TOAST - MEJORADO PARA AMBOS MODOS
+   ============================================ */
+:host ::ng-deep .p-toast {
+  opacity: 1;
+  z-index: 9999;
+}
+
+:host ::ng-deep .p-toast .p-toast-message {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-left: 5px solid;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   TOAST SUCCESS - MODO CLARO
+   ============================================ */
+:host ::ng-deep .p-toast .p-toast-message-success {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);
+  border-left-color: var(--color-success);
+  color: var(--color-black);
+  border-right: 1px solid rgba(40, 167, 69, 0.2);
+  border-top: 1px solid rgba(40, 167, 69, 0.2);
+  border-bottom: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-message-icon,
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-icon-close {
+  color: var(--color-success);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-summary {
+  color: var(--color-success);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success .p-toast-detail {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================
+   TOAST ERROR - MODO CLARO
+   ============================================ */
+:host ::ng-deep .p-toast .p-toast-message-error {
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+  border-left-color: var(--color-error);
+  color: var(--color-black);
+  border-right: 1px solid rgba(220, 53, 69, 0.2);
+  border-top: 1px solid rgba(220, 53, 69, 0.2);
+  border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-message-icon,
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-icon-close {
+  color: var(--color-error);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-summary {
+  color: var(--color-error);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error .p-toast-detail {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================
+   TOAST WARN - MODO CLARO
+   ============================================ */
+:host ::ng-deep .p-toast .p-toast-message-warn {
+  background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+  border-left-color: var(--color-warning);
+  color: var(--color-black);
+  border-right: 1px solid rgba(255, 193, 7, 0.2);
+  border-top: 1px solid rgba(255, 193, 7, 0.2);
+  border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-message-icon,
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-icon-close {
+  color: #d39e00;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-summary {
+  color: #d39e00;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-warn .p-toast-detail {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================
+   TOAST INFO - MODO CLARO
+   ============================================ */
+:host ::ng-deep .p-toast .p-toast-message-info {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+  border-left-color: var(--color-info);
+  color: var(--color-black);
+  border-right: 1px solid rgba(23, 162, 184, 0.2);
+  border-top: 1px solid rgba(23, 162, 184, 0.2);
+  border-bottom: 1px solid rgba(23, 162, 184, 0.2);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-info .p-toast-message-icon,
+:host ::ng-deep .p-toast .p-toast-message-info .p-toast-icon-close {
+  color: var(--color-info);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-info .p-toast-summary {
+  color: var(--color-info);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-toast .p-toast-message-info .p-toast-detail {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Contenido del Toast */
+:host ::ng-deep .p-toast .p-toast-message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-text {
+  flex: 1;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Botón Cerrar */
+:host ::ng-deep .p-toast .p-toast-icon-close {
+  font-size: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-toast .p-toast-icon-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   MODO OSCURO - TOAST SUCCESS
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-success {
+  background: linear-gradient(135deg, #1a2e1a 0%, #0d1f0d 100%);
+  color: var(--color-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(40, 167, 69, 0.3);
+  border-top: 1px solid rgba(40, 167, 69, 0.3);
+  border-bottom: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-success
+  .p-toast-summary {
+  color: #4ade80;
+  text-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-success
+  .p-toast-detail {
+  color: #e8e8e8;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-success
+  .p-toast-message-icon,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-success
+  .p-toast-icon-close {
+  color: #4ade80;
+}
+
+/* ============================================
+   MODO OSCURO - TOAST ERROR
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-error {
+  background: linear-gradient(135deg, #2e1a1a 0%, #1f0d0d 100%);
+  color: var(--color-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(220, 53, 69, 0.3);
+  border-top: 1px solid rgba(220, 53, 69, 0.3);
+  border-bottom: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-error
+  .p-toast-summary {
+  color: #f87171;
+  text-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-error
+  .p-toast-detail {
+  color: #e8e8e8;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-error
+  .p-toast-message-icon,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-error
+  .p-toast-icon-close {
+  color: #f87171;
+}
+
+/* ============================================
+   MODO OSCURO - TOAST WARN
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-warn {
+  background: linear-gradient(135deg, #2e2a1a 0%, #1f1c0d 100%);
+  color: var(--color-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(255, 193, 7, 0.3);
+  border-top: 1px solid rgba(255, 193, 7, 0.3);
+  border-bottom: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-warn
+  .p-toast-summary {
+  color: #fbbf24;
+  text-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-warn
+  .p-toast-detail {
+  color: #e8e8e8;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-warn
+  .p-toast-message-icon,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-warn
+  .p-toast-icon-close {
+  color: #fbbf24;
+}
+
+/* ============================================
+   MODO OSCURO - TOAST INFO
+   ============================================ */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-message-info {
+  background: linear-gradient(135deg, #1a2a2e 0%, #0d1a1f 100%);
+  color: var(--color-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(23, 162, 184, 0.3);
+  border-top: 1px solid rgba(23, 162, 184, 0.3);
+  border-bottom: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-info
+  .p-toast-summary {
+  color: #3b82f6;
+  text-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-info
+  .p-toast-detail {
+  color: #e8e8e8;
+}
+
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-info
+  .p-toast-message-icon,
+:host-context(.dark-mode)
+  ::ng-deep
+  .p-toast
+  .p-toast-message-info
+  .p-toast-icon-close {
+  color: #3b82f6;
+}
+
+/* Botón cerrar en modo oscuro */
+:host-context(.dark-mode) ::ng-deep .p-toast .p-toast-icon-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   ANIMACIONES TOAST
+   ============================================ */
+:host ::ng-deep .p-toast .p-toast-message {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-exit-active {
+  animation: slideOutRight 0.3s ease-in;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - TOAST
+   ============================================ */
+@media (max-width: 768px) {
+  :host ::ng-deep .p-toast {
+    width: calc(100% - 2rem);
+    left: 1rem;
+    right: 1rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message {
+    padding: 0.75rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-icon {
+    font-size: 1.25rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-success .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-error .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-warn .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-info .p-toast-summary {
+    font-size: 0.95rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-success .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-error .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-warn .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-info .p-toast-detail {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep .p-toast {
+    width: calc(100% - 1rem);
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message {
+    padding: 0.6rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-content {
+    gap: 0.75rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-icon {
+    font-size: 1.1rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-success .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-error .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-warn .p-toast-summary,
+  :host ::ng-deep .p-toast .p-toast-message-info .p-toast-summary {
+    font-size: 0.9rem;
+  }
+
+  :host ::ng-deep .p-toast .p-toast-message-success .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-error .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-warn .p-toast-detail,
+  :host ::ng-deep .p-toast .p-toast-message-info .p-toast-detail {
+    font-size: 0.8rem;
+  }
 }

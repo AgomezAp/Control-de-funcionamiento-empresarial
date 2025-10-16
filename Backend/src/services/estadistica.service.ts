@@ -58,6 +58,28 @@ export class EstadisticaService {
       },
     });
 
+    // ✅ NUEVAS ESTADÍSTICAS: Peticiones actuales asignadas al usuario (independiente del periodo)
+    const peticiones_pendientes_actual = await Peticion.count({
+      where: {
+        asignado_a: usuario_id,
+        estado: "Pendiente",
+      },
+    });
+
+    const peticiones_en_progreso_actual = await Peticion.count({
+      where: {
+        asignado_a: usuario_id,
+        estado: "En Progreso",
+      },
+    });
+
+    const peticiones_pausadas_actual = await Peticion.count({
+      where: {
+        asignado_a: usuario_id,
+        estado: "Pausada",
+      },
+    });
+
     // Tiempo promedio de resolución
     const peticionesConTiempo = await PeticionHistorico.findAll({
       where: {
@@ -119,6 +141,10 @@ export class EstadisticaService {
         tiempo_promedio_resolucion_horas,
         costo_total_generado,
         fecha_calculo: new Date(),
+        // ✅ Nuevos campos de estado actual
+        peticiones_pendientes_actual,
+        peticiones_en_progreso_actual,
+        peticiones_pausadas_actual,
       },
     });
 
@@ -130,6 +156,10 @@ export class EstadisticaService {
         tiempo_promedio_resolucion_horas,
         costo_total_generado,
         fecha_calculo: new Date(),
+        // ✅ Actualizar también los campos de estado actual
+        peticiones_pendientes_actual,
+        peticiones_en_progreso_actual,
+        peticiones_pausadas_actual,
       });
     }
 

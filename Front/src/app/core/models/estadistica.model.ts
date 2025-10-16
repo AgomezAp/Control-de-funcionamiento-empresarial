@@ -12,6 +12,10 @@ export interface EstadisticaUsuario {
   costo_total_generado: number;
   fecha_calculo: Date;
   usuario?: Usuario;
+  // ✅ Nuevos campos: estado actual de peticiones asignadas
+  peticiones_pendientes_actual?: number;
+  peticiones_en_progreso_actual?: number;
+  peticiones_pausadas_actual?: number;
 }
 
 export interface EstadisticaGlobal {

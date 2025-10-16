@@ -41,11 +41,11 @@ class WebSocketService {
             }
             try {
                 const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || 'secret');
-                // Asignar propiedades al socket
-                socket.userId = decoded.id;
-                socket.userEmail = decoded.email;
+                // ✅ CORREGIDO: Usar nombres correctos del JWT
+                socket.userId = decoded.uid; // era decoded.id
+                socket.userEmail = decoded.correo; // era decoded.email
                 socket.userRole = decoded.rol;
-                console.log(`🔐 Usuario autenticado: ${decoded.email} (ID: ${decoded.id})`);
+                console.log(`🔐 Usuario autenticado: ${decoded.correo} (ID: ${decoded.uid})`);
                 next();
             }
             catch (error) {
@@ -155,14 +155,9 @@ class WebSocketService {
      * Emitir cambio de estado de petición
      */
     emitCambioEstado(peticionId, nuevoEstado, fecha_resolucion) {
+        // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
+        // La mayoría de componentes escuchan globalmente, no por room
         this.emit('cambioEstado', {
-            peticionId,
-            nuevoEstado,
-            fecha_resolucion,
-            timestamp: new Date(),
-        });
-        // También emitir a la sala específica de la petición
-        this.emitToRoom(`peticion_${peticionId}`, 'cambioEstado', {
             peticionId,
             nuevoEstado,
             fecha_resolucion,
@@ -182,8 +177,8 @@ class WebSocketService {
             tiempo_limite_horas,
             timestamp: new Date(),
         };
+        // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
         this.emit('peticionAceptada', data);
-        this.emitToRoom(`peticion_${peticionId}`, 'peticionAceptada', data);
     }
     /**
      * Emitir petición vencida
@@ -194,8 +189,8 @@ class WebSocketService {
             peticion,
             timestamp: new Date(),
         };
+        // ✅ CORREGIDO: Solo emitir a TODOS (no duplicar con room)
         this.emit('peticionVencida', data);
-        this.emitToRoom(`peticion_${peticionId}`, 'peticionVencida', data);
     }
     /**
      * Emitir nuevo comentario
