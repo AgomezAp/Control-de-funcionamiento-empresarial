@@ -1,55 +1,273 @@
+/* ============================================
+   VARIABLES CSS - MODO CLARO Y OSCURO
+   ============================================ */
+:root {
+  /* Colores institucionales base */
+  --color-primary: #000000; /* Negro */
+  --color-secondary: #fdb913; /* Amarillo institucional */
+  --color-white: #ffffff; /* Blanco */
+
+  /* Modo Claro */
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f5f5f5;
+  --bg-kpi: #ffffff;
+
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
+  --text-muted: #757575;
+  --text-on-primary: #ffffff;
+
+  --border-color: #e0e0e0;
+  --border-accent: #fdb913;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.18);
+
+  /* Colores de KPIs */
+  --kpi-blue-bg: rgba(33, 150, 243, 0.1);
+  --kpi-blue: #2196f3;
+  --kpi-yellow-bg: rgba(253, 185, 19, 0.1);
+  --kpi-yellow: #fdb913;
+  --kpi-green-bg: rgba(76, 175, 80, 0.1);
+  --kpi-green: #4caf50;
+  --kpi-orange-bg: rgba(255, 152, 0, 0.1);
+  --kpi-orange: #ff9800;
+
+  /* Gradientes */
+  --gradient-primary: linear-gradient(135deg, #000000 0%, #2c2c2c 100%);
+  --gradient-secondary: linear-gradient(135deg, #fdb913 0%, #ffc93c 100%);
+  --gradient-overlay: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+[data-theme="dark"] {
+  /* Modo Oscuro */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --bg-hover: #2a2a2a;
+  --bg-kpi: #252525;
+
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #9e9e9e;
+  --text-on-primary: #000000;
+
+  --border-color: #333333;
+  --border-accent: #fdb913;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 6px 16px rgba(253, 185, 19, 0.2);
+
+  /* KPIs en modo oscuro */
+  --kpi-blue-bg: rgba(33, 150, 243, 0.15);
+  --kpi-blue: #42a5f5;
+  --kpi-yellow-bg: rgba(253, 185, 19, 0.15);
+  --kpi-yellow: #ffd54f;
+  --kpi-green-bg: rgba(76, 175, 80, 0.15);
+  --kpi-green: #66bb6a;
+  --kpi-orange-bg: rgba(255, 152, 0, 0.15);
+  --kpi-orange: #ffb74d;
+
+  /* Gradientes modo oscuro */
+  --gradient-primary: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+  --gradient-secondary: linear-gradient(135deg, #fdb913 0%, #ffd54f 100%);
+  --gradient-overlay: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+/* ============================================
+   DASHBOARD CONTAINER
+   ============================================ */
 .dashboard-directivo {
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
+/* ============================================
+   HEADER
+   ============================================ */
 .dashboard-header {
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: var(--gradient-primary);
+  border-radius: 16px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
 
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 var(--spacing-xs) 0;
+.dashboard-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    var(--color-secondary) 0%,
+    transparent 70%
+  );
+  opacity: 0.1;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.1;
   }
-
-  .subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin: 0;
+  50% {
+    transform: scale(1.1);
+    opacity: 0.15;
   }
 }
 
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.5px;
+}
+
+.dashboard-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+[data-theme="dark"] .dashboard-header .subtitle {
+  color: #e0e0e0;
+}
+
+/* ============================================
+   KPI GRID
+   ============================================ */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
+/* ============================================
+   KPI CARDS
+   ============================================ */
 .kpi-card {
-  ::ng-deep .p-card-body {
-    padding: var(--spacing-lg);
-  }
+  background: var(--bg-kpi) !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-secondary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.kpi-card:hover::before {
+  transform: scaleX(1);
+}
+
+.kpi-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover) !important;
+  border-color: var(--color-secondary) !important;
 }
 
 .kpi-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: 1.25rem;
+  padding: 0.5rem;
 }
 
 .kpi-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--border-radius-lg);
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2rem;
   flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-  i {
-    font-size: 1.75rem;
+.kpi-icon::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.kpi-card:hover .kpi-icon::after {
+  opacity: 1;
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
   }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.kpi-card:hover .kpi-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .kpi-details {
@@ -58,26 +276,377 @@
 
 .kpi-label {
   font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .kpi-value {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
   margin: 0;
+  line-height: 1;
+  transition: color 0.3s ease;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-::ng-deep {
-  .p-card {
-    margin-bottom: var(--spacing-lg);
+.kpi-card:hover .kpi-value {
+  color: var(--color-secondary);
+}
+
+/* ============================================
+   CARDS GENERALES
+   ============================================ */
+::ng-deep .p-card {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-md) !important;
+  margin-bottom: 2rem !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .p-card:hover {
+  box-shadow: var(--shadow-lg) !important;
+  border-color: var(--border-accent) !important;
+}
+
+::ng-deep .p-card .p-card-header {
+  background: var(--bg-secondary) !important;
+  border-bottom: 3px solid var(--color-secondary) !important;
+  padding: 1.5rem !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  position: relative;
+}
+
+::ng-deep .p-card .p-card-header::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background: var(--gradient-secondary);
+}
+
+::ng-deep .p-card .p-card-content {
+  padding: 1.5rem !important;
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ============================================
+   GRÁFICOS
+   ============================================ */
+::ng-deep .p-chart {
+  height: 400px;
+  padding: 1rem;
+}
+
+::ng-deep canvas {
+  max-height: 400px !important;
+}
+
+/* ============================================
+   TABLAS
+   ============================================ */
+::ng-deep .p-datatable {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.5px !important;
+  padding: 1.25rem 1rem !important;
+  border-bottom: 3px solid var(--color-secondary) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: all 0.2s ease !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: var(--bg-hover) !important;
+  transform: translateX(4px);
+  box-shadow: -4px 0 0 var(--color-secondary);
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1.25rem 1rem !important;
+  color: var(--text-primary) !important;
+  font-size: 0.95rem !important;
+  font-weight: 500;
+  border: none !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:last-child {
+  border-bottom: none !important;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+::ng-deep app-badge {
+  display: inline-block;
+}
+
+::ng-deep .badge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-align: center;
+  display: inline-block;
+  min-width: 60px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .badge:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+::ng-deep .badge-info {
+  background: var(--kpi-blue-bg);
+  color: var(--kpi-blue);
+  border-color: var(--kpi-blue);
+}
+
+::ng-deep .badge-success {
+  background: var(--kpi-green-bg);
+  color: var(--kpi-green);
+  border-color: var(--kpi-green);
+}
+
+::ng-deep .badge-warning {
+  background: var(--kpi-yellow-bg);
+  color: var(--kpi-yellow);
+  border-color: var(--kpi-yellow);
+}
+
+::ng-deep .badge-danger {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  border-color: #f44336;
+}
+
+/* ============================================
+   FORMATO DE NÚMEROS
+   ============================================ */
+.kpi-value,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1200px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .p-card-header {
-    font-weight: 600;
-    font-size: 1.125rem;
+  .dashboard-header h1 {
+    font-size: 2rem;
   }
+}
+
+@media (max-width: 768px) {
+  .dashboard-directivo {
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .dashboard-header .subtitle {
+    font-size: 1rem;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .kpi-content {
+    gap: 1rem;
+  }
+
+  .kpi-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.75rem;
+  }
+
+  .kpi-value {
+    font-size: 1.75rem;
+  }
+
+  ::ng-deep .p-card .p-card-header {
+    font-size: 1.25rem !important;
+    padding: 1rem !important;
+  }
+
+  ::ng-deep .p-card .p-card-content {
+    padding: 1rem !important;
+  }
+
+  ::ng-deep .p-chart {
+    height: 300px;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.75rem 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .kpi-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+  }
+
+  .kpi-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================
+   ANIMACIONES Y TRANSICIONES
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-directivo > * {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.kpi-grid > * {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.kpi-grid > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.kpi-grid > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.kpi-grid > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.kpi-grid > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary);
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .dashboard-directivo {
+    background: white;
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    background: white !important;
+    border: 2px solid #000;
+    box-shadow: none;
+  }
+
+  .kpi-card,
+  ::ng-deep .p-card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    page-break-inside: avoid;
+  }
+
+  .kpi-card:hover,
+  ::ng-deep .p-card:hover {
+    transform: none;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible para accesibilidad */
+*:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

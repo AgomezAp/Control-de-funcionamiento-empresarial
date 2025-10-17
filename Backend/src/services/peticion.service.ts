@@ -246,7 +246,7 @@ export class PeticionService {
       {
         model: Cliente,
         as: "cliente",
-        attributes: ["id", "nombre", "pais", "tipo_cliente"],  // ✅ Nombre correcto de la columna
+        attributes: ["id", "nombre", "pais", "tipo_cliente"],
       },
       {
         model: Categoria,
@@ -267,12 +267,15 @@ export class PeticionService {
       },
     ];
 
-    // ✅ Buscar primero en peticiones activas
+    // ✅ Buscar primero en peticiones activas por ID
     let peticion = await Peticion.findByPk(id, { include: includeOptions });
 
-    // ✅ Si no se encuentra, buscar en histórico
+    // ✅ Si no se encuentra, buscar en histórico por peticion_id_original
     if (!peticion) {
-      peticion = await PeticionHistorico.findByPk(id, { include: includeOptions }) as any;
+      peticion = await PeticionHistorico.findOne({ 
+        where: { peticion_id_original: id },
+        include: includeOptions 
+      }) as any;
     }
 
     if (!peticion) {
@@ -674,7 +677,7 @@ export class PeticionService {
       };
     }
 
-    return await PeticionHistorico.findAll({
+    const peticiones = await PeticionHistorico.findAll({
       where: whereClause,
       include: [
         { model: Cliente, as: "cliente", attributes: ["id", "nombre"] },
@@ -683,6 +686,15 @@ export class PeticionService {
         { model: Usuario, as: "asignado", attributes: ["uid", "nombre_completo"] },
       ],
       order: [["fecha_resolucion", "DESC"]],
+    });
+
+    // ✅ Transformar la respuesta para que el ID visible sea el peticion_id_original
+    return peticiones.map((peticion: any) => {
+      const peticionObj = peticion.toJSON();
+      return {
+        ...peticionObj,
+        id: peticionObj.peticion_id_original, // ✅ Usar el ID original
+      };
     });
   }
 

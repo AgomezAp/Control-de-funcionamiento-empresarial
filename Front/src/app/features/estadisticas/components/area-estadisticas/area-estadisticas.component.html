@@ -1,233 +1,365 @@
-<div class="container mx-auto p-4">
-  <p-toast></p-toast>
+<div class="container">
+  <!-- Toast personalizado -->
+  <div class="toast-container" *ngIf="showToast">
+    <div
+      class="toast"
+      [class.success]="toastType === 'success'"
+      [class.error]="toastType === 'error'"
+    >
+      <i
+        class="icon"
+        [class.icon-check]="toastType === 'success'"
+        [class.icon-error]="toastType === 'error'"
+      ></i>
+      <span>{{ toastMessage }}</span>
+      <button class="toast-close" (click)="showToast = false">×</button>
+    </div>
+  </div>
 
   <!-- Header con filtros -->
-  <div class="mb-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-3xl font-bold text-gray-800">
-        <i class="pi pi-building text-green-600 mr-2"></i>
+  <div class="header-section">
+    <div class="header-wrapper">
+      <h2 class="page-title">
+        <i class="icon-building"></i>
         Estadísticas por Área
       </h2>
 
-      <div class="flex gap-3">
-        <!-- ✅ Selector de Área (solo para Admin/Directivo) -->
-        <p-dropdown
-          *ngIf="esAdmin"
-          [options]="areasDisponibles"
-          [(ngModel)]="areaSeleccionada"
-          placeholder="Seleccionar Área"
-          optionLabel="label"
-          optionValue="value"
-          (onChange)="onAreaChange()"
-          [style]="{ width: '220px' }"
-        ></p-dropdown>
-
-        <!-- Mostrar área fija si no es Admin/Directivo -->
-        <div *ngIf="!esAdmin" class="flex items-center px-4 py-2 bg-blue-50 rounded-lg border border-blue-200">
-          <i class="pi pi-building text-blue-600 mr-2"></i>
-          <span class="font-semibold text-blue-800">{{ areaSeleccionada }}</span>
+      <div class="filters-container">
+        <!-- Selector de Área (solo para Admin/Directivo) -->
+        <div class="select-wrapper" *ngIf="esAdmin">
+          <select
+            class="custom-select"
+            [(ngModel)]="areaSeleccionada"
+            (change)="onAreaChange()"
+          >
+            <option value="" disabled>Seleccionar Área</option>
+            <option *ngFor="let area of areasDisponibles" [value]="area.value">
+              {{ area.label }}
+            </option>
+          </select>
+          <i class="select-icon icon-chevron-down"></i>
         </div>
 
-        <p-dropdown
-          [options]="meses"
-          [(ngModel)]="selectedMes"
-          placeholder="Mes"
-          optionLabel="label"
-          optionValue="value"
-          (onChange)="onFiltroChange()"
-          [style]="{ width: '150px' }"
-        ></p-dropdown>
+        <!-- Mostrar área fija si no es Admin/Directivo -->
+        <div *ngIf="!esAdmin" class="area-badge">
+          <i class="icon-building"></i>
+          <span>{{ areaSeleccionada }}</span>
+        </div>
 
-        <p-dropdown
-          [options]="anios"
-          [(ngModel)]="selectedAnio"
-          placeholder="Año"
-          optionLabel="label"
-          optionValue="value"
-          (onChange)="onFiltroChange()"
-          [style]="{ width: '120px' }"
-        ></p-dropdown>
+        <div class="select-wrapper">
+          <select
+            class="custom-select"
+            [(ngModel)]="selectedMes"
+            (change)="onFiltroChange()"
+          >
+            <option value="" disabled>Mes</option>
+            <option *ngFor="let mes of meses" [value]="mes.value">
+              {{ mes.label }}
+            </option>
+          </select>
+          <i class="select-icon icon-chevron-down"></i>
+        </div>
+
+        <div class="select-wrapper">
+          <select
+            class="custom-select"
+            [(ngModel)]="selectedAnio"
+            (change)="onFiltroChange()"
+          >
+            <option value="" disabled>Año</option>
+            <option *ngFor="let anio of anios" [value]="anio.value">
+              {{ anio.label }}
+            </option>
+          </select>
+          <i class="select-icon icon-chevron-down"></i>
+        </div>
 
         <button
-          pButton
-          icon="pi pi-refresh"
-          label="Actualizar"
+          class="btn btn-refresh"
           (click)="loadEstadisticas()"
-          [loading]="loading"
-          class="p-button-outlined"
-        ></button>
+          [disabled]="loading"
+        >
+          <i class="icon-refresh" [class.spinning]="loading"></i>
+          <span>Actualizar</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Resumen del Área -->
-  <div *ngIf="!loading && estadisticas.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-    <p-card class="bg-blue-50">
-      <div class="text-center">
-        <p class="text-sm text-gray-600 mb-2">Total Creadas</p>
-        <p class="text-3xl font-bold text-blue-600">{{ resumenArea.totalCreadas }}</p>
+  <div *ngIf="!loading && estadisticas.length > 0" class="stats-grid">
+    <div class="stat-card stat-creadas">
+      <div class="stat-content">
+        <p class="stat-label">Total Creadas</p>
+        <p class="stat-value">{{ resumenArea.totalCreadas }}</p>
       </div>
-    </p-card>
+    </div>
 
-    <p-card class="bg-green-50">
-      <div class="text-center">
-        <p class="text-sm text-gray-600 mb-2">Total Resueltas</p>
-        <p class="text-3xl font-bold text-green-600">{{ resumenArea.totalResueltas }}</p>
-        <p class="text-xs text-gray-500">
-          {{ calcularPorcentaje(resumenArea.totalResueltas, resumenArea.totalCreadas) }}%
+    <div class="stat-card stat-resueltas">
+      <div class="stat-content">
+        <p class="stat-label">Total Resueltas</p>
+        <p class="stat-value">{{ resumenArea.totalResueltas }}</p>
+        <p class="stat-percentage">
+          {{
+            calcularPorcentaje(
+              resumenArea.totalResueltas,
+              resumenArea.totalCreadas
+            )
+          }}%
         </p>
       </div>
-    </p-card>
+    </div>
 
-    <p-card class="bg-red-50">
-      <div class="text-center">
-        <p class="text-sm text-gray-600 mb-2">Total Canceladas</p>
-        <p class="text-3xl font-bold text-red-600">{{ resumenArea.totalCanceladas }}</p>
+    <div class="stat-card stat-canceladas">
+      <div class="stat-content">
+        <p class="stat-label">Total Canceladas</p>
+        <p class="stat-value">{{ resumenArea.totalCanceladas }}</p>
       </div>
-    </p-card>
+    </div>
 
-    <p-card class="bg-purple-50">
-      <div class="text-center">
-        <p class="text-sm text-gray-600 mb-2">Tiempo Promedio</p>
-        <p class="text-3xl font-bold text-purple-600">{{ resumenArea.promedioTiempo | number: '1.1-1' }}</p>
-        <p class="text-xs text-gray-500">horas</p>
+    <div class="stat-card stat-tiempo">
+      <div class="stat-content">
+        <p class="stat-label">Tiempo Promedio</p>
+        <p class="stat-value">
+          {{ resumenArea.promedioTiempo | number : "1.1-1" }}
+        </p>
+        <p class="stat-unit">horas</p>
       </div>
-    </p-card>
+    </div>
 
-    <p-card class="bg-yellow-50">
-      <div class="text-center">
-        <p class="text-sm text-gray-600 mb-2">Costo Total</p>
-        <p class="text-2xl font-bold text-yellow-700">${{ resumenArea.costoTotal | number: '1.2-2' }}</p>
+    <div class="stat-card stat-costo">
+      <div class="stat-content">
+        <p class="stat-label">Costo Total</p>
+        <p class="stat-value-currency">
+          ${{ resumenArea.costoTotal | number : "1.2-2" }}
+        </p>
       </div>
-    </p-card>
+    </div>
   </div>
 
   <!-- Skeleton Loading -->
-  <div *ngIf="loading">
-    <p-card>
-      <p-skeleton width="100%" height="300px"></p-skeleton>
-    </p-card>
-    <p-card class="mt-4">
-      <p-skeleton width="100%" height="400px"></p-skeleton>
-    </p-card>
+  <div *ngIf="loading" class="loading-container">
+    <div class="card">
+      <div class="skeleton skeleton-chart"></div>
+    </div>
+    <div class="card">
+      <div class="skeleton skeleton-table"></div>
+    </div>
   </div>
 
   <!-- Mensaje sin datos -->
-  <div *ngIf="!loading && estadisticas.length === 0" class="text-center py-12">
-    <p-card>
-      <i class="pi pi-info-circle text-6xl text-blue-500 mb-4"></i>
-      <h3 class="text-2xl font-bold mb-2">Sin datos disponibles</h3>
-      <p class="text-gray-600">
-        No hay estadísticas para este área en el período seleccionado
-      </p>
-    </p-card>
+  <div *ngIf="!loading && estadisticas.length === 0" class="empty-state">
+    <div class="card">
+      <i class="icon-info"></i>
+      <h3>Sin datos disponibles</h3>
+      <p>No hay estadísticas para este área en el período seleccionado</p>
+    </div>
   </div>
 
   <!-- Gráfico comparativo -->
-  <div *ngIf="!loading && estadisticas.length > 0" class="mb-6">
-    <p-card>
-      <ng-template pTemplate="header">
-        <div class="p-4">
-          <h3 class="text-xl font-bold">Comparación de Usuarios del Área</h3>
-        </div>
-      </ng-template>
-      <div style="height: 400px">
-        <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart>
+  <div *ngIf="!loading && estadisticas.length > 0" class="chart-section">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Comparación de Usuarios del Área</h3>
       </div>
-    </p-card>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas #chartCanvas></canvas>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Tabla detallada -->
-  <div *ngIf="!loading && estadisticas.length > 0">
-    <p-card>
-      <ng-template pTemplate="header">
-        <div class="p-4">
-          <h3 class="text-xl font-bold">Detalle por Usuario</h3>
+  <div *ngIf="!loading && estadisticas.length > 0" class="table-section">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Detalle por Usuario</h3>
+      </div>
+
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th (click)="sortBy('usuario.nombre_completo')" class="sortable">
+                Usuario
+                <i
+                  class="sort-icon"
+                  [class.active]="sortField === 'usuario.nombre_completo'"
+                ></i>
+              </th>
+              <th
+                (click)="sortBy('peticiones_creadas')"
+                class="sortable text-center"
+              >
+                Creadas
+                <i
+                  class="sort-icon"
+                  [class.active]="sortField === 'peticiones_creadas'"
+                ></i>
+              </th>
+              <th
+                (click)="sortBy('peticiones_resueltas')"
+                class="sortable text-center"
+              >
+                Resueltas
+                <i
+                  class="sort-icon"
+                  [class.active]="sortField === 'peticiones_resueltas'"
+                ></i>
+              </th>
+              <th class="text-center">% Efectividad</th>
+              <th
+                (click)="sortBy('peticiones_canceladas')"
+                class="sortable text-center"
+              >
+                Canceladas
+                <i
+                  class="sort-icon"
+                  [class.active]="sortField === 'peticiones_canceladas'"
+                ></i>
+              </th>
+              <th
+                (click)="sortBy('tiempo_promedio_resolucion_horas')"
+                class="sortable text-center"
+              >
+                Tiempo Prom.
+                <i
+                  class="sort-icon"
+                  [class.active]="
+                    sortField === 'tiempo_promedio_resolucion_horas'
+                  "
+                ></i>
+              </th>
+              <th
+                (click)="sortBy('costo_total_generado')"
+                class="sortable text-right"
+              >
+                Costo Total
+                <i
+                  class="sort-icon"
+                  [class.active]="sortField === 'costo_total_generado'"
+                ></i>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let est of paginatedData">
+              <td>
+                <div class="user-cell">
+                  <i class="icon-user"></i>
+                  <span>{{
+                    est.usuario?.nombre_completo || "Usuario " + est.usuario_id
+                  }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="badge badge-neutral">{{
+                  est.peticiones_creadas
+                }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge badge-success">{{
+                  est.peticiones_resueltas
+                }}</span>
+              </td>
+              <td class="text-center">
+                <span
+                  class="badge"
+                  [ngClass]="
+                    getBadgeClass(
+                      calcularPorcentaje(
+                        est.peticiones_resueltas,
+                        est.peticiones_creadas
+                      )
+                    )
+                  "
+                >
+                  {{
+                    calcularPorcentaje(
+                      est.peticiones_resueltas,
+                      est.peticiones_creadas
+                    )
+                  }}%
+                </span>
+              </td>
+              <td class="text-center">
+                <span class="badge badge-danger">{{
+                  est.peticiones_canceladas
+                }}</span>
+              </td>
+              <td class="text-center">
+                <span class="time-value">
+                  {{
+                    est.tiempo_promedio_resolucion_horas || 0 | number : "1.1-1"
+                  }}
+                  hrs
+                </span>
+              </td>
+              <td class="text-right">
+                <span class="cost-value">
+                  ${{ est.costo_total_generado | number : "1.2-2" }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="estadisticas.length === 0" class="empty-table">
+          No hay datos disponibles
         </div>
-      </ng-template>
+      </div>
 
-      <p-table
-        [value]="estadisticas"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-sm"
-        [tableStyle]="{ 'min-width': '50rem' }"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="usuario.nombre_completo">
-              Usuario
-              <p-sortIcon field="usuario.nombre_completo"></p-sortIcon>
-            </th>
-            <th pSortableColumn="peticiones_creadas" class="text-center">
-              Creadas
-              <p-sortIcon field="peticiones_creadas"></p-sortIcon>
-            </th>
-            <th pSortableColumn="peticiones_resueltas" class="text-center">
-              Resueltas
-              <p-sortIcon field="peticiones_resueltas"></p-sortIcon>
-            </th>
-            <th class="text-center">% Efectividad</th>
-            <th pSortableColumn="peticiones_canceladas" class="text-center">
-              Canceladas
-              <p-sortIcon field="peticiones_canceladas"></p-sortIcon>
-            </th>
-            <th pSortableColumn="tiempo_promedio_resolucion_horas" class="text-center">
-              Tiempo Prom.
-              <p-sortIcon field="tiempo_promedio_resolucion_horas"></p-sortIcon>
-            </th>
-            <th pSortableColumn="costo_total_generado" class="text-right">
-              Costo Total
-              <p-sortIcon field="costo_total_generado"></p-sortIcon>
-            </th>
-          </tr>
-        </ng-template>
+      <!-- Paginación -->
+      <div class="pagination-container" *ngIf="estadisticas.length > 0">
+        <div class="pagination-info">
+          Mostrando {{ startIndex + 1 }} a {{ endIndex }} de
+          {{ estadisticas.length }} usuarios
+        </div>
 
-        <ng-template pTemplate="body" let-est>
-          <tr>
-            <td>
-              <div class="flex items-center gap-2">
-                <i class="pi pi-user text-gray-500"></i>
-                <span class="font-semibold">{{ est.usuario?.nombre_completo || 'Usuario ' + est.usuario_id }}</span>
-              </div>
-            </td>
-            <td class="text-center">
-              <span class="font-semibold">{{ est.peticiones_creadas }}</span>
-            </td>
-            <td class="text-center">
-              <span class="font-semibold text-green-600">{{ est.peticiones_resueltas }}</span>
-            </td>
-            <td class="text-center">
-              <p-tag
-                [value]="calcularPorcentaje(est.peticiones_resueltas, est.peticiones_creadas) + '%'"
-                [severity]="getSeverity(calcularPorcentaje(est.peticiones_resueltas, est.peticiones_creadas))"
-              ></p-tag>
-            </td>
-            <td class="text-center">
-              <span class="font-semibold text-red-600">{{ est.peticiones_canceladas }}</span>
-            </td>
-            <td class="text-center">
-              <span class="text-purple-600">
-                {{ est.tiempo_promedio_resolucion_horas || 0 | number: '1.1-1' }} hrs
-              </span>
-            </td>
-            <td class="text-right">
-              <span class="font-semibold text-gray-700">
-                ${{ est.costo_total_generado | number: '1.2-2' }}
-              </span>
-            </td>
-          </tr>
-        </ng-template>
+        <div class="pagination-controls">
+          <button
+            class="btn-pagination"
+            (click)="previousPage()"
+            [disabled]="currentPage === 1"
+          >
+            <i class="icon-chevron-left"></i>
+          </button>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="7" class="text-center py-4">No hay datos disponibles</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+          <span class="page-numbers">
+            <button
+              *ngFor="let page of getPageNumbers()"
+              class="btn-page"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </span>
+
+          <button
+            class="btn-pagination"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+          >
+            <i class="icon-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="rows-per-page">
+          <label>Filas por página:</label>
+          <select
+            [(ngModel)]="rowsPerPage"
+            (change)="onRowsPerPageChange()"
+            class="select-small"
+          >
+            <option [value]="10">10</option>
+            <option [value]="25">25</option>
+            <option [value]="50">50</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

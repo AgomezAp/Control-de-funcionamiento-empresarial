@@ -622,6 +622,7 @@
    FIREFOX - SELECT ARROW FIX
    ============================================ */
 .field-select {
+  appearance: none;
   -moz-appearance: none;
 }
 

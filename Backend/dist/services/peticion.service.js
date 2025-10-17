@@ -212,7 +212,7 @@ class PeticionService {
                 {
                     model: Cliente_1.default,
                     as: "cliente",
-                    attributes: ["id", "nombre", "pais", "tipo_cliente"], // ✅ Nombre correcto de la columna
+                    attributes: ["id", "nombre", "pais", "tipo_cliente"],
                 },
                 {
                     model: Categoria_1.default,
@@ -232,11 +232,14 @@ class PeticionService {
                     include: [{ model: Area_1.default, as: "area", attributes: ["nombre"] }],
                 },
             ];
-            // ✅ Buscar primero en peticiones activas
+            // ✅ Buscar primero en peticiones activas por ID
             let peticion = yield Peticion_1.default.findByPk(id, { include: includeOptions });
-            // ✅ Si no se encuentra, buscar en histórico
+            // ✅ Si no se encuentra, buscar en histórico por peticion_id_original
             if (!peticion) {
-                peticion = (yield PeticionHistorico_1.default.findByPk(id, { include: includeOptions }));
+                peticion = (yield PeticionHistorico_1.default.findOne({
+                    where: { peticion_id_original: id },
+                    include: includeOptions
+                }));
             }
             if (!peticion) {
                 throw new error_util_1.NotFoundError("Petición no encontrada");
@@ -565,7 +568,7 @@ class PeticionService {
                     [sequelize_1.Op.between]: [fechaInicio, fechaFin],
                 };
             }
-            return yield PeticionHistorico_1.default.findAll({
+            const peticiones = yield PeticionHistorico_1.default.findAll({
                 where: whereClause,
                 include: [
                     { model: Cliente_1.default, as: "cliente", attributes: ["id", "nombre"] },
@@ -574,6 +577,11 @@ class PeticionService {
                     { model: Usuario_1.default, as: "asignado", attributes: ["uid", "nombre_completo"] },
                 ],
                 order: [["fecha_resolucion", "DESC"]],
+            });
+            // ✅ Transformar la respuesta para que el ID visible sea el peticion_id_original
+            return peticiones.map((peticion) => {
+                const peticionObj = peticion.toJSON();
+                return Object.assign(Object.assign({}, peticionObj), { id: peticionObj.peticion_id_original });
             });
         });
     }

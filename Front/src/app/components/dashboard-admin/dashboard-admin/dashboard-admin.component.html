@@ -145,32 +145,4 @@
     </p-card>
   </div>
 
-  <!-- Top Diseñadores -->
-  <p-card header="Top 5 Diseñadores Más Productivos">
-    <p-table [value]="topDisenadores" [tableStyle]="{ 'min-width': '50rem' }">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>#</th>
-          <th>Diseñador</th>
-          <th>Peticiones Resueltas</th>
-          <th>Costo Generado</th>
-          <th>Tiempo Promedio</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-disenador let-i="rowIndex">
-        <tr>
-          <td>{{ i + 1 }}</td>
-          <td>{{ disenador.nombre }}</td>
-          <td>
-            <app-badge
-              [label]="disenador.peticionesResueltas.toString()"
-              severity="success"
-            ></app-badge>
-          </td>
-          <td>{{ disenador.costoGenerado | currencyCop }}</td>
-          <td>{{ formatNumber(disenador.tiempoPromedio) }} horas</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </p-card>
 </div>
