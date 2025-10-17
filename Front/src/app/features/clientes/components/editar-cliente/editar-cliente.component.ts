@@ -88,6 +88,7 @@ export class EditarClienteComponent implements OnInit {
   initForm(): void {
     this.clienteForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
+      cedula: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
       pais: ['', Validators.required],
       tipo_cliente: ['', Validators.required],
       pautador_id: ['', Validators.required],

@@ -92,7 +92,7 @@
               optionValue="id"
               placeholder="Seleccione un cliente"
               [filter]="true"
-              filterBy="nombre,pais"
+              filterBy="nombre,pais,cedula"
               [showClear]="true"
               styleClass="custom-dropdown-field"
               [ngClass]="{ 'field-invalid': isFieldInvalid('cliente_id') }"
@@ -102,7 +102,12 @@
                   <i class="pi pi-building"></i>
                   <div class="dropdown-item-info">
                     <span class="dropdown-item-name">{{ cliente.nombre }}</span>
-                    <span class="dropdown-item-detail">{{ cliente.pais }}</span>
+                    <span class="dropdown-item-detail">
+                      {{ cliente.pais }}
+                      <span *ngIf="cliente.cedula" style="color: #6c757d; margin-left: 8px;">
+                        • {{ cliente.cedula }}
+                      </span>
+                    </span>
                   </div>
                 </div>
               </ng-template>

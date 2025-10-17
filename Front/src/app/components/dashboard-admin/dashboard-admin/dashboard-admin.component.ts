@@ -28,7 +28,6 @@ interface AreaOption {
     DropdownModule,
     FormsModule,
     CurrencycopPipe,
-    BadgeComponent,
   ],
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.css',

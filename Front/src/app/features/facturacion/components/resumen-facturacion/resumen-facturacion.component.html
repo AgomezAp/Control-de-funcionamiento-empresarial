@@ -225,9 +225,12 @@
                 <i class="pi pi-building"></i>
                 <div class="client-info">
                   <span class="client-name">{{ periodo.cliente?.nombre }}</span>
-                  <span class="client-country">{{
-                    periodo.cliente?.pais
-                  }}</span>
+                  <span class="client-country">
+                    {{ periodo.cliente?.pais }}
+                    <span *ngIf="periodo.cliente?.cedula" class="client-cedula">
+                      • {{ periodo.cliente?.cedula }}
+                    </span>
+                  </span>
                 </div>
               </div>
             </td>

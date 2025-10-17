@@ -26,6 +26,12 @@ Cliente.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
     },
+    cedula: {
+        type: sequelize_1.DataTypes.STRING(50),
+        allowNull: true,
+        unique: true,
+        comment: "Cédula o documento de identidad del cliente",
+    },
     pais: {
         type: sequelize_1.DataTypes.STRING(100),
         allowNull: false,

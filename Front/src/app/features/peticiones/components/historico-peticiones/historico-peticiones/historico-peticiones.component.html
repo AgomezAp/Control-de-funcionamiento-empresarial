@@ -63,10 +63,8 @@
               pButton
               icon="pi pi-eye"
               class="p-button-rounded p-button-text"
-              [routerLink]="[
-                '/peticiones',
-                peticion.peticion_id_original || peticion.id
-              ]"
+              (click)="verDetalle(peticion.peticion_id_original || peticion.id)"
+              title="Ver detalle"
             ></button>
           </td>
         </tr>

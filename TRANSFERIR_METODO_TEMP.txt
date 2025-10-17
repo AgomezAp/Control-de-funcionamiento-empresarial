@@ -1,0 +1,101 @@
+
+  async transferirClientes(data: {
+    cliente_ids: number[];
+    nuevo_pautador_id?: number;
+    nuevo_disenador_id?: number;
+  }, usuarioActual: any) {
+    const { cliente_ids, nuevo_pautador_id, nuevo_disenador_id } = data;
+
+    if (!nuevo_pautador_id && !nuevo_disenador_id) {
+      throw new ValidationError("Debe especificar al menos un pautador o diseñador nuevo");
+    }
+
+    if (!cliente_ids || cliente_ids.length === 0) {
+      throw new ValidationError("Debe seleccionar al menos un cliente para transferir");
+    }
+
+    if (nuevo_pautador_id) {
+      const nuevoPautador = await Usuario.findByPk(nuevo_pautador_id, {
+        include: [{ model: Area, as: "area" }],
+      });
+
+      if (!nuevoPautador) {
+        throw new NotFoundError("El nuevo pautador especificado no existe");
+      }
+
+      if ((nuevoPautador as any).area.nombre !== "Pautas") {
+        throw new ValidationError("El usuario asignado como pautador no pertenece al área de Pautas");
+      }
+    }
+
+    if (nuevo_disenador_id) {
+      const nuevoDisenador = await Usuario.findByPk(nuevo_disenador_id, {
+        include: [{ model: Area, as: "area" }],
+      });
+
+      if (!nuevoDisenador) {
+        throw new NotFoundError("El nuevo diseñador especificado no existe");
+      }
+
+      if ((nuevoDisenador as any).area.nombre !== "Diseño") {
+        throw new ValidationError("El usuario asignado como diseñador no pertenece al área de Diseño");
+      }
+    }
+
+    const clientes = await Cliente.findAll({
+      where: { id: cliente_ids },
+      include: [
+        { model: Usuario, as: "pautador", attributes: ["uid", "nombre_completo"] },
+        { model: Usuario, as: "disenador", attributes: ["uid", "nombre_completo"] },
+      ],
+    });
+
+    if (clientes.length === 0) {
+      throw new NotFoundError("No se encontraron los clientes especificados");
+    }
+
+    if (clientes.length !== cliente_ids.length) {
+      throw new ValidationError("Algunos de los clientes especificados no existen");
+    }
+
+    for (const cliente of clientes) {
+      const cambios: any = {};
+      const descripciones = [];
+
+      const pautadorAnterior = (cliente as any).pautador?.nombre_completo || 'N/A';
+      const disenadorAnterior = (cliente as any).disenador?.nombre_completo || 'N/A';
+
+      if (nuevo_pautador_id && cliente.pautador_id !== nuevo_pautador_id) {
+        cambios.pautador_id = nuevo_pautador_id;
+        descripciones.push(`Pautador cambiado de ${pautadorAnterior} a nuevo pautador`);
+      }
+
+      if (nuevo_disenador_id && cliente.disenador_id !== nuevo_disenador_id) {
+        cambios.disenador_id = nuevo_disenador_id;
+        descripciones.push(`Diseñador cambiado de ${disenadorAnterior} a nuevo diseñador`);
+      }
+
+      if (Object.keys(cambios).length > 0) {
+        await cliente.update(cambios);
+
+        await this.auditoriaService.registrarCambio({
+          tabla_afectada: "clientes",
+          registro_id: cliente.id,
+          tipo_cambio: "UPDATE",
+          campo_modificado: "transferencia",
+          valor_anterior: JSON.stringify({ pautador_id: cliente.pautador_id, disenador_id: cliente.disenador_id }),
+          valor_nuevo: JSON.stringify(cambios),
+          usuario_id: usuarioActual.uid,
+          descripcion: `Transferencia: ${descripciones.join(', ')}`,
+        });
+      }
+    }
+
+    return await Cliente.findAll({
+      where: { id: cliente_ids },
+      include: [
+        { model: Usuario, as: "pautador", attributes: ["uid", "nombre_completo", "correo"] },
+        { model: Usuario, as: "disenador", attributes: ["uid", "nombre_completo", "correo"] },
+      ],
+    });
+  }

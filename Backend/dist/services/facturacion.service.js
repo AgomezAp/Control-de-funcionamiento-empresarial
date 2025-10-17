@@ -18,6 +18,7 @@ const Cliente_1 = __importDefault(require("../models/Cliente"));
 const Peticion_1 = __importDefault(require("../models/Peticion"));
 const PeticionHistorico_1 = __importDefault(require("../models/PeticionHistorico"));
 const Categoria_1 = __importDefault(require("../models/Categoria"));
+const Usuario_1 = __importDefault(require("../models/Usuario"));
 const sequelize_1 = require("sequelize");
 const error_util_1 = require("../utils/error.util");
 class FacturacionService {
@@ -85,7 +86,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "pais"],
+                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
                     },
                 ],
             });
@@ -141,6 +142,11 @@ class FacturacionService {
                 },
                 include: [
                     { model: Categoria_1.default, as: "categoria", attributes: ["nombre", "area_tipo"] },
+                    {
+                        model: Usuario_1.default,
+                        as: "asignado",
+                        attributes: ["uid", "nombre_completo", "correo"]
+                    },
                 ],
             });
             const peticionesHistorico = yield PeticionHistorico_1.default.findAll({
@@ -152,6 +158,11 @@ class FacturacionService {
                 },
                 include: [
                     { model: Categoria_1.default, as: "categoria", attributes: ["nombre", "area_tipo"] },
+                    {
+                        model: Usuario_1.default,
+                        as: "asignado",
+                        attributes: ["uid", "nombre_completo", "correo"]
+                    },
                 ],
             });
             const todasPeticiones = [...peticionesActivas, ...peticionesHistorico];
@@ -212,7 +223,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "pais"],
+                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
                     },
                 ],
                 order: [["costo_total", "DESC"]],
@@ -273,7 +284,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "pais"],
+                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
                     },
                     {
                         model: Categoria_1.default,

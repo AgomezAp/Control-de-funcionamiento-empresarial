@@ -57,6 +57,8 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
   peticionId: number = 0;
   currentUser: any = null;
   private destroy$ = new Subject<void>();
+  // ✅ Variable para saber si vino del histórico
+  private fromHistorico = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +69,12 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {
     this.currentUser = this.authService.getCurrentUser();
+    
+    // ✅ Detectar si vino del histórico mediante el estado de navegación
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.fromHistorico = navigation.extras.state['fromHistorico'] === true;
+    }
   }
 
   ngOnInit(): void {
@@ -330,6 +338,11 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    this.router.navigate(['/peticiones']);
+    // ✅ Volver al histórico si vino de ahí, sino a peticiones activas
+    if (this.fromHistorico) {
+      this.router.navigate(['/peticiones/historico']);
+    } else {
+      this.router.navigate(['/peticiones']);
+    }
   }
 }

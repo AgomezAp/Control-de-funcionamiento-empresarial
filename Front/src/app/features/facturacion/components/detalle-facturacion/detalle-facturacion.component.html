@@ -50,6 +50,14 @@
           <span class="info-value">{{ periodo.cliente?.nombre || 'N/A' }}</span>
         </div>
         <div class="info-item">
+          <span class="info-label">Cédula/NIT:</span>
+          <span class="info-value">{{ periodo.cliente?.cedula || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">País:</span>
+          <span class="info-value">{{ periodo.cliente?.pais || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
           <span class="info-label">Tipo:</span>
           <span class="info-value">{{ periodo.cliente?.tipo_cliente || 'N/A' }}</span>
         </div>
@@ -204,7 +212,7 @@
             <td>
               <div class="user-cell">
                 <i class="pi pi-user"></i>
-                <span>{{ peticion.usuario_resolvio?.nombre_completo || 'N/A' }}</span>
+                <span>{{ peticion.asignado?.nombre_completo || 'N/A' }}</span>
               </div>
             </td>
             <td>{{ peticion.fecha_resolucion | date: 'dd/MM/yyyy' }}</td>

@@ -9,6 +9,13 @@ exports.crearClienteValidator = [
         .withMessage("El nombre del cliente es requerido")
         .isLength({ min: 2 })
         .withMessage("El nombre debe tener al menos 2 caracteres"),
+    (0, express_validator_1.body)("cedula")
+        .optional({ nullable: true, checkFalsy: true })
+        .trim()
+        .isLength({ min: 5, max: 50 })
+        .withMessage("La cédula debe tener entre 5 y 50 caracteres")
+        .matches(/^[a-zA-Z0-9\-]+$/)
+        .withMessage("La cédula solo puede contener letras, números y guiones"),
     (0, express_validator_1.body)("pais")
         .trim()
         .notEmpty()
@@ -40,6 +47,13 @@ exports.actualizarClienteValidator = [
         .trim()
         .isLength({ min: 2 })
         .withMessage("El nombre debe tener al menos 2 caracteres"),
+    (0, express_validator_1.body)("cedula")
+        .optional({ nullable: true, checkFalsy: true })
+        .trim()
+        .isLength({ min: 5, max: 50 })
+        .withMessage("La cédula debe tener entre 5 y 50 caracteres")
+        .matches(/^[a-zA-Z0-9\-]+$/)
+        .withMessage("La cédula solo puede contener letras, números y guiones"),
     (0, express_validator_1.body)("pais").optional().trim().notEmpty().withMessage("El país no puede estar vacío"),
     (0, express_validator_1.body)("tipo_cliente")
         .optional()

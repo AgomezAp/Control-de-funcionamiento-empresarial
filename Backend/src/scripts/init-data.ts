@@ -453,6 +453,7 @@ async function initData() {
     const clientes = [
       {
         nombre: "Empresa Tech Solutions",
+        cedula: "900123456-7",
         pais: "Colombia",
         tipo_cliente: "Meta Ads",
         pautador_id: pautador1.uid,
@@ -462,6 +463,7 @@ async function initData() {
       },
       {
         nombre: "Comercial El Progreso",
+        cedula: "MEX987654321",
         pais: "México",
         tipo_cliente: "Google Ads",
         pautador_id: pautador2.uid,
@@ -471,6 +473,7 @@ async function initData() {
       },
       {
         nombre: "Restaurante La Buena Mesa",
+        cedula: "900234567-8",
         pais: "Colombia",
         tipo_cliente: "Meta Ads",
         pautador_id: pautador1.uid,
@@ -480,6 +483,7 @@ async function initData() {
       },
       {
         nombre: "Tienda Fashion Style",
+        cedula: "B12345678",
         pais: "España",
         tipo_cliente: "Google Ads",
         pautador_id: pautador2.uid,
@@ -489,6 +493,7 @@ async function initData() {
       },
       {
         nombre: "Consultora Legal Asociados",
+        cedula: "20-30567891-4",
         pais: "Argentina",
         tipo_cliente: "Externo",
         pautador_id: pautador1.uid,

@@ -8,6 +8,14 @@ export const crearClienteValidator = [
     .isLength({ min: 2 })
     .withMessage("El nombre debe tener al menos 2 caracteres"),
 
+  body("cedula")
+    .optional({ nullable: true, checkFalsy: true })
+    .trim()
+    .isLength({ min: 5, max: 50 })
+    .withMessage("La cédula debe tener entre 5 y 50 caracteres")
+    .matches(/^[a-zA-Z0-9\-]+$/)
+    .withMessage("La cédula solo puede contener letras, números y guiones"),
+
   body("pais")
     .trim()
     .notEmpty()
@@ -45,6 +53,14 @@ export const actualizarClienteValidator = [
     .trim()
     .isLength({ min: 2 })
     .withMessage("El nombre debe tener al menos 2 caracteres"),
+
+  body("cedula")
+    .optional({ nullable: true, checkFalsy: true })
+    .trim()
+    .isLength({ min: 5, max: 50 })
+    .withMessage("La cédula debe tener entre 5 y 50 caracteres")
+    .matches(/^[a-zA-Z0-9\-]+$/)
+    .withMessage("La cédula solo puede contener letras, números y guiones"),
 
   body("pais").optional().trim().notEmpty().withMessage("El país no puede estar vacío"),
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // PrimeNG
 import { TableModule } from 'primeng/table';
@@ -44,7 +44,10 @@ export class HistoricoPeticionesComponent implements OnInit {
   historico: PeticionHistorico[] = [];
   loading = false;
 
-  constructor(private peticionService: PeticionService) {}
+  constructor(
+    private peticionService: PeticionService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadHistorico();
@@ -63,6 +66,13 @@ export class HistoricoPeticionesComponent implements OnInit {
         console.error('Error al cargar histórico:', error);
         this.loading = false;
       },
+    });
+  }
+
+  // ✅ Método para navegar al detalle con estado
+  verDetalle(peticionId: number): void {
+    this.router.navigate(['/peticiones', peticionId], {
+      state: { fromHistorico: true }
     });
   }
 }

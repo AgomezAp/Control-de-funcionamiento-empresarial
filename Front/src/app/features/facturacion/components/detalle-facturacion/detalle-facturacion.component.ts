@@ -227,6 +227,14 @@ export class DetalleFacturacionComponent implements OnInit {
             <span class="info-value">${periodo.cliente?.nombre || 'N/A'}</span>
           </div>
           <div class="info-row">
+            <span class="info-label">Cédula/NIT:</span>
+            <span class="info-value">${periodo.cliente?.cedula || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">País:</span>
+            <span class="info-value">${periodo.cliente?.pais || 'N/A'}</span>
+          </div>
+          <div class="info-row">
             <span class="info-label">Tipo:</span>
             <span class="info-value">${periodo.cliente?.tipo_cliente || 'N/A'}</span>
           </div>
@@ -283,7 +291,7 @@ export class DetalleFacturacionComponent implements OnInit {
               <tr>
                 <td>#${pet.id}</td>
                 <td>${pet.categoria?.nombre || 'N/A'}</td>
-                <td>${pet.usuario_resolvio?.nombre_completo || 'N/A'}</td>
+                <td>${pet.asignado?.nombre_completo || 'N/A'}</td>
                 <td>${new Date(pet.fecha_resolucion).toLocaleDateString()}</td>
                 <td>$${pet.costo.toLocaleString('es-CO', { minimumFractionDigits: 2 })}</td>
               </tr>

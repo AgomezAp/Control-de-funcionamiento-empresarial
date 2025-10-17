@@ -3,6 +3,7 @@ import Cliente from "../models/Cliente";
 import Peticion from "../models/Peticion";
 import PeticionHistorico from "../models/PeticionHistorico";
 import Categoria from "../models/Categoria";
+import Usuario from "../models/Usuario";
 import { Op } from "sequelize";
 import sequelize from "../database/connection";
 import { NotFoundError } from "../utils/error.util";
@@ -78,7 +79,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "pais"],
+          attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
         },
       ],
     });
@@ -139,6 +140,11 @@ export class FacturacionService {
       },
       include: [
         { model: Categoria, as: "categoria", attributes: ["nombre", "area_tipo"] },
+        { 
+          model: Usuario, 
+          as: "asignado", 
+          attributes: ["uid", "nombre_completo", "correo"] 
+        },
       ],
     });
 
@@ -151,6 +157,11 @@ export class FacturacionService {
       },
       include: [
         { model: Categoria, as: "categoria", attributes: ["nombre", "area_tipo"] },
+        { 
+          model: Usuario, 
+          as: "asignado", 
+          attributes: ["uid", "nombre_completo", "correo"] 
+        },
       ],
     });
 
@@ -221,7 +232,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "pais"],
+          attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
         },
       ],
       order: [["costo_total", "DESC"]],
@@ -286,7 +297,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "pais"],
+          attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
         },
         {
           model: Categoria,

@@ -49,6 +49,30 @@
         </small>
       </div>
 
+      <!-- Cédula / NIT -->
+      <div class="form-group full">
+        <label for="cedula">
+          Cédula / NIT / Documento de Identidad
+        </label>
+        <input
+          type="text"
+          id="cedula"
+          formControlName="cedula"
+          placeholder="Ej: 900123456-7, B12345678"
+          class="form-control"
+        />
+        <small
+          *ngIf="
+            clienteForm.get('cedula')?.invalid &&
+            clienteForm.get('cedula')?.touched
+          "
+          class="error"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          La cédula debe tener entre 5 y 50 caracteres (solo letras, números y guiones)
+        </small>
+      </div>
+
       <!-- País -->
       <div class="form-group">
         <label for="pais"> País <span class="required">*</span> </label>

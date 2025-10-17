@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { WS_EVENTS } from '../constants/api.constants';
 import { AuthService } from './auth.service';
 import { io, Socket } from 'socket.io-client';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })

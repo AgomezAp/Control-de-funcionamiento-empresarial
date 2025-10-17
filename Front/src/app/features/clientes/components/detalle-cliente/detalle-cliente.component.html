@@ -51,6 +51,15 @@
         <p class="info-value">{{ cliente.nombre }}</p>
       </div>
 
+      <!-- Cédula/NIT -->
+      <div class="info-card">
+        <label class="info-label">
+          <i class="pi pi-id-card"></i>
+          Cédula/NIT
+        </label>
+        <p class="info-value">{{ cliente.cedula || 'No especificado' }}</p>
+      </div>
+
       <!-- País -->
       <div class="info-card">
         <label class="info-label">

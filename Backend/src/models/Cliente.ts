@@ -11,6 +11,7 @@ export enum TipoCliente {
 export class Cliente extends Model {
   public id!: number;
   public nombre!: string;
+  public cedula!: string; // ✅ Nuevo campo
   public pais!: string;
   public tipo_cliente!: TipoCliente;
   public pautador_id!: number;
@@ -30,6 +31,12 @@ Cliente.init(
     nombre: {
       type: DataTypes.STRING(255),
       allowNull: false,
+    },
+    cedula: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      unique: true,
+      comment: "Cédula o documento de identidad del cliente",
     },
     pais: {
       type: DataTypes.STRING(100),
