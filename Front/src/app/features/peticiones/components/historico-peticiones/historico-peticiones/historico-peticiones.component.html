@@ -1,147 +1,182 @@
-<div class="historico-container">
-  <div class="page-card">
-    <!-- HEADER -->
-    <div class="card-header">
-      <div class="header-content">
-        <div class="header-title">
-          <i class="pi pi-history"></i>
-          <h2>Histórico de Peticiones</h2>
-        </div>
-      </div>
+<!-- PÁGINA DE HISTÓRICO DE PETICIONES -->
+<div class="peticiones-page">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <i class="pi pi-history header-icon"></i>
+      <h1 class="page-title">Histórico de Peticiones</h1>
+      <span class="count-badge" *ngIf="historico && historico.length > 0">
+        {{ historico.length }}
+      </span>
     </div>
+    <div class="header-actions">
+      <!-- Aquí puedes agregar botones si lo necesitas -->
+    </div>
+  </div>
 
-    <!-- LOADER -->
-    <app-loader *ngIf="loading"></app-loader>
+  <!-- LOADER -->
+  <app-loader *ngIf="loading"></app-loader>
 
-    <!-- TABLE -->
-    <div class="table-wrapper" *ngIf="!loading">
+  <!-- TABLA -->
+  <div class="table-container" *ngIf="!loading">
+    <div class="table-wrapper">
       <!-- EMPTY STATE -->
-      <div class="empty-state" *ngIf="!historico || historico.length === 0">
-        <div class="empty-state-content">
-          <i class="pi pi-history"></i>
-          <h3>Sin histórico</h3>
-          <p>No hay peticiones en el histórico</p>
+      <div class="empty-cell" *ngIf="!historico || historico.length === 0">
+        <div style="text-align: center; padding: 3rem;">
+          <i class="pi pi-history" style="font-size: 3rem; color: var(--color-yellow); margin-bottom: 1rem;"></i>
+          <h3 style="color: var(--color-black); margin-bottom: 0.5rem;">Sin histórico</h3>
+          <p style="color: var(--color-gray-dark);">No hay peticiones en el histórico</p>
         </div>
       </div>
 
-      <!-- TABLE CONTENT -->
-      <div class="table-scroll" *ngIf="historico && historico.length > 0">
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Categoría</th>
-              <th>Costo</th>
-              <th>Estado Final</th>
-              <th>Fecha Resolución</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let peticion of paginatedData">
-              <td>
-                <span class="id-badge">#{{ peticion.id }}</span>
-              </td>
-              <td>
-                <div class="client-cell">
-                  <i class="pi pi-user"></i>
-                  <span>{{ peticion.cliente?.nombre }}</span>
+      <!-- TABLA DE PETICIONES -->
+      <table class="peticiones-table" *ngIf="historico && historico.length > 0">
+        <thead>
+          <tr>
+            <th class="col-id">ID</th>
+            <th class="col-cliente">CLIENTE</th>
+            <th class="col-categoria">CATEGORÍA</th>
+            <th class="col-costo">COSTO</th>
+            <th class="col-estado">ESTADO</th>
+            <th class="col-fecha">CREADO</th>
+            <th class="col-acciones">ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-row" *ngFor="let peticion of paginatedData">
+            <!-- ID -->
+            <td>
+              <span class="id-badge">#{{ peticion.id }}</span>
+            </td>
+
+            <!-- CLIENTE -->
+            <td>
+              <div class="cliente-cell">
+                <div class="avatar">
+                  {{ (peticion.cliente?.nombre || 'C').charAt(0).toUpperCase() }}
                 </div>
-              </td>
-              <td>
-                <span class="category-badge">{{
-                  peticion.categoria?.nombre
-                }}</span>
-              </td>
-              <td>
-                <span class="cost-value">{{
-                  peticion.costo | currencyCop
-                }}</span>
-              </td>
-              <td>
+                <span class="cliente-name">{{ peticion.cliente?.nombre || 'Sin cliente' }}</span>
+              </div>
+            </td>
+
+            <!-- CATEGORÍA -->
+            <td>
+              <div class="categoria-cell">
+                <span class="categoria-name">{{ peticion.categoria?.nombre || 'Sin categoría' }}</span>
+              </div>
+            </td>
+
+            <!-- COSTO -->
+            <td>
+              <span class="costo-value">{{ peticion.costo | currencyCop }}</span>
+            </td>
+
+            <!-- ESTADO -->
+            <td>
+              <div class="estado-cell">
                 <span
                   class="status-badge"
                   [ngClass]="{
-                    'status-success': peticion.estado === 'Resuelta',
-                    'status-danger': peticion.estado !== 'Resuelta'
+                    'status-resuelta': peticion.estado === 'Resuelta',
+                    'status-cancelada': peticion.estado === 'Cancelada'
                   }"
                 >
+                  <i 
+                    class="pi"
+                    [ngClass]="{
+                      'pi-check-circle': peticion.estado === 'Resuelta',
+                      'pi-times-circle': peticion.estado === 'Cancelada'
+                    }"
+                  ></i>
                   {{ peticion.estado }}
                 </span>
-              </td>
-              <td>
-                <span class="date-cell">{{
-                  peticion.fecha_resolucion | timeAgo
-                }}</span>
-              </td>
-              <td>
-                <div class="actions-cell">
-                  <button
-                    class="action-btn btn-view"
-                    (click)="
-                      verDetalle(peticion.peticion_id_original || peticion.id)
-                    "
-                    title="Ver detalle"
-                  >
-                    <i class="pi pi-eye"></i>
-                  </button>
+              </div>
+            </td>
+
+            <!-- FECHA -->
+            <td>
+              <div class="fecha-cell">
+                <div class="fecha-value">
+                  <i class="pi pi-calendar"></i>
+                  {{ peticion.fecha_resolucion | timeAgo }}
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <span class="creador-name" *ngIf="peticion.asignado">
+                  por {{ peticion.asignado.nombre_completo }}
+                </span>
+              </div>
+            </td>
+
+            <!-- ACCIONES -->
+            <td>
+              <div class="actions-cell">
+                <button
+                  class="action-btn view-btn"
+                  (click)="verDetalle(peticion.peticion_id_original || peticion.id)"
+                  title="Ver detalle"
+                >
+                  <i class="pi pi-eye"></i>
+                </button>
+         
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINACIÓN -->
+    <div class="pagination" *ngIf="historico && historico.length > 0">
+      <div class="pagination-info">
+        Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+        {{ Math.min(currentPage * itemsPerPage, historico.length) }} de 
+        {{ historico.length }} peticiones
       </div>
 
-      <!-- PAGINATION -->
-      <div class="pagination" *ngIf="historico && historico.length > 0">
+      <div class="pagination-controls">
         <button
           class="pagination-btn"
           [disabled]="currentPage === 1"
           (click)="goToPage(1)"
+          title="Primera página"
         >
           <i class="pi pi-angle-double-left"></i>
         </button>
+
         <button
           class="pagination-btn"
           [disabled]="currentPage === 1"
           (click)="goToPage(currentPage - 1)"
+          title="Página anterior"
         >
           <i class="pi pi-angle-left"></i>
         </button>
 
-        <div class="pagination-pages">
-          <button
-            *ngFor="let page of visiblePages"
-            class="pagination-page"
-            [class.active]="page === currentPage"
-            (click)="goToPage(page)"
-          >
-            {{ page }}
-          </button>
-        </div>
+        <button
+          *ngFor="let page of visiblePages"
+          class="pagination-btn"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
 
         <button
           class="pagination-btn"
           [disabled]="currentPage === totalPages"
           (click)="goToPage(currentPage + 1)"
+          title="Página siguiente"
         >
           <i class="pi pi-angle-right"></i>
         </button>
+
         <button
           class="pagination-btn"
           [disabled]="currentPage === totalPages"
           (click)="goToPage(totalPages)"
+          title="Última página"
         >
           <i class="pi pi-angle-double-right"></i>
         </button>
-
-        <span class="pagination-info">
-          Página {{ currentPage }} de {{ totalPages }} ({{
-            historico.length
-          }}
-          registros)
-        </span>
       </div>
     </div>
   </div>

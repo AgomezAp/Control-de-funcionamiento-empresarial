@@ -194,24 +194,44 @@
           <tr *ngFor="let peticion of peticionesFiltradas" class="table-row">
             <!-- ID -->
             <td>
-              <span class="id-badge" [appTooltip]="'Petición ID: ' + peticion.id">#{{ peticion.id }}</span>
+              <span
+                class="id-badge"
+                [appTooltip]="'Petición ID: ' + peticion.id"
+                >#{{ peticion.id }}</span
+              >
             </td>
 
             <!-- Cliente -->
             <td>
               <div class="cliente-cell">
-                <div class="avatar" [appTooltip]="peticion.cliente?.nombre || 'Sin cliente'">
+                <div
+                  class="avatar"
+                  [appTooltip]="peticion.cliente?.nombre || 'Sin cliente'"
+                >
                   {{ peticion.cliente?.nombre | initials }}
                 </div>
-                <span class="cliente-name" [innerHTML]="(peticion.cliente?.nombre || '') | highlight: searchTerm"></span>
+                <span
+                  class="cliente-name"
+                  [innerHTML]="
+                    peticion.cliente?.nombre || '' | highlight : searchTerm
+                  "
+                ></span>
               </div>
             </td>
 
             <!-- Categoría -->
             <td>
               <div class="categoria-cell">
-                <span class="categoria-name" [innerHTML]="(peticion.categoria?.nombre || '') | highlight: searchTerm"></span>
-                <span class="area-badge" [appTooltip]="'Área: ' + peticion.categoria?.area_tipo">
+                <span
+                  class="categoria-name"
+                  [innerHTML]="
+                    peticion.categoria?.nombre || '' | highlight : searchTerm
+                  "
+                ></span>
+                <span
+                  class="area-badge"
+                  [appTooltip]="'Área: ' + peticion.categoria?.area_tipo"
+                >
                   <i class="pi pi-briefcase"></i>
                   {{ peticion.categoria?.area_tipo }}
                 </span>
@@ -242,7 +262,13 @@
                   class="tiempo-empleado-badge"
                 >
                   <i class="pi pi-clock"></i>
-                  {{ formatearTiempo(peticion.tiempo_empleado_actual || peticion.tiempo_empleado_segundos || 0) }}
+                  {{
+                    formatearTiempo(
+                      peticion.tiempo_empleado_actual ||
+                        peticion.tiempo_empleado_segundos ||
+                        0
+                    )
+                  }}
                 </div>
               </div>
             </td>
@@ -272,24 +298,11 @@
                   <i class="pi pi-eye"></i>
                 </button>
                 <button
-                  class="action-btn pdf-btn"
-                  (click)="exportarPeticionPDF(peticion)"
-                  pTooltip="Exportar a PDF"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-file-pdf"></i>
-                </button>
-                <button
-                  class="action-btn print-btn"
-                  (click)="imprimirPeticion(peticion)"
-                  pTooltip="Imprimir"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-print"></i>
-                </button>
-                <!-- Botones pausar/reanudar temporizador -->
-                <button
-                  *ngIf="peticion.estado === 'En Progreso' && canPauseOrResume(peticion) && peticion.temporizador_activo"
+                  *ngIf="
+                    peticion.estado === 'En Progreso' &&
+                    canPauseOrResume(peticion) &&
+                    peticion.temporizador_activo
+                  "
                   class="action-btn pause-btn"
                   (click)="pausarTemporizador(peticion)"
                   pTooltip="Pausar temporizador"
@@ -299,7 +312,9 @@
                   <i class="pi pi-pause"></i>
                 </button>
                 <button
-                  *ngIf="peticion.estado === 'Pausada' && canPauseOrResume(peticion)"
+                  *ngIf="
+                    peticion.estado === 'Pausada' && canPauseOrResume(peticion)
+                  "
                   class="action-btn resume-btn"
                   (click)="reanudarTemporizador(peticion)"
                   pTooltip="Reanudar temporizador"
@@ -378,7 +393,9 @@
     <div *ngFor="let peticion of peticionesFiltradas" class="peticion-card">
       <!-- Card Header -->
       <div class="card-header-custom">
-        <span class="card-id" [appTooltip]="'Petición ID: ' + peticion.id">#{{ peticion.id }}</span>
+        <span class="card-id" [appTooltip]="'Petición ID: ' + peticion.id"
+          >#{{ peticion.id }}</span
+        >
         <span
           [class]="
             'status-badge status-' +
@@ -395,20 +412,36 @@
       <div class="card-body-custom">
         <div class="card-info-item">
           <i class="pi pi-building"></i>
-          <span [innerHTML]="(peticion.cliente?.nombre || '') | highlight: searchTerm"></span>
+          <span
+            [innerHTML]="
+              peticion.cliente?.nombre || '' | highlight : searchTerm
+            "
+          ></span>
         </div>
 
         <div class="card-info-item">
           <i class="pi pi-tag"></i>
-          <span [innerHTML]="(peticion.categoria?.nombre || '') | highlight: searchTerm"></span>
-          <span class="area-badge-small" [appTooltip]="'Área: ' + peticion.categoria?.area_tipo">{{
-            peticion.categoria?.area_tipo
-          }}</span>
+          <span
+            [innerHTML]="
+              peticion.categoria?.nombre || '' | highlight : searchTerm
+            "
+          ></span>
+          <span
+            class="area-badge-small"
+            [appTooltip]="'Área: ' + peticion.categoria?.area_tipo"
+            >{{ peticion.categoria?.area_tipo }}</span
+          >
         </div>
 
         <div class="card-info-item description">
           <i class="pi pi-align-left"></i>
-          <p [innerHTML]="((peticion.descripcion || '') | truncate : 100) | highlight: searchTerm"></p>
+          <p
+            [innerHTML]="
+              peticion.descripcion || ''
+                | truncate : 100
+                | highlight : searchTerm
+            "
+          ></p>
         </div>
 
         <div class="card-info-item cost">
@@ -416,10 +449,24 @@
           <span class="cost-amount">{{ peticion.costo | currencyCop }}</span>
         </div>
 
-        <div *ngIf="peticion.estado === 'En Progreso'" class="card-time-employed">
+        <div
+          *ngIf="peticion.estado === 'En Progreso'"
+          class="card-time-employed"
+        >
           <i class="pi pi-clock"></i>
-          <span>Tiempo: {{ formatearTiempo(peticion.tiempo_empleado_actual || peticion.tiempo_empleado_segundos || 0) }}</span>
-          <span *ngIf="peticion.temporizador_activo" class="active-indicator">●</span>
+          <span
+            >Tiempo:
+            {{
+              formatearTiempo(
+                peticion.tiempo_empleado_actual ||
+                  peticion.tiempo_empleado_segundos ||
+                  0
+              )
+            }}</span
+          >
+          <span *ngIf="peticion.temporizador_activo" class="active-indicator"
+            >●</span
+          >
         </div>
 
         <div class="card-info-item timestamp">
@@ -434,17 +481,27 @@
           <i class="pi pi-eye"></i>
           Ver
         </button>
-        <button class="card-btn btn-outline" (click)="exportarPeticionPDF(peticion)">
+        <button
+          class="card-btn btn-outline"
+          (click)="exportarPeticionPDF(peticion)"
+        >
           <i class="pi pi-file-pdf"></i>
           PDF
         </button>
-        <button class="card-btn btn-outline" (click)="imprimirPeticion(peticion)">
+        <button
+          class="card-btn btn-outline"
+          (click)="imprimirPeticion(peticion)"
+        >
           <i class="pi pi-print"></i>
           Imprimir
         </button>
         <!-- Botones pausar/reanudar -->
         <button
-          *ngIf="peticion.estado === 'En Progreso' && canPauseOrResume(peticion) && peticion.temporizador_activo"
+          *ngIf="
+            peticion.estado === 'En Progreso' &&
+            canPauseOrResume(peticion) &&
+            peticion.temporizador_activo
+          "
           class="card-btn btn-warning"
           (click)="pausarTemporizador(peticion)"
           [disabled]="loadingAccion"

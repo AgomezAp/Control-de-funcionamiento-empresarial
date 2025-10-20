@@ -36,7 +36,7 @@ interface SearchResult {
     BadgeModule,
     AvatarModule,
     TooltipModule,
-    ClickOutsideDirective,
+  //  ClickOutsideDirective,
     InitialsPipe,
   ],
   templateUrl: './navbar.component.html',
