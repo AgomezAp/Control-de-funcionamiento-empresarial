@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Cliente = exports.TipoCliente = void 0;
+exports.Cliente = exports.TipoPersona = exports.TipoCliente = void 0;
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../database/connection"));
 var TipoCliente;
@@ -13,6 +13,11 @@ var TipoCliente;
     TipoCliente["EXTERNO"] = "Externo";
     TipoCliente["OTRO"] = "Otro";
 })(TipoCliente || (exports.TipoCliente = TipoCliente = {}));
+var TipoPersona;
+(function (TipoPersona) {
+    TipoPersona["NATURAL"] = "Natural";
+    TipoPersona["JURIDICA"] = "Jur\u00EDdica";
+})(TipoPersona || (exports.TipoPersona = TipoPersona = {}));
 class Cliente extends sequelize_1.Model {
 }
 exports.Cliente = Cliente;
@@ -31,6 +36,12 @@ Cliente.init({
         allowNull: true,
         unique: true,
         comment: "Cédula o documento de identidad del cliente",
+    },
+    tipo_persona: {
+        type: sequelize_1.DataTypes.ENUM("Natural", "Jurídica"),
+        allowNull: false,
+        defaultValue: "Natural",
+        comment: "Tipo de persona: Natural o Jurídica",
     },
     telefono: {
         type: sequelize_1.DataTypes.STRING(20),

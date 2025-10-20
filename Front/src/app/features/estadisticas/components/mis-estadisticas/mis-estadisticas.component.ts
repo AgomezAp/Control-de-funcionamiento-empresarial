@@ -99,17 +99,22 @@ export class MisEstadisticasComponent implements OnInit {
       .getMisEstadisticas(this.selectedAnio, this.selectedMes)
       .subscribe({
         next: (response) => {
+          console.log('📊 Respuesta de estadísticas:', response);
           if (response.success && response.data) {
             this.estadisticas = response.data;
+            console.log('📈 Estadísticas recibidas:', this.estadisticas);
             this.estadisticaActual = this.estadisticas.find(
               (e) => e.año === this.selectedAnio && e.mes === this.selectedMes
             );
+            console.log('📌 Estadística actual:', this.estadisticaActual);
             this.updateCharts();
+          } else {
+            console.warn('⚠️ No hay datos en la respuesta');
           }
           this.loading = false;
         },
         error: (error) => {
-          console.error('Error cargando estadísticas:', error);
+          console.error('❌ Error cargando estadísticas:', error);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',

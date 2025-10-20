@@ -2,12 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-// PrimeNG
-import { TableModule } from 'primeng/table';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-
 // Services
 import { PeticionService } from '../../../../../core/services/peticion.service';
 
@@ -28,13 +22,8 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
   imports: [
     CommonModule,
     RouterModule,
-    TableModule,
-    CardModule,
-    ButtonModule,
-    TagModule,
     TimeAgoPipe,
     CurrencycopPipe,
-    EmptyStateComponent,
     LoaderComponent,
   ],
   templateUrl: './historico-peticiones.component.html',
@@ -43,6 +32,13 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
 export class HistoricoPeticionesComponent implements OnInit {
   historico: PeticionHistorico[] = [];
   loading = false;
+
+  // Paginación
+  currentPage = 1;
+  rowsPerPage = 15;
+  totalPages = 1;
+  paginatedData: PeticionHistorico[] = [];
+  visiblePages: number[] = [];
 
   constructor(
     private peticionService: PeticionService,
@@ -59,6 +55,7 @@ export class HistoricoPeticionesComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data) {
           this.historico = response.data;
+          this.calculatePagination();
         }
         this.loading = false;
       },
@@ -69,10 +66,58 @@ export class HistoricoPeticionesComponent implements OnInit {
     });
   }
 
-  // ✅ Método para navegar al detalle con estado
+  // ============================================
+  // PAGINACIÓN
+  // ============================================
+  calculatePagination(): void {
+    this.totalPages = Math.ceil(this.historico.length / this.rowsPerPage);
+    this.updatePaginatedData();
+    this.updateVisiblePages();
+  }
+
+  updatePaginatedData(): void {
+    const start = (this.currentPage - 1) * this.rowsPerPage;
+    const end = start + this.rowsPerPage;
+    this.paginatedData = this.historico.slice(start, end);
+  }
+
+  updateVisiblePages(): void {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisible - 1);
+
+    if (endPage - startPage < maxVisible - 1) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    this.visiblePages = pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+      this.updateVisiblePages();
+
+      // Scroll al inicio de la tabla
+      const tableWrapper = document.querySelector('.table-scroll');
+      if (tableWrapper) {
+        tableWrapper.scrollTop = 0;
+      }
+    }
+  }
+
+  // ============================================
+  // NAVEGACIÓN
+  // ============================================
   verDetalle(peticionId: number): void {
     this.router.navigate(['/peticiones', peticionId], {
-      state: { fromHistorico: true }
+      state: { fromHistorico: true },
     });
   }
 }

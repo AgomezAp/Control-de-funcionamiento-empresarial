@@ -10,6 +10,7 @@ export class ClienteService {
   async crear(data: {
     nombre: string;
     cedula?: string;
+    tipo_persona?: string;
     telefono?: string;
     correo?: string;
     ciudad?: string;

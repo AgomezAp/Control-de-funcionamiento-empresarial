@@ -8,10 +8,16 @@ export enum TipoCliente {
   OTRO = "Otro",
 }
 
+export enum TipoPersona {
+  NATURAL = "Natural",
+  JURIDICA = "Jurídica",
+}
+
 export class Cliente extends Model {
   public id!: number;
   public nombre!: string;
   public cedula!: string;
+  public tipo_persona!: TipoPersona;
   public telefono!: string;
   public correo!: string;
   public ciudad!: string;
@@ -41,6 +47,12 @@ Cliente.init(
       allowNull: true,
       unique: true,
       comment: "Cédula o documento de identidad del cliente",
+    },
+    tipo_persona: {
+      type: DataTypes.ENUM("Natural", "Jurídica"),
+      allowNull: false,
+      defaultValue: "Natural",
+      comment: "Tipo de persona: Natural o Jurídica",
     },
     telefono: {
       type: DataTypes.STRING(20),

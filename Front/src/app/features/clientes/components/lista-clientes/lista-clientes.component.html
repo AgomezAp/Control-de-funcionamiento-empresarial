@@ -12,7 +12,7 @@
         (click)="crearCliente()"
       >
         <i class="pi pi-plus"></i>
-        Crear Cliente
+        <span>Crear Cliente</span>
       </button>
     </div>
   </div>
@@ -20,13 +20,13 @@
   <!-- Loader -->
   <app-loader *ngIf="loading"></app-loader>
 
-  <!-- BUSCADOR FUERA DE LA TABLA -->
-  <div class="search-section" *ngIf="!loading">
-    <div class="search-container">
-      <span class="search-icon-wrapper">
+  <!-- Content -->
+  <div class="content-wrapper" *ngIf="!loading">
+    <!-- BUSCADOR -->
+    <div class="search-section">
+      <div class="search-container">
         <i class="pi pi-search search-icon"></i>
         <input
-          pInputText
           type="text"
           class="search-input"
           [(ngModel)]="globalFilterValue"
@@ -37,127 +37,197 @@
           *ngIf="globalFilterValue"
           class="clear-search-btn"
           (click)="clearFilter()"
-          pTooltip="Limpiar búsqueda"
+          title="Limpiar búsqueda"
         >
           <i class="pi pi-times"></i>
         </button>
-      </span>
+      </div>
     </div>
-  </div>
 
-  <!-- Tabla SIN CAPTION -->
-  <div class="clientes-table-container" *ngIf="!loading">
-    <p-table
-      #dt
-      [value]="clientes"
-      [paginator]="true"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50, 100]"
-      [globalFilterFields]="['nombre', 'cedula', 'pais', 'area']"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
-      responsiveLayout="scroll"
-      styleClass="clientes-table"
-    >
+    <!-- Tabla -->
+    <div class="table-wrapper">
       <!-- Empty state -->
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5" class="empty-cell">
-            <app-empty-state
-              icon="pi-users"
-              title="No hay clientes"
-              message="No se encontraron clientes registrados"
-            ></app-empty-state>
-          </td>
-        </tr>
-      </ng-template>
+      <div *ngIf="filteredClientes.length === 0" class="empty-state">
+        <app-empty-state
+          icon="pi-users"
+          title="No hay clientes"
+          message="No se encontraron clientes registrados"
+        ></app-empty-state>
+      </div>
 
-      <!-- Header -->
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="id" class="col-id">
-            <div class="header-content">
-              ID
-              <p-sortIcon field="id"></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="nombre" class="col-nombre">
-            <div class="header-content">
-              Nombre
-              <p-sortIcon field="nombre"></p-sortIcon>
-            </div>
-          </th>
-          <th class="col-cedula">Cédula/NIT</th>
-          <th class="col-pais">País</th>
-          <th class="col-tipo">Tipo de Cliente</th>
-          <th class="col-acciones">Acciones</th>
-        </tr>
-      </ng-template>
+      <!-- Table -->
+      <div *ngIf="filteredClientes.length > 0" class="table-scroll">
+        <table class="clientes-table">
+          <thead>
+            <tr>
+              <th class="col-id" (click)="sortBy('id')">
+                <div class="header-content">
+                  <span>ID</span>
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-sort-amount-down':
+                        sortField === 'id' && sortOrder === 1,
+                      'pi-sort-amount-up':
+                        sortField === 'id' && sortOrder === -1,
+                      'pi-sort': sortField !== 'id'
+                    }"
+                  ></i>
+                </div>
+              </th>
+              <th class="col-nombre" (click)="sortBy('nombre')">
+                <div class="header-content">
+                  <span>Nombre</span>
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-sort-amount-down':
+                        sortField === 'nombre' && sortOrder === 1,
+                      'pi-sort-amount-up':
+                        sortField === 'nombre' && sortOrder === -1,
+                      'pi-sort': sortField !== 'nombre'
+                    }"
+                  ></i>
+                </div>
+              </th>
+              <th class="col-cedula">Cédula/NIT</th>
+              <th class="col-pais">País</th>
+              <th class="col-tipo">Tipo de Cliente</th>
+              <th class="col-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of paginatedClientes" class="table-row">
+              <td class="col-id">
+                <span class="id-badge">{{ cliente.id }}</span>
+              </td>
+              <td class="col-nombre">
+                <strong class="cliente-nombre">{{ cliente.nombre }}</strong>
+              </td>
+              <td class="col-cedula">
+                <span class="cedula-text">{{ cliente.cedula || "N/A" }}</span>
+              </td>
+              <td class="col-pais">
+                <span class="pais-badge">{{ cliente.pais }}</span>
+              </td>
+              <td class="col-tipo">
+                <span
+                  class="tipo-badge"
+                  [ngClass]="{
+                    'tipo-meta': cliente.tipo_cliente === 'Meta Ads',
+                    'tipo-google': cliente.tipo_cliente === 'Google Ads',
+                    'tipo-externo': cliente.tipo_cliente === 'Externo',
+                    'tipo-otro': cliente.tipo_cliente === 'Otro'
+                  }"
+                >
+                  {{ cliente.tipo_cliente }}
+                </span>
+              </td>
+              <td class="col-acciones">
+                <div class="actions-container">
+                  <button
+                    class="action-btn view-btn"
+                    (click)="verDetalle(cliente.id)"
+                    title="Ver detalle"
+                  >
+                    <i class="pi pi-eye"></i>
+                  </button>
+                  <button
+                    *appHasRole="[
+                      RoleEnum.ADMIN,
+                      RoleEnum.DIRECTIVO,
+                      RoleEnum.LIDER
+                    ]"
+                    class="action-btn edit-btn"
+                    (click)="editarCliente(cliente.id)"
+                    title="Editar"
+                  >
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button
+                    *appHasRole="[RoleEnum.ADMIN]"
+                    class="action-btn delete-btn"
+                    (click)="eliminarCliente(cliente)"
+                    title="Eliminar"
+                  >
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <!-- Body -->
-      <ng-template pTemplate="body" let-cliente>
-        <tr class="table-row">
-          <td class="col-id">
-            <span class="id-badge">{{ cliente.id }}</span>
-          </td>
-          <td class="col-nombre">
-            <strong class="cliente-nombre">{{ cliente.nombre }}</strong>
-          </td>
-          <td class="col-cedula">
-            <span class="cedula-text">{{ cliente.cedula || 'N/A' }}</span>
-          </td>
-          <td class="col-pais">
-            <span class="pais-badge">{{ cliente.pais }}</span>
-          </td>
-          <td class="col-tipo">
-            <span class="tipo-badge" [ngClass]="{
-              'tipo-meta': cliente.tipo_cliente === 'Meta Ads',
-              'tipo-google': cliente.tipo_cliente === 'Google Ads',
-              'tipo-externo': cliente.tipo_cliente === 'Externo',
-              'tipo-otro': cliente.tipo_cliente === 'Otro'
-            }">
-              {{ cliente.tipo_cliente }}
-            </span>
-          </td>
-          <td class="col-acciones">
-            <div class="actions-container">
-              <button
-                class="action-btn view-btn"
-                (click)="verDetalle(cliente.id)"
-                pTooltip="Ver detalle"
-                tooltipPosition="top"
-              >
-                <i class="pi pi-eye"></i>
-              </button>
-              <button
-                *appHasRole="[
-                  RoleEnum.ADMIN,
-                  RoleEnum.DIRECTIVO,
-                  RoleEnum.LIDER
-                ]"
-                class="action-btn edit-btn"
-                (click)="editarCliente(cliente.id)"
-                pTooltip="Editar"
-                tooltipPosition="top"
-              >
-                <i class="pi pi-pencil"></i>
-              </button>
-              <button
-                *appHasRole="[RoleEnum.ADMIN]"
-                class="action-btn delete-btn"
-                (click)="eliminarCliente(cliente)"
-                pTooltip="Eliminar"
-                tooltipPosition="top"
-              >
-                <i class="pi pi-trash"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+      <!-- Paginación -->
+      <div *ngIf="filteredClientes.length > 0" class="pagination">
+        <div class="pagination-info">
+          Mostrando {{ (currentPage - 1) * pageSize + 1 }} a
+          {{ Math.min(currentPage * pageSize, filteredClientes.length) }} de
+          {{ filteredClientes.length }} clientes
+        </div>
+
+        <div class="pagination-controls">
+          <button
+            class="pagination-btn"
+            (click)="goToPage(1)"
+            [disabled]="currentPage === 1"
+            title="Primera página"
+          >
+            <i class="pi pi-angle-double-left"></i>
+          </button>
+          <button
+            class="pagination-btn"
+            (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            title="Página anterior"
+          >
+            <i class="pi pi-angle-left"></i>
+          </button>
+
+          <div class="pagination-pages">
+            <button
+              *ngFor="let page of visiblePages"
+              class="pagination-page"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </div>
+
+          <button
+            class="pagination-btn"
+            (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            title="Página siguiente"
+          >
+            <i class="pi pi-angle-right"></i>
+          </button>
+          <button
+            class="pagination-btn"
+            (click)="goToPage(totalPages)"
+            [disabled]="currentPage === totalPages"
+            title="Última página"
+          >
+            <i class="pi pi-angle-double-right"></i>
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label>Mostrar:</label>
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            <option [value]="10">10</option>
+            <option [value]="25">25</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Modales -->
 <p-confirmDialog></p-confirmDialog>
 <p-toast position="top-right"></p-toast>

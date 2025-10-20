@@ -1,190 +1,516 @@
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
+/* ============================================
+   VARIABLES - MODO CLARO
+   ============================================ */
+:host {
+  --yellow: #ffd700;
+  --yellow-dark: #ffc000;
+  --yellow-alpha: rgba(255, 215, 0, 0.15);
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-hint: #757575;
+
+  --border-color: #e0e0e0;
+  --border-hover: #d0d0d0;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
 }
 
-/* Utilities */
-.flex {
+/* ============================================
+   VARIABLES - MODO OSCURO
+   ============================================ */
+:host-context(body.dark-mode),
+:host-context([data-theme="dark"]) {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --bg-card: #242424;
+
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-hint: #b0b0b0;
+
+  --border-color: #404040;
+  --border-hover: #505050;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --danger-bg: rgba(239, 68, 68, 0.15);
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL - SIN SCROLL
+   ============================================ */
+.historico-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 1.5rem;
+  height: calc(100vh - 70px); /* Resta la altura del navbar/header */
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.page-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  height: 100%; /* Usa el 100% del contenedor padre */
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.align-items-center {
+/* ============================================
+   HEADER COMPACTO
+   ============================================ */
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid var(--yellow);
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
   align-items: center;
-}
-
-.justify-content-between {
   justify-content: space-between;
 }
 
-.p-3 {
-  padding: 1rem;
-}
-
-.m-0 {
-  margin: 0;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
-.p-4 {
-  padding: 1.5rem;
-}
-
-/* Título - adaptable a tema */
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
+.header-title {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
-h2 i {
+.header-title i {
+  color: var(--yellow);
+  font-size: 1.75rem;
+}
+
+.header-title h2 {
+  margin: 0;
   font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
-/* ===================================== */
-/* ESTILOS QUE RESPETAN EL TEMA */
-/* ===================================== */
-
-/* Eliminar estilos que sobreescriben el tema de PrimeNG */
-::ng-deep .p-datatable {
-  font-size: 0.875rem;
+/* ============================================
+   TABLE WRAPPER - CON SCROLL
+   ============================================ */
+.table-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* Mejorar hover sin forzar colores */
-::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  transition: background-color 0.2s;
-}
-
-/* Asegurar que el strong se vea bien en ambos modos */
-::ng-deep .p-datatable .p-datatable-tbody > tr > td strong {
-  font-weight: 600;
-}
-
-/* Mensaje vacío */
-::ng-deep .p-datatable .p-datatable-emptymessage > td {
-  padding: 2rem;
-  text-align: center;
-}
-
-/* Tags - Mantener colores específicos pero mejorados */
-::ng-deep .p-tag {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-::ng-deep .p-tag.p-tag-success {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-::ng-deep .p-tag.p-tag-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-/* Tags para modo oscuro */
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-success {
-  background-color: #1e4620;
-  color: #a3d9a5;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-tag.p-tag-danger {
-  background-color: #5a1a1a;
-  color: #f1aeb5;
-}
-
-/* Botones - dejar que PrimeNG maneje los colores */
-::ng-deep .p-button.p-button-rounded.p-button-text {
-  width: 2.5rem;
-  height: 2.5rem;
+.table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 0 1.5rem;
 }
 
 /* Scrollbar personalizado */
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
+.table-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
-  background: var(--surface-ground);
-  border-radius: 4px;
+.table-scroll::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 10px;
 }
 
-::ng-deep .p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
-  background: var(--text-color-secondary);
-  border-radius: 4px;
-  opacity: 0.5;
+.table-scroll::-webkit-scrollbar-thumb {
+  background: var(--yellow);
+  border-radius: 10px;
 }
 
-::ng-deep
-  .p-datatable
-  .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
-  background: var(--text-color);
-  opacity: 0.7;
+.table-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--yellow-dark);
 }
 
-/* Card - usar variables de PrimeNG */
-::ng-deep .p-card {
-  box-shadow: var(--card-shadow);
-  border-radius: 8px;
+/* ============================================
+   TABLA COMPACTA
+   ============================================ */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
 }
 
-::ng-deep .p-card .p-card-body {
-  padding: 0;
+.custom-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-card);
 }
 
-::ng-deep .p-card .p-card-content {
-  padding: 0;
+.custom-table thead tr {
+  border-bottom: 2px solid var(--border-color);
 }
 
-/* Loader */
-app-loader {
-  display: block;
-  min-height: 400px;
+.custom-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--bg-card);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Estilos generales */
-td {
+.custom-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background: var(--bg-secondary);
+}
+
+.custom-table td {
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
   vertical-align: middle;
+  transition: color 0.3s ease;
 }
 
-button:focus {
-  outline: none;
+/* ============================================
+   BADGES Y ESTILOS DE CELDA
+   ============================================ */
+.id-badge {
+  background: var(--yellow-alpha);
+  color: var(--yellow-dark);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: inline-block;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
+.client-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.client-cell i {
+  color: var(--yellow);
+  font-size: 0.875rem;
+}
+
+.client-cell span {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.category-badge {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: inline-block;
+}
+
+:host-context(body.dark-mode) .category-badge,
+:host-context([data-theme="dark"]) .category-badge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.cost-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 0.35rem 0.875rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.status-success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.date-cell {
+  color: var(--text-hint);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   BOTONES DE ACCIÓN
+   ============================================ */
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.action-btn {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.btn-view {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.btn-view:hover {
+  background: #3b82f6;
+  color: white;
+  transform: scale(1.1);
+}
+
+:host-context(body.dark-mode) .btn-view,
+:host-context([data-theme="dark"]) .btn-view {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+/* ============================================
+   PAGINACIÓN COMPACTA
+   ============================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  background: var(--bg-card);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pagination-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.pagination-page {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.pagination-page:hover {
+  background: var(--bg-secondary);
+  border-color: var(--yellow);
+}
+
+.pagination-page.active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.pagination-info {
+  font-size: 0.8rem;
+  color: var(--text-hint);
+  margin-left: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty-state-content {
+  text-align: center;
+}
+
+.empty-state-content i {
+  font-size: 4rem;
+  color: var(--text-hint);
+  margin-bottom: 1rem;
+}
+
+.empty-state-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-state-content p {
+  font-size: 1rem;
+  color: var(--text-hint);
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .historico-container {
     padding: 1rem;
   }
 
-  h2 {
+  .card-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-title h2 {
     font-size: 1.25rem;
   }
 
-  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
-  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+  .table-scroll {
+    padding: 0 1rem;
   }
 
-  ::ng-deep .p-button.p-button-rounded.p-button-text {
-    width: 2rem;
-    height: 2rem;
+  .custom-table th,
+  .custom-table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
   }
 }
 
-@media (max-width: 576px) {
-  .p-4 {
+@media (max-width: 768px) {
+  .historico-container {
     padding: 0.5rem;
   }
 
-  ::ng-deep .p-datatable {
+  .card-header {
+    padding: 0.75rem;
+  }
+
+  .header-title h2 {
+    font-size: 1.1rem;
+  }
+
+  .table-scroll {
+    padding: 0 0.5rem;
+  }
+
+  .custom-table {
     font-size: 0.75rem;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    padding: 0.5rem;
+  }
+
+  .pagination {
+    padding: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
+    margin: 0.5rem 0 0 0;
+  }
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-card {
+  animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

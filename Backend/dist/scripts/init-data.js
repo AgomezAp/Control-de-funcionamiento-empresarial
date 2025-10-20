@@ -450,6 +450,7 @@ function initData() {
                 {
                     nombre: "Empresa Tech Solutions",
                     cedula: "900123456-7",
+                    tipo_persona: "Jurídica",
                     telefono: "+57 301-1234567",
                     correo: "info@techsolutions.com.co",
                     ciudad: "Medellín",
@@ -464,6 +465,7 @@ function initData() {
                 {
                     nombre: "Comercial El Progreso",
                     cedula: "MEX987654321",
+                    tipo_persona: "Jurídica",
                     telefono: "+52 55-1234-5678",
                     correo: "ventas@elprogreso.mx",
                     ciudad: "Ciudad de México",
@@ -478,6 +480,7 @@ function initData() {
                 {
                     nombre: "Restaurante La Buena Mesa",
                     cedula: "900234567-8",
+                    tipo_persona: "Jurídica",
                     telefono: "+57 310-7654321",
                     correo: "contacto@labuenamesa.co",
                     ciudad: "Bogotá",
@@ -492,6 +495,7 @@ function initData() {
                 {
                     nombre: "Tienda Fashion Style",
                     cedula: "B12345678",
+                    tipo_persona: "Jurídica",
                     telefono: "+34 612-987654",
                     correo: "tienda@fashionstyle.es",
                     ciudad: "Madrid",
@@ -506,6 +510,7 @@ function initData() {
                 {
                     nombre: "Consultora Legal Asociados",
                     cedula: "20-30567891-4",
+                    tipo_persona: "Jurídica",
                     telefono: "+54 11-5678-9012",
                     correo: "info@legalasociados.com.ar",
                     ciudad: "Buenos Aires",

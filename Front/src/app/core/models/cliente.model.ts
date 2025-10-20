@@ -7,10 +7,16 @@ export enum TipoCliente {
   OTRO = 'Otro'
 }
 
+export enum TipoPersona {
+  NATURAL = 'Natural',
+  JURIDICA = 'Jurídica'
+}
+
 export interface Cliente {
   id: number;
   nombre: string;
   cedula?: string;
+  tipo_persona: TipoPersona | string;
   telefono?: string;
   correo?: string;
   ciudad?: string;
@@ -29,6 +35,7 @@ export interface Cliente {
 export interface ClienteCreate {
   nombre: string;
   cedula?: string;
+  tipo_persona: TipoPersona | string;
   telefono?: string;
   correo?: string;
   ciudad?: string;
@@ -43,6 +50,7 @@ export interface ClienteCreate {
 export interface ClienteUpdate {
   nombre?: string;
   cedula?: string;
+  tipo_persona?: TipoPersona | string;
   telefono?: string;
   correo?: string;
   ciudad?: string;

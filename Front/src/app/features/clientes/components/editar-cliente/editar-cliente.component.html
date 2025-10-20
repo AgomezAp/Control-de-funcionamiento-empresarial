@@ -73,6 +73,30 @@
         </small>
       </div>
 
+      <!-- Tipo de Persona -->
+      <div class="form-group">
+        <label for="tipo_persona">
+          Tipo de Persona <span class="required">*</span>
+        </label>
+        <p-dropdown
+          id="tipo_persona"
+          formControlName="tipo_persona"
+          [options]="tiposPersona"
+          placeholder="Seleccionar tipo de persona"
+          styleClass="w-full"
+        ></p-dropdown>
+        <small
+          *ngIf="
+            clienteForm.get('tipo_persona')?.invalid &&
+            clienteForm.get('tipo_persona')?.touched
+          "
+          class="error"
+        >
+          <i class="pi pi-exclamation-circle"></i>
+          Debe seleccionar un tipo de persona
+        </small>
+      </div>
+
       <!-- Teléfono -->
       <div class="form-group">
         <label for="telefono"> Teléfono </label>

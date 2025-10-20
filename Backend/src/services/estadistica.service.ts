@@ -181,7 +181,7 @@ export class EstadisticaService {
       whereClause.mes = mes;
     }
 
-    return await EstadisticaUsuario.findAll({
+    let estadisticas = await EstadisticaUsuario.findAll({
       where: whereClause,
       include: [
         {
@@ -196,6 +196,31 @@ export class EstadisticaService {
         ["mes", "DESC"],
       ],
     });
+
+    // 🔥 Si NO existen estadísticas y se especificó año y mes, calcularlas automáticamente
+    if ((!estadisticas || estadisticas.length === 0) && año && mes) {
+      console.log(`⚠️ No hay estadísticas para usuario ${usuario_id} en ${año}-${mes}. Calculando automáticamente...`);
+      await this.calcularEstadisticasUsuario(usuario_id, año, mes);
+      
+      // Volver a consultar después de calcular
+      estadisticas = await EstadisticaUsuario.findAll({
+        where: whereClause,
+        include: [
+          {
+            model: Usuario,
+            as: "usuario",
+            attributes: ["uid", "nombre_completo", "correo"],
+            include: [{ model: Area, as: "area", attributes: ["nombre"] }],
+          },
+        ],
+        order: [
+          ["año", "DESC"],
+          ["mes", "DESC"],
+        ],
+      });
+    }
+
+    return estadisticas;
   }
 
   async obtenerEstadisticasPorArea(

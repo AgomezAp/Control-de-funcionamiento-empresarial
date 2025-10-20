@@ -128,220 +128,447 @@ export class DetalleFacturacionComponent implements OnInit {
 
     const { periodo, detalle_peticiones, resumen_categorias, totales } = this.detalle;
     
+    // Generar número de factura (formato: FAC-YYYYMM-CLIENTEID-PERIODOID)
+    const numeroFactura = `FAC-${periodo.año}${String(periodo.mes).padStart(2, '0')}-${periodo.cliente_id}-${periodo.id}`;
+    
+    // Calcular subtotal, IVA y total (Colombia: IVA 19%)
+    const subtotal = totales.costo_total / 1.19;
+    const iva = totales.costo_total - subtotal;
+    
     const contenidoHTML = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>Facturación - ${periodo.cliente?.nombre || 'Cliente'}</title>
+        <title>Factura ${numeroFactura}</title>
         <style>
-          body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 40px;
-            color: #333;
-          }
-          .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #3b82f6;
-            padding-bottom: 20px;
-          }
-          .header h1 {
-            color: #1e40af;
+          * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
           }
-          .info-section {
-            margin-bottom: 30px;
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 8px;
+          
+          body {
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #000;
+            padding: 20mm;
           }
-          .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-          }
-          .info-label {
-            font-weight: bold;
-            color: #6b7280;
-          }
-          .info-value {
-            color: #1f2937;
-          }
-          table {
+          
+          .factura-container {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-          }
-          th {
-            background: #3b82f6;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-          }
-          td {
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
-          }
-          tr:hover {
-            background: #f9fafb;
-          }
-          .total-row {
-            background: #eff6ff;
-            font-weight: bold;
-          }
-          .total-row td {
-            border-top: 2px solid #3b82f6;
+            max-width: 210mm;
+            margin: 0 auto;
+            border: 2px solid #000;
             padding: 15px;
           }
-          .estado {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+          
+          /* HEADER - Información de la empresa emisora */
+          .header-factura {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
           }
-          .estado-abierto { background: #dbeafe; color: #1e40af; }
-          .estado-cerrado { background: #fef3c7; color: #92400e; }
-          .estado-facturado { background: #d1fae5; color: #065f46; }
-          .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 2px solid #e5e7eb;
-            color: #6b7280;
+          
+          .empresa-info {
+            width: 60%;
+          }
+          
+          .empresa-info h1 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #000;
+          }
+          
+          .empresa-info p {
+            margin: 2px 0;
+            font-size: 10px;
+          }
+          
+          .factura-numero {
+            width: 35%;
+            text-align: right;
+            border-left: 2px solid #000;
+            padding-left: 10px;
+          }
+          
+          .factura-numero h2 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #d32f2f;
+          }
+          
+          .factura-numero p {
+            margin: 3px 0;
+            font-size: 10px;
+          }
+          
+          .factura-numero .numero {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            margin: 5px 0;
+          }
+          
+          /* SECCIÓN CLIENTE */
+          .seccion-cliente {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #f5f5f5;
+          }
+          
+          .seccion-cliente h3 {
             font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+          }
+          
+          .cliente-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+          }
+          
+          .cliente-item {
+            display: flex;
+          }
+          
+          .cliente-label {
+            font-weight: bold;
+            width: 120px;
+            flex-shrink: 0;
+          }
+          
+          .cliente-value {
+            flex: 1;
+          }
+          
+          /* TABLA DE ITEMS */
+          .tabla-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+          }
+          
+          .tabla-items thead {
+            background: #333;
+            color: white;
+          }
+          
+          .tabla-items th {
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid #000;
+          }
+          
+          .tabla-items td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 10px;
+          }
+          
+          .tabla-items tbody tr:nth-child(even) {
+            background: #f9f9f9;
+          }
+          
+          .text-center {
+            text-align: center;
+          }
+          
+          .text-right {
+            text-align: right;
+          }
+          
+          /* TOTALES */
+          .seccion-totales {
+            width: 100%;
+            margin-top: 20px;
+          }
+          
+          .totales-grid {
+            width: 300px;
+            float: right;
+            border: 2px solid #000;
+          }
+          
+          .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid #ccc;
+          }
+          
+          .total-row:last-child {
+            border-bottom: none;
+            background: #333;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+          }
+          
+          .total-label {
+            font-weight: bold;
+          }
+          
+          .total-value {
+            text-align: right;
+            min-width: 120px;
+          }
+          
+          /* FOOTER - Información legal */
+          .footer-legal {
+            clear: both;
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #000;
+            font-size: 9px;
+            text-align: justify;
+          }
+          
+          .footer-legal h4 {
+            font-size: 10px;
+            margin-bottom: 5px;
+          }
+          
+          .footer-legal p {
+            margin: 3px 0;
+            line-height: 1.3;
+          }
+          
+          .firmas {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+          }
+          
+          .firma-box {
+            width: 45%;
+            text-align: center;
+          }
+          
+          .firma-linea {
+            border-top: 1px solid #000;
+            margin-bottom: 5px;
+            margin-top: 60px;
+          }
+          
+          .firma-label {
+            font-size: 10px;
+            font-weight: bold;
+          }
+          
+          /* MARCA DE AGUA */
+          .estado-marca {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.05);
+            z-index: -1;
+            pointer-events: none;
+          }
+          
+          @media print {
+            body {
+              padding: 0;
+            }
+            .factura-container {
+              border: none;
+            }
           }
         </style>
       </head>
       <body>
-        <div class="header">
-          <h1>Periodo de Facturación</h1>
-          <p>${this.getPeriodoLabel()}</p>
-        </div>
-
-        <div class="info-section">
-          <h2>Información del Cliente</h2>
-          <div class="info-row">
-            <span class="info-label">Cliente:</span>
-            <span class="info-value">${periodo.cliente?.nombre || 'N/A'}</span>
+        <div class="factura-container">
+          
+          <!-- MARCA DE AGUA -->
+          <div class="estado-marca">${periodo.estado}</div>
+          
+          <!-- HEADER -->
+          <div class="header-factura">
+            <div class="empresa-info">
+              <h1>Andres Publicidad</h1>
+              <p><strong>NIT:</strong> 900.123.456-7</p>
+              <p><strong>Dirección:</strong> Calle 123 #45-67, Bogotá D.C., Colombia</p>
+              <p><strong>Teléfono:</strong> +57 (1) 234-5678</p>
+              <p><strong>Email:</strong> facturacion@andrespublicidad.com</p>
+              <p><strong>Página Web:</strong> www.andrespublicidad.com</p>
+              <p style="margin-top: 5px;"><strong>Régimen:</strong> Responsable de IVA - Gran Contribuyente</p>
+              <p><strong>Actividad Económica:</strong> Servicios de publicidad digital y marketing</p>
+            </div>
+            
+            <div class="factura-numero">
+              <h2>FACTURA DE VENTA</h2>
+              <p class="numero">${numeroFactura}</p>
+              <p><strong>Fecha Emisión:</strong></p>
+              <p>${new Date(periodo.fecha_generacion).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p style="margin-top: 8px;"><strong>Período Facturado:</strong></p>
+              <p>${this.meses[periodo.mes - 1]} ${periodo.año}</p>
+              <p style="margin-top: 8px;"><strong>Resolución DIAN:</strong></p>
+              <p style="font-size: 9px;">No. 18764123456789</p>
+              <p style="font-size: 9px;">Rango: FAC-1 a FAC-50000</p>
+              <p style="font-size: 9px;">Vigencia: 2024-2026</p>
+            </div>
           </div>
-          <div class="info-row">
-            <span class="info-label">Cédula/NIT:</span>
-            <span class="info-value">${periodo.cliente?.cedula || 'No especificado'}</span>
+          
+          <!-- INFORMACIÓN DEL CLIENTE -->
+          <div class="seccion-cliente">
+            <h3>DATOS DEL CLIENTE</h3>
+            <div class="cliente-grid">
+              <div class="cliente-item">
+                <span class="cliente-label">Razón Social:</span>
+                <span class="cliente-value">${periodo.cliente?.nombre || 'N/A'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">${periodo.cliente?.tipo_persona === 'Jurídica' ? 'NIT' : 'Cédula'}:</span>
+                <span class="cliente-value">${periodo.cliente?.cedula || 'No especificado'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Tipo de Persona:</span>
+                <span class="cliente-value">${periodo.cliente?.tipo_persona || 'No especificado'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Tipo de Cliente:</span>
+                <span class="cliente-value">${periodo.cliente?.tipo_cliente || 'N/A'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Dirección:</span>
+                <span class="cliente-value">${periodo.cliente?.direccion || 'No especificada'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Ciudad:</span>
+                <span class="cliente-value">${periodo.cliente?.ciudad || 'No especificada'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Teléfono:</span>
+                <span class="cliente-value">${periodo.cliente?.telefono || 'No especificado'}</span>
+              </div>
+              <div class="cliente-item">
+                <span class="cliente-label">Email:</span>
+                <span class="cliente-value">${periodo.cliente?.correo || 'No especificado'}</span>
+              </div>
+            </div>
           </div>
-          <div class="info-row">
-            <span class="info-label">Teléfono:</span>
-            <span class="info-value">${periodo.cliente?.telefono || 'No especificado'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Correo:</span>
-            <span class="info-value">${periodo.cliente?.correo || 'No especificado'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Ciudad:</span>
-            <span class="info-value">${periodo.cliente?.ciudad || 'No especificado'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Dirección:</span>
-            <span class="info-value">${periodo.cliente?.direccion || 'No especificado'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">País:</span>
-            <span class="info-value">${periodo.cliente?.pais || 'N/A'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Tipo:</span>
-            <span class="info-value">${periodo.cliente?.tipo_cliente || 'N/A'}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Estado:</span>
-            <span class="info-value estado estado-${periodo.estado.toLowerCase()}">${periodo.estado}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Fecha de Generación:</span>
-            <span class="info-value">${new Date(periodo.fecha_generacion).toLocaleDateString()}</span>
-          </div>
-        </div>
-
-        <h2>Resumen por Categoría</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Categoría</th>
-              <th>Área</th>
-              <th>Cantidad</th>
-              <th>Costo Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${resumen_categorias.map((cat: any) => `
+          
+          <!-- TABLA DE ITEMS/SERVICIOS -->
+          <table class="tabla-items">
+            <thead>
               <tr>
-                <td>${cat.categoria}</td>
-                <td>${cat.area_tipo}</td>
-                <td>${cat.cantidad}</td>
-                <td>$${cat.costo_total.toLocaleString('es-CO', { minimumFractionDigits: 2 })}</td>
+                <th style="width: 8%;" class="text-center">ÍTEM</th>
+                <th style="width: 10%;" class="text-center">CÓDIGO</th>
+                <th style="width: 32%;">DESCRIPCIÓN DEL SERVICIO</th>
+                <th style="width: 15%;">ÁREA</th>
+                <th style="width: 10%;" class="text-center">CANTIDAD</th>
+                <th style="width: 12%;" class="text-right">VALOR UNIT.</th>
+                <th style="width: 13%;" class="text-right">VALOR TOTAL</th>
               </tr>
-            `).join('')}
-            <tr class="total-row">
-              <td colspan="2"><strong>TOTAL</strong></td>
-              <td><strong>${totales.total_peticiones}</strong></td>
-              <td><strong>$${totales.costo_total.toLocaleString('es-CO', { minimumFractionDigits: 2 })}</strong></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Detalle de Peticiones</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Categoría</th>
-              <th>Usuario</th>
-              <th>Fecha Resolución</th>
-              <th>Costo</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${detalle_peticiones.map((pet: any) => `
-              <tr>
-                <td>#${pet.id}</td>
-                <td>${pet.categoria?.nombre || 'N/A'}</td>
-                <td>${pet.asignado?.nombre_completo || 'N/A'}</td>
-                <td>${new Date(pet.fecha_resolucion).toLocaleDateString()}</td>
-                <td>$${pet.costo.toLocaleString('es-CO', { minimumFractionDigits: 2 })}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-
-        <div class="footer">
-          <p>Documento generado el ${new Date().toLocaleString()}</p>
-          <p>Sistema de Control de Funcionamiento Empresarial</p>
+            </thead>
+            <tbody>
+              ${resumen_categorias.map((cat: any, index: number) => {
+                const valorUnitario = cat.cantidad > 0 ? cat.costo_total / cat.cantidad : 0;
+                return `
+                  <tr>
+                    <td class="text-center">${index + 1}</td>
+                    <td class="text-center">SRV-${String(index + 1).padStart(3, '0')}</td>
+                    <td><strong>${cat.categoria}</strong><br><span style="font-size: 9px;">Servicios de ${cat.categoria.toLowerCase()} - Período ${this.meses[periodo.mes - 1]} ${periodo.año}</span></td>
+                    <td>${cat.area_tipo}</td>
+                    <td class="text-center">${cat.cantidad}</td>
+                    <td class="text-right">$${valorUnitario.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td class="text-right">$${cat.costo_total.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+          
+          <!-- TOTALES -->
+          <div class="seccion-totales">
+            <div class="totales-grid">
+              <div class="total-row">
+                <span class="total-label">Subtotal:</span>
+                <span class="total-value">$${subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+              <div class="total-row">
+                <span class="total-label">IVA (19%):</span>
+                <span class="total-value">$${iva.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+              <div class="total-row">
+                <span class="total-label">TOTAL A PAGAR:</span>
+                <span class="total-value">$${totales.costo_total.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- INFORMACIÓN LEGAL -->
+          <div class="footer-legal">
+            <h4>INFORMACIÓN DE PAGO</h4>
+            <p><strong>Cuenta Bancaria:</strong> Banco de Bogotá - Cuenta Corriente No. 123-456789-01 | <strong>Beneficiario:</strong> TU EMPRESA S.A.S. - NIT 900.123.456-7</p>
+            <p><strong>Condiciones de Pago:</strong> 30 días calendario a partir de la fecha de emisión de esta factura.</p>
+            
+            <h4 style="margin-top: 10px;">OBSERVACIONES</h4>
+            <p>Esta factura corresponde a los servicios de publicidad digital y marketing prestados durante el período de <strong>${this.meses[periodo.mes - 1]} ${periodo.año}</strong>. Se incluyen ${totales.total_peticiones} peticiones/servicios completadas exitosamente según el detalle de categorías especificado.</p>
+            
+            <h4 style="margin-top: 10px;">NOTAS LEGALES</h4>
+            <p>• Esta factura se asimila en sus efectos legales a la Letra de Cambio según Art. 774 del Código de Comercio.</p>
+            <p>• Sujeto a retención en la fuente según corresponda por ley vigente.</p>
+            <p>• Factura electrónica con validez fiscal según normatividad DIAN.</p>
+            <p>• Para cualquier aclaración o duda sobre esta factura, por favor contactar al departamento de facturación.</p>
+          </div>
+          
+          <!-- FIRMAS -->
+          <div class="firmas">
+            <div class="firma-box">
+              <div class="firma-linea"></div>
+              <p class="firma-label">ELABORADO POR</p>
+              <p style="font-size: 9px; margin-top: 3px;">Dpto. de Facturación</p>
+            </div>
+            <div class="firma-box">
+              <div class="firma-linea"></div>
+              <p class="firma-label">RECIBIDO POR</p>
+              <p style="font-size: 9px; margin-top: 3px;">Cliente - Firma y Sello</p>
+            </div>
+          </div>
+          
+          <!-- PIE DE PÁGINA -->
+          <div style="margin-top: 30px; text-align: center; font-size: 8px; color: #666;">
+            <p>Sistema de Gestión de Facturación | Generado electrónicamente el ${new Date().toLocaleString('es-CO')}</p>
+            <p>Esta factura fue generada automáticamente por el sistema y no requiere firma autógrafa | Documento controlado</p>
+          </div>
+          
         </div>
       </body>
       </html>
     `;
 
+    // Crear ventana y generar PDF
     const ventana = window.open('', '_blank');
     if (ventana) {
       ventana.document.write(contenidoHTML);
       ventana.document.close();
       
+      // Esperar a que se cargue el contenido antes de imprimir
       ventana.onload = () => {
-        ventana.print();
+        setTimeout(() => {
+          ventana.print();
+        }, 250);
       };
-
-      this.messageService.add({
-        severity: 'success',
-        summary: 'PDF Generado',
-        detail: 'Use Ctrl+P o Guardar como PDF en el diálogo de impresión'
-      });
     } else {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudo abrir la ventana de impresión. Verifique el bloqueador de ventanas emergentes.'
+        detail: 'No se pudo abrir la ventana para generar el PDF. Por favor, permite las ventanas emergentes.'
       });
     }
   }

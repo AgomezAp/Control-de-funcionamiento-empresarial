@@ -15,14 +15,69 @@
       <div class="search-wrapper">
         <i class="pi pi-search search-icon"></i>
         <input
+          #searchInput
           type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          (focus)="showSearchResults = true"
+          (keydown)="onSearchKeyDown($event)"
           placeholder="Buscar... (Ctrl+K)"
           class="search-input"
         />
+        <button
+          *ngIf="searchQuery"
+          pButton
+          type="button"
+          icon="pi pi-times"
+          class="p-button-text p-button-sm clear-search-btn"
+          (click)="clearSearch()"
+        ></button>
         <kbd class="search-shortcut">
           <span>Ctrl</span>
           <span>K</span>
         </kbd>
+      </div>
+      
+      <!-- Search Results Dropdown -->
+      <div
+        *ngIf="showSearchResults && searchQuery && filteredResults.length > 0"
+        class="search-results"
+        (clickOutside)="showSearchResults = false"
+      >
+        <div class="search-results-header">
+          <span>Resultados de búsqueda</span>
+          <span class="results-count">{{ filteredResults.length }}</span>
+        </div>
+        <div class="search-results-list">
+          <div
+            *ngFor="let result of filteredResults; let i = index"
+            class="search-result-item"
+            [class.selected]="selectedResultIndex === i"
+            (click)="navigateToResult(result)"
+            (mouseenter)="selectedResultIndex = i"
+          >
+            <div class="result-icon">
+              <i [class]="result.icon"></i>
+            </div>
+            <div class="result-content">
+              <span class="result-title">{{ result.title }}</span>
+              <span class="result-category">{{ result.category }}</span>
+            </div>
+            <i class="pi pi-arrow-right result-arrow"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- No Results Message -->
+      <div
+        *ngIf="showSearchResults && searchQuery && filteredResults.length === 0"
+        class="search-results no-results"
+        (clickOutside)="showSearchResults = false"
+      >
+        <div class="no-results-content">
+          <i class="pi pi-search"></i>
+          <p>No se encontraron resultados para "{{ searchQuery }}"</p>
+        </div>
       </div>
     </div>
 

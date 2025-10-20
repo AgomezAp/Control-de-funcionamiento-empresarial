@@ -9,7 +9,8 @@ export class ClienteController {
     try {
       const { 
         nombre, 
-        cedula, 
+        cedula,
+        tipo_persona,
         telefono, 
         correo, 
         ciudad, 
@@ -25,6 +26,7 @@ export class ClienteController {
         {
           nombre,
           cedula,
+          tipo_persona,
           telefono,
           correo,
           ciudad,

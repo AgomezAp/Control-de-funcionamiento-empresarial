@@ -15,7 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { NotificacionService } from '../../../../core/services/notificacion.service';
-import { ClienteCreate, TipoCliente } from '../../../../core/models/cliente.model';
+import { ClienteCreate, TipoCliente, TipoPersona } from '../../../../core/models/cliente.model';
 import { Usuario } from '../../../../core/models/usuario.model';
 import { MENSAJES } from '../../../../core/constants/mensajes.constants';
 
@@ -64,6 +64,11 @@ export class CrearClienteComponent implements OnInit {
     { label: 'Otro', value: TipoCliente.OTRO },
   ];
 
+  tiposPersona = [
+    { label: 'Natural', value: TipoPersona.NATURAL },
+    { label: 'Jurídica', value: TipoPersona.JURIDICA },
+  ];
+
   ngOnInit(): void {
     this.initForm();
     this.cargarUsuarios();
@@ -73,6 +78,7 @@ export class CrearClienteComponent implements OnInit {
     this.clienteForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       cedula: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
+      tipo_persona: [TipoPersona.NATURAL, Validators.required],
       telefono: ['', [Validators.maxLength(20)]],
       correo: ['', [Validators.email, Validators.maxLength(100)]],
       ciudad: ['', [Validators.maxLength(100)]],

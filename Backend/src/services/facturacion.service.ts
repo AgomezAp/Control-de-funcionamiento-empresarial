@@ -79,7 +79,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
+          attributes: ["id", "nombre", "cedula", "tipo_persona", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
         },
       ],
     });
@@ -119,7 +119,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
+          attributes: ["id", "nombre", "cedula", "tipo_persona", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
         },
       ],
     });
@@ -233,7 +233,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
+          attributes: ["id", "nombre", "cedula", "tipo_persona", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
         },
       ],
       order: [["costo_total", "DESC"]],
@@ -298,7 +298,7 @@ export class FacturacionService {
         {
           model: Cliente,
           as: "cliente",
-          attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
+          attributes: ["id", "nombre", "cedula", "tipo_persona", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
         },
         {
           model: Categoria,

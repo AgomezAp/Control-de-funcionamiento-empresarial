@@ -69,15 +69,50 @@
           "
           class="form-error"
         >
-          La cédula debe tener entre 5 y 50 caracteres (solo letras, números y guiones)
+          La cédula debe tener entre 5 y 50 caracteres (solo letras, números y
+          guiones)
+        </small>
+      </div>
+
+      <!-- TIPO DE PERSONA -->
+      <div class="form-group">
+        <label for="tipo_persona" class="form-label">
+          Tipo de Persona <span class="required">*</span>
+        </label>
+        <small class="form-hint">Natural o Jurídica</small>
+        <div class="select-wrapper">
+          <select
+            id="tipo_persona"
+            formControlName="tipo_persona"
+            class="form-control form-select"
+            [class.error]="
+              clienteForm.get('tipo_persona')?.invalid &&
+              clienteForm.get('tipo_persona')?.touched
+            "
+          >
+            <option value="" disabled selected>
+              Seleccionar tipo de persona
+            </option>
+            <option *ngFor="let tipo of tiposPersona" [value]="tipo.value">
+              {{ tipo.label }}
+            </option>
+          </select>
+          <i class="pi pi-chevron-down select-icon"></i>
+        </div>
+        <small
+          *ngIf="
+            clienteForm.get('tipo_persona')?.invalid &&
+            clienteForm.get('tipo_persona')?.touched
+          "
+          class="form-error"
+        >
+          Debe seleccionar un tipo de persona
         </small>
       </div>
 
       <!-- TELÉFONO -->
       <div class="form-group">
-        <label for="telefono" class="form-label">
-          Teléfono
-        </label>
+        <label for="telefono" class="form-label"> Teléfono </label>
         <small class="form-hint">Opcional - Ej: +57 310-1234567</small>
         <input
           type="text"
@@ -103,9 +138,7 @@
 
       <!-- CORREO ELECTRÓNICO -->
       <div class="form-group">
-        <label for="correo" class="form-label">
-          Correo Electrónico
-        </label>
+        <label for="correo" class="form-label"> Correo Electrónico </label>
         <small class="form-hint">Opcional - Ej: contacto&#64;empresa.com</small>
         <input
           type="email"
@@ -131,9 +164,7 @@
 
       <!-- CIUDAD -->
       <div class="form-group">
-        <label for="ciudad" class="form-label">
-          Ciudad
-        </label>
+        <label for="ciudad" class="form-label"> Ciudad </label>
         <small class="form-hint">Opcional - Ej: Bogotá</small>
         <input
           type="text"
@@ -159,10 +190,10 @@
 
       <!-- DIRECCIÓN -->
       <div class="form-group full-width">
-        <label for="direccion" class="form-label">
-          Dirección
-        </label>
-        <small class="form-hint">Opcional - Ej: Calle 85 #15-20, Zona Rosa</small>
+        <label for="direccion" class="form-label"> Dirección </label>
+        <small class="form-hint"
+          >Opcional - Ej: Calle 85 #15-20, Zona Rosa</small
+        >
         <textarea
           id="direccion"
           formControlName="direccion"
@@ -245,7 +276,7 @@
         </div>
         <small
           *ngIf="
-            clienteForm.get('tipo_cliente')?.invalid && 
+            clienteForm.get('tipo_cliente')?.invalid &&
             clienteForm.get('tipo_cliente')?.touched
           "
           class="form-error"

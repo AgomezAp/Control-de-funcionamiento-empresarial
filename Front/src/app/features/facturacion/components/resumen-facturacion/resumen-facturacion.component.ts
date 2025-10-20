@@ -301,6 +301,10 @@ export class ResumenFacturacionComponent implements OnInit {
             <span class="info-value">${periodo.cliente?.cedula || 'No especificado'}</span>
           </div>
           <div class="info-row">
+            <span class="info-label">Tipo de Persona:</span>
+            <span class="info-value">${periodo.cliente?.tipo_persona || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
             <span class="info-label">Teléfono:</span>
             <span class="info-value">${periodo.cliente?.telefono || 'No especificado'}</span>
           </div>

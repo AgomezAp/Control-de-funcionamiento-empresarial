@@ -17,7 +17,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { NotificacionService } from '../../../../core/services/notificacion.service';
-import { Cliente, ClienteUpdate, TipoCliente } from '../../../../core/models/cliente.model';
+import { Cliente, ClienteUpdate, TipoCliente, TipoPersona } from '../../../../core/models/cliente.model';
 import { Usuario } from '../../../../core/models/usuario.model';
 import { MENSAJES } from '../../../../core/constants/mensajes.constants';
 
@@ -72,6 +72,11 @@ export class EditarClienteComponent implements OnInit {
     { label: 'Otro', value: TipoCliente.OTRO },
   ];
 
+  tiposPersona = [
+    { label: 'Natural', value: TipoPersona.NATURAL },
+    { label: 'Jurídica', value: TipoPersona.JURIDICA },
+  ];
+
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.paramMap.get('id'));
     if (!this.clienteId) {
@@ -89,6 +94,7 @@ export class EditarClienteComponent implements OnInit {
     this.clienteForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       cedula: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
+      tipo_persona: [TipoPersona.NATURAL, Validators.required],
       telefono: ['', [Validators.maxLength(20)]],
       correo: ['', [Validators.email, Validators.maxLength(100)]],
       ciudad: ['', [Validators.maxLength(100)]],
@@ -134,6 +140,7 @@ export class EditarClienteComponent implements OnInit {
           this.clienteForm.patchValue({
             nombre: this.cliente.nombre,
             cedula: this.cliente.cedula,
+            tipo_persona: this.cliente.tipo_persona,
             telefono: this.cliente.telefono,
             correo: this.cliente.correo,
             ciudad: this.cliente.ciudad,
