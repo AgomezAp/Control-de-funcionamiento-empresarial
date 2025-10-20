@@ -73,6 +73,118 @@
         </small>
       </div>
 
+      <!-- TELÉFONO -->
+      <div class="form-group">
+        <label for="telefono" class="form-label">
+          Teléfono
+        </label>
+        <small class="form-hint">Opcional - Ej: +57 310-1234567</small>
+        <input
+          type="text"
+          id="telefono"
+          formControlName="telefono"
+          class="form-control"
+          placeholder="Ej: +57 310-1234567"
+          [class.error]="
+            clienteForm.get('telefono')?.invalid &&
+            clienteForm.get('telefono')?.touched
+          "
+        />
+        <small
+          *ngIf="
+            clienteForm.get('telefono')?.invalid &&
+            clienteForm.get('telefono')?.touched
+          "
+          class="form-error"
+        >
+          El teléfono no puede exceder 20 caracteres
+        </small>
+      </div>
+
+      <!-- CORREO ELECTRÓNICO -->
+      <div class="form-group">
+        <label for="correo" class="form-label">
+          Correo Electrónico
+        </label>
+        <small class="form-hint">Opcional - Ej: contacto&#64;empresa.com</small>
+        <input
+          type="email"
+          id="correo"
+          formControlName="correo"
+          class="form-control"
+          placeholder="Ej: contacto&#64;empresa.com"
+          [class.error]="
+            clienteForm.get('correo')?.invalid &&
+            clienteForm.get('correo')?.touched
+          "
+        />
+        <small
+          *ngIf="
+            clienteForm.get('correo')?.invalid &&
+            clienteForm.get('correo')?.touched
+          "
+          class="form-error"
+        >
+          Ingrese un correo electrónico válido
+        </small>
+      </div>
+
+      <!-- CIUDAD -->
+      <div class="form-group">
+        <label for="ciudad" class="form-label">
+          Ciudad
+        </label>
+        <small class="form-hint">Opcional - Ej: Bogotá</small>
+        <input
+          type="text"
+          id="ciudad"
+          formControlName="ciudad"
+          class="form-control"
+          placeholder="Ej: Bogotá"
+          [class.error]="
+            clienteForm.get('ciudad')?.invalid &&
+            clienteForm.get('ciudad')?.touched
+          "
+        />
+        <small
+          *ngIf="
+            clienteForm.get('ciudad')?.invalid &&
+            clienteForm.get('ciudad')?.touched
+          "
+          class="form-error"
+        >
+          La ciudad no puede exceder 100 caracteres
+        </small>
+      </div>
+
+      <!-- DIRECCIÓN -->
+      <div class="form-group full-width">
+        <label for="direccion" class="form-label">
+          Dirección
+        </label>
+        <small class="form-hint">Opcional - Ej: Calle 85 #15-20, Zona Rosa</small>
+        <textarea
+          id="direccion"
+          formControlName="direccion"
+          class="form-control"
+          rows="3"
+          placeholder="Ej: Calle 85 #15-20, Zona Rosa"
+          [class.error]="
+            clienteForm.get('direccion')?.invalid &&
+            clienteForm.get('direccion')?.touched
+          "
+        ></textarea>
+        <small
+          *ngIf="
+            clienteForm.get('direccion')?.invalid &&
+            clienteForm.get('direccion')?.touched
+          "
+          class="form-error"
+        >
+          La dirección no puede exceder 500 caracteres
+        </small>
+      </div>
+
       <!-- PAÍS -->
       <div class="form-group">
         <label for="pais" class="form-label">

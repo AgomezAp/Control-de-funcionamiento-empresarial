@@ -17,9 +17,14 @@ class ClienteController {
     crear(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { nombre, pais, tipo_cliente, pautador_id, disenador_id, fecha_inicio } = req.body;
+                const { nombre, cedula, telefono, correo, ciudad, direccion, pais, tipo_cliente, pautador_id, disenador_id, fecha_inicio } = req.body;
                 const cliente = yield clienteService.crear({
                     nombre,
+                    cedula,
+                    telefono,
+                    correo,
+                    ciudad,
+                    direccion,
                     pais,
                     tipo_cliente,
                     pautador_id,

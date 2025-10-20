@@ -10,7 +10,11 @@ export enum TipoCliente {
 export interface Cliente {
   id: number;
   nombre: string;
-  cedula?: string; // ✅ Nuevo campo
+  cedula?: string;
+  telefono?: string;
+  correo?: string;
+  ciudad?: string;
+  direccion?: string;
   pais: string;
   tipo_cliente: TipoCliente;
   pautador_id: number;
@@ -24,7 +28,11 @@ export interface Cliente {
 
 export interface ClienteCreate {
   nombre: string;
-  cedula?: string; // ✅ Nuevo campo
+  cedula?: string;
+  telefono?: string;
+  correo?: string;
+  ciudad?: string;
+  direccion?: string;
   pais: string;
   tipo_cliente: TipoCliente | string;
   pautador_id: number;
@@ -34,7 +42,11 @@ export interface ClienteCreate {
 
 export interface ClienteUpdate {
   nombre?: string;
-  cedula?: string; // ✅ Nuevo campo
+  cedula?: string;
+  telefono?: string;
+  correo?: string;
+  ciudad?: string;
+  direccion?: string;
   pais?: string;
   tipo_cliente?: TipoCliente | string;
   pautador_id?: number;

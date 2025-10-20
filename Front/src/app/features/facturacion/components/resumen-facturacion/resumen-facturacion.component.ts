@@ -174,33 +174,13 @@ export class ResumenFacturacionComponent implements OnInit {
   exportarPDF(periodo: PeriodoFacturacion): void {
     this.loading = true;
     
-    // Obtener el detalle completo del periodo
-    this.facturacionService.getById(periodo.id).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.generarPDF(response.data);
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error obteniendo detalle:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Error al obtener los datos para el PDF'
-        });
-        this.loading = false;
-      }
-    });
-  }
-
-  private generarPDF(periodo: PeriodoFacturacion): void {
-    // Obtener detalle completo para el PDF
+    // Obtener el detalle completo del periodo para el PDF
     this.facturacionService.getDetalle(periodo.cliente_id, periodo.año, periodo.mes).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           this.crearDocumentoPDF(response.data);
         }
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error generando PDF:', error);
@@ -209,6 +189,7 @@ export class ResumenFacturacionComponent implements OnInit {
           summary: 'Error',
           detail: 'Error al generar el PDF'
         });
+        this.loading = false;
       }
     });
   }
@@ -314,6 +295,30 @@ export class ResumenFacturacionComponent implements OnInit {
           <div class="info-row">
             <span class="info-label">Cliente:</span>
             <span class="info-value">${periodo.cliente?.nombre || 'N/A'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Cédula/NIT:</span>
+            <span class="info-value">${periodo.cliente?.cedula || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teléfono:</span>
+            <span class="info-value">${periodo.cliente?.telefono || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Correo:</span>
+            <span class="info-value">${periodo.cliente?.correo || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Ciudad:</span>
+            <span class="info-value">${periodo.cliente?.ciudad || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dirección:</span>
+            <span class="info-value">${periodo.cliente?.direccion || 'No especificado'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">País:</span>
+            <span class="info-value">${periodo.cliente?.pais || 'N/A'}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Tipo:</span>

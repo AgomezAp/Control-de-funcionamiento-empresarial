@@ -86,7 +86,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
+                        attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
                     },
                 ],
             });
@@ -124,6 +124,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
+                        attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
                     },
                 ],
             });
@@ -223,7 +224,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
+                        attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
                     },
                 ],
                 order: [["costo_total", "DESC"]],
@@ -284,7 +285,7 @@ class FacturacionService {
                     {
                         model: Cliente_1.default,
                         as: "cliente",
-                        attributes: ["id", "nombre", "cedula", "pais", "tipo_cliente"],
+                        attributes: ["id", "nombre", "cedula", "telefono", "correo", "ciudad", "direccion", "pais", "tipo_cliente"],
                     },
                     {
                         model: Categoria_1.default,

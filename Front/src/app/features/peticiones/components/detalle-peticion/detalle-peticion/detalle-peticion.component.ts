@@ -255,12 +255,7 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.success) {
           this.loadPeticion();
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Temporizador Pausado',
-            detail: 'El temporizador de la petición ha sido pausado',
-            life: 3000,
-          });
+          // ✅ No mostrar mensaje aquí - el WebSocket ya lo hace cuando detecta el cambio de estado
         }
       },
       error: (error) => {
@@ -282,12 +277,7 @@ export class DetallePeticionComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.success) {
           this.loadPeticion();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Temporizador Reanudado',
-            detail: 'El temporizador de la petición ha sido reanudado',
-            life: 3000,
-          });
+          // ✅ No mostrar mensaje aquí - el WebSocket ya lo hace cuando detecta el cambio de estado
         }
       },
       error: (error) => {

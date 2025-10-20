@@ -73,6 +73,10 @@ export class CrearClienteComponent implements OnInit {
     this.clienteForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       cedula: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
+      telefono: ['', [Validators.maxLength(20)]],
+      correo: ['', [Validators.email, Validators.maxLength(100)]],
+      ciudad: ['', [Validators.maxLength(100)]],
+      direccion: ['', [Validators.maxLength(500)]],
       pais: ['', Validators.required],
       tipo_cliente: ['', Validators.required],
       pautador_id: ['', Validators.required],

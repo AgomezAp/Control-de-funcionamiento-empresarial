@@ -32,6 +32,29 @@ Cliente.init({
         unique: true,
         comment: "Cédula o documento de identidad del cliente",
     },
+    telefono: {
+        type: sequelize_1.DataTypes.STRING(20),
+        allowNull: true,
+        comment: "Número de teléfono de contacto",
+    },
+    correo: {
+        type: sequelize_1.DataTypes.STRING(100),
+        allowNull: true,
+        validate: {
+            isEmail: true,
+        },
+        comment: "Correo electrónico del cliente",
+    },
+    ciudad: {
+        type: sequelize_1.DataTypes.STRING(100),
+        allowNull: true,
+        comment: "Ciudad de residencia",
+    },
+    direccion: {
+        type: sequelize_1.DataTypes.TEXT,
+        allowNull: true,
+        comment: "Dirección completa de residencia",
+    },
     pais: {
         type: sequelize_1.DataTypes.STRING(100),
         allowNull: false,

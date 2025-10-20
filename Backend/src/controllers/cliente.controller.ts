@@ -7,11 +7,28 @@ const clienteService = new ClienteService();
 export class ClienteController {
   async crear(req: Request, res: Response) {
     try {
-      const { nombre, pais, tipo_cliente, pautador_id, disenador_id, fecha_inicio } = req.body;
+      const { 
+        nombre, 
+        cedula, 
+        telefono, 
+        correo, 
+        ciudad, 
+        direccion, 
+        pais, 
+        tipo_cliente, 
+        pautador_id, 
+        disenador_id, 
+        fecha_inicio 
+      } = req.body;
 
       const cliente = await clienteService.crear(
         {
           nombre,
+          cedula,
+          telefono,
+          correo,
+          ciudad,
+          direccion,
           pais,
           tipo_cliente,
           pautador_id,

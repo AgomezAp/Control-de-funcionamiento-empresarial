@@ -9,6 +9,11 @@ export class ClienteService {
 
   async crear(data: {
     nombre: string;
+    cedula?: string;
+    telefono?: string;
+    correo?: string;
+    ciudad?: string;
+    direccion?: string;
     pais: string;
     tipo_cliente: string;
     pautador_id: number;
