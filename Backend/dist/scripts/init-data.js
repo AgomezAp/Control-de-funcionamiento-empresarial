@@ -380,6 +380,8 @@ function initData() {
                     rol_id: rolesCreados.Admin.id,
                     area_id: areasCreadas["Diseño"].id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "Juan Pérez - Pautador",
@@ -388,6 +390,8 @@ function initData() {
                     rol_id: rolesCreados.Usuario.id,
                     area_id: areasCreadas.Pautas.id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "María García - Pautadora",
@@ -396,6 +400,8 @@ function initData() {
                     rol_id: rolesCreados.Usuario.id,
                     area_id: areasCreadas.Pautas.id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "Carlos López - Diseñador",
@@ -404,6 +410,8 @@ function initData() {
                     rol_id: rolesCreados.Usuario.id,
                     area_id: areasCreadas.Diseño.id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "Ana Martínez - Diseñadora",
@@ -412,6 +420,8 @@ function initData() {
                     rol_id: rolesCreados.Usuario.id,
                     area_id: areasCreadas.Diseño.id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "Luis Rodríguez - Líder Pautas",
@@ -420,6 +430,8 @@ function initData() {
                     rol_id: rolesCreados.Líder.id,
                     area_id: areasCreadas.Pautas.id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
                 {
                     nombre_completo: "Roberto Fernández - Directivo",
@@ -428,6 +440,8 @@ function initData() {
                     rol_id: rolesCreados.Directivo.id,
                     area_id: areasCreadas["Pautas"].id,
                     status: true,
+                    estado_presencia: "Activo",
+                    ultima_actividad: new Date(),
                 },
             ];
             const usuariosCreados = [];

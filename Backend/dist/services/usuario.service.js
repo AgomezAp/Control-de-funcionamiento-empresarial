@@ -155,5 +155,60 @@ class UsuarioService {
             });
         });
     }
+    /**
+     * Cambiar estado de presencia (Activo, Ausente, No Molestar, Away)
+     * El usuario puede cambiar su propio estado, pero no puede poner "Inactivo" (eso es status=false del admin)
+     */
+    cambiarEstadoPresencia(uid, estadoPresencia, usuarioActual) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const usuario = yield Usuario_1.default.findByPk(uid);
+            if (!usuario) {
+                throw new error_util_1.NotFoundError("Usuario no encontrado");
+            }
+            // Solo puede cambiar su propio estado de presencia
+            if (usuarioActual.uid !== uid) {
+                throw new error_util_1.ForbiddenError("Solo puedes cambiar tu propio estado de presencia");
+            }
+            // Validar estados permitidos
+            const estadosPermitidos = ["Activo", "Ausente", "No Molestar", "Away"];
+            if (!estadosPermitidos.includes(estadoPresencia)) {
+                throw new error_util_1.ValidationError("Estado de presencia inválido");
+            }
+            const valorAnterior = usuario.estado_presencia;
+            yield usuario.update({
+                estado_presencia: estadoPresencia,
+                ultima_actividad: new Date()
+            });
+            // Registrar en auditoría
+            yield this.auditoriaService.registrarCambio({
+                tabla_afectada: "usuarios",
+                registro_id: uid,
+                tipo_cambio: "UPDATE",
+                campo_modificado: "estado_presencia",
+                valor_anterior: valorAnterior,
+                valor_nuevo: estadoPresencia,
+                usuario_id: usuarioActual.uid,
+                descripcion: `Cambio de estado de presencia a ${estadoPresencia}`,
+            });
+            return usuario;
+        });
+    }
+    /**
+     * Actualizar última actividad del usuario
+     */
+    actualizarActividad(uid) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const usuario = yield Usuario_1.default.findByPk(uid);
+            if (!usuario) {
+                throw new error_util_1.NotFoundError("Usuario no encontrado");
+            }
+            yield usuario.update({
+                ultima_actividad: new Date(),
+                // Si estaba Away, cambiar automáticamente a Activo
+                estado_presencia: usuario.estado_presencia === "Away" ? "Activo" : usuario.estado_presencia
+            });
+            return usuario;
+        });
+    }
 }
 exports.UsuarioService = UsuarioService;

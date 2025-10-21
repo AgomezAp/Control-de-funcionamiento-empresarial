@@ -36,6 +36,16 @@ Usuario.init({
         allowNull: false,
         defaultValue: true,
     },
+    estado_presencia: {
+        type: sequelize_1.DataTypes.ENUM("Activo", "Ausente", "No Molestar", "Away"),
+        allowNull: false,
+        defaultValue: "Activo",
+    },
+    ultima_actividad: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.DataTypes.NOW,
+    },
     rol_id: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,

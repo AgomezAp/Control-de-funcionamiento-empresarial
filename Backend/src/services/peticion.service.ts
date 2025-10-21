@@ -65,11 +65,19 @@ export class PeticionService {
 
     // Si el área es "Pautas", asignar automáticamente al pautador del cliente
     if (data.area === "Pautas") {
-      estadoInicial = "En Progreso";
-      usuarioAsignado = clienteData.pautador_id;
-      fechaAceptacion = new Date();
-      temporizadorActivo = true;
-      fechaInicioTemporizador = new Date();
+      // Verificar que el pautador esté activo (status = true)
+      const pautador = await Usuario.findByPk(clienteData.pautador_id);
+      
+      if (pautador && pautador.status === true) {
+        estadoInicial = "En Progreso";
+        usuarioAsignado = clienteData.pautador_id;
+        fechaAceptacion = new Date();
+        temporizadorActivo = true;
+        fechaInicioTemporizador = new Date();
+      } else {
+        // Si el pautador está inactivo, la petición queda pendiente
+        console.warn(`⚠️ Pautador ${clienteData.pautador_id} está inactivo, petición queda pendiente`);
+      }
     }
 
     // Si el área es "Gestión Administrativa", queda pendiente (sin auto-asignación)

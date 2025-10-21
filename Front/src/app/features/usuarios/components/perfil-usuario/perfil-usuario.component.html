@@ -1,256 +1,275 @@
-<div class="container mx-auto p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex justify-between items-center p-4">
-        <h2 class="text-2xl font-bold">
-          {{ cargando ? "Cargando..." : "Perfil de Usuario" }}
+<div class="container-perfil">
+  <app-loader *ngIf="cargando"></app-loader>
+
+  <div *ngIf="!cargando" class="content-wrapper">
+    <div class="perfil-card">
+      <!-- Header -->
+      <div class="card-header">
+        <h2 class="header-title">
+          <i class="pi pi-user" style="color: #4caf50"></i>
+          <span>Perfil de Usuario</span>
         </h2>
-        <div class="flex gap-2">
-          <p-button
-            icon="pi pi-pencil"
-            label="Editar"
-            severity="warn"
-            [outlined]="true"
-            (onClick)="editar()"
-            *ngIf="!cargando && usuario"
-          />
-          <p-button
-            icon="pi pi-arrow-left"
-            label="Volver"
-            [text]="true"
-            (onClick)="volver()"
-          />
+        <div class="header-actions">
+          <button
+            class="btn btn-edit"
+            type="button"
+            (click)="editar()"
+            *ngIf="usuario"
+          >
+            <i class="pi pi-pencil"></i>
+            <span>Editar</span>
+          </button>
+          <button class="btn btn-back" type="button" (click)="volver()">
+            <i class="pi pi-arrow-left"></i>
+            <span>Volver</span>
+          </button>
         </div>
       </div>
-    </ng-template>
 
-    <!-- Skeleton mientras carga -->
-    <div *ngIf="cargando" class="flex flex-col gap-4">
-      <p-skeleton height="2rem" width="50%" />
-      <p-skeleton height="1.5rem" />
-      <p-skeleton height="1.5rem" />
-    </div>
-
-    <!-- Contenido del usuario -->
-    <div *ngIf="!cargando && usuario">
-      <p-tabView
-        [(activeIndex)]="activeTabIndex"
-        (onChange)="onTabChange($event)"
-      >
-        <!-- Tab: Información Personal -->
-        <p-tabPanel>
-          <ng-template pTemplate="header">
+      <!-- Tabs -->
+      <div class="tabs-container" *ngIf="usuario">
+        <div class="tabs-header">
+          <button
+            class="tab-button"
+            [class.active]="activeTabIndex === 0"
+            (click)="activeTabIndex = 0"
+          >
             <i class="pi pi-user"></i>
             <span>Información Personal</span>
-          </ng-template>
-
-          <div class="flex flex-col gap-4 p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block font-semibold mb-1">Nombre Completo</label>
-                <p class="text-lg">{{ usuario.nombre_completo }}</p>
-              </div>
-
-              <div>
-                <label class="block font-semibold mb-1"
-                  >Correo Electrónico</label
-                >
-                <p class="text-lg">{{ usuario.correo }}</p>
-              </div>
-
-              <div>
-                <label class="block font-semibold mb-1">Estado</label>
-                <p-tag
-                  [value]="usuario.status ? 'Activo' : 'Inactivo'"
-                  [severity]="usuario.status ? 'success' : 'danger'"
-                />
-              </div>
-
-              <div>
-                <label class="block font-semibold mb-1">ID de Usuario</label>
-                <p class="text-sm font-mono">{{ usuario.uid }}</p>
-              </div>
-            </div>
-
-            <p-divider />
-
-            <!-- Rol y Área -->
-            <h3 class="text-xl font-bold">Asignaciones</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="info-box rol-box">
-                <label class="block font-semibold mb-2">
-                  <i class="pi pi-shield mr-2"></i>Rol
-                </label>
-                <p class="text-lg font-medium" *ngIf="usuario.rol">
-                  {{ usuario.rol.nombre }}
-                </p>
-                <p
-                  class="text-sm info-description"
-                  *ngIf="usuario.rol && usuario.rol.descripcion"
-                >
-                  {{ usuario.rol.descripcion }}
-                </p>
-              </div>
-
-              <div class="info-box area-box">
-                <label class="block font-semibold mb-2">
-                  <i class="pi pi-building mr-2"></i>Área
-                </label>
-                <p class="text-lg font-medium" *ngIf="usuario.area">
-                  {{ usuario.area.nombre }}
-                </p>
-                <p
-                  class="text-sm info-description"
-                  *ngIf="usuario.area && usuario.area.descripcion"
-                >
-                  {{ usuario.area.descripcion }}
-                </p>
-              </div>
-            </div>
-
-            <p-divider />
-
-            <!-- Fechas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block font-semibold mb-1"
-                  >Fecha de Creación</label
-                >
-                <p class="text-sm">
-                  {{ usuario.fecha_creacion | date : "dd/MM/yyyy HH:mm" }}
-                  <span class="time-ago ml-2"
-                    >({{ usuario.fecha_creacion | timeAgo }})</span
-                  >
-                </p>
-              </div>
-
-              <div>
-                <label class="block font-semibold mb-1"
-                  >Última Actualización</label
-                >
-                <p class="text-sm">
-                  {{ usuario.fecha_actualizacion | date : "dd/MM/yyyy HH:mm" }}
-                  <span class="time-ago ml-2"
-                    >({{ usuario.fecha_actualizacion | timeAgo }})</span
-                  >
-                </p>
-              </div>
-            </div>
-          </div>
-        </p-tabPanel>
-
-        <!-- Tab: Estadísticas -->
-        <p-tabPanel>
-          <ng-template pTemplate="header">
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTabIndex === 1"
+            (click)="activeTabIndex = 1; cargarEstadisticas()"
+          >
             <i class="pi pi-chart-bar"></i>
             <span>Estadísticas</span>
-          </ng-template>
+          </button>
+        </div>
 
-          <div class="flex flex-col gap-4 p-4">
-            <div *ngIf="cargandoEstadisticas" class="flex flex-col gap-3">
-              <p-skeleton height="4rem" />
-              <p-skeleton height="4rem" />
-              <p-skeleton height="4rem" />
+        <!-- Tab Content: Información Personal -->
+        <div class="tab-content" *ngIf="activeTabIndex === 0">
+          <div class="info-grid">
+            <div class="info-item">
+              <label class="info-label">
+                <i class="pi pi-user" style="color: #ffd700"></i>
+                Nombre Completo
+              </label>
+              <p class="info-value">{{ usuario.nombre_completo }}</p>
             </div>
 
-            <div
-              *ngIf="!cargandoEstadisticas && estadisticas"
-              class="grid grid-cols-1 md:grid-cols-3 gap-4"
-            >
-              <!-- Peticiones Totales -->
-              <div class="stat-card stat-blue">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Total Peticiones</p>
-                    <p class="stat-value">
-                      {{ estadisticas.totalPeticiones || 0 }}
-                    </p>
-                  </div>
-                  <i class="pi pi-list stat-icon"></i>
-                </div>
-              </div>
-
-              <!-- Peticiones Resueltas -->
-              <div class="stat-card stat-green">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Resueltas</p>
-                    <p class="stat-value">
-                      {{ estadisticas.peticionesResueltas || 0 }}
-                    </p>
-                  </div>
-                  <i class="pi pi-check-circle stat-icon"></i>
-                </div>
-              </div>
-
-              <!-- Peticiones Pendientes -->
-              <div class="stat-card stat-orange">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Pendientes</p>
-                    <p class="stat-value">
-                      {{ estadisticas.peticionesPendientes || 0 }}
-                    </p>
-                  </div>
-                  <i class="pi pi-clock stat-icon"></i>
-                </div>
-              </div>
-
-              <!-- Peticiones Vencidas -->
-              <div class="stat-card stat-red">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Vencidas</p>
-                    <p class="stat-value">
-                      {{ estadisticas.peticionesVencidas || 0 }}
-                    </p>
-                  </div>
-                  <i class="pi pi-exclamation-triangle stat-icon"></i>
-                </div>
-              </div>
-
-              <!-- Tasa de Resolución -->
-              <div class="stat-card stat-purple">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Tasa de Resolución</p>
-                    <p class="stat-value">{{ tasaResolucion }}%</p>
-                  </div>
-                  <i class="pi pi-chart-line stat-icon"></i>
-                </div>
-              </div>
-
-              <!-- Tiempo Promedio -->
-              <div class="stat-card stat-indigo">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="stat-label">Tiempo Promedio</p>
-                    <p class="stat-value-small">
-                      {{ estadisticas.tiempoPromedioResolucion || 0 }}h
-                    </p>
-                  </div>
-                  <i class="pi pi-stopwatch stat-icon"></i>
-                </div>
-              </div>
+            <div class="info-item">
+              <label class="info-label">
+                <i class="pi pi-envelope" style="color: #2196f3"></i>
+                Correo Electrónico
+              </label>
+              <p class="info-value">{{ usuario.correo }}</p>
             </div>
 
-            <div
-              *ngIf="!cargandoEstadisticas && !estadisticas"
-              class="empty-state"
-            >
-              <i class="pi pi-info-circle empty-icon"></i>
-              <p class="empty-text">No hay estadísticas disponibles</p>
+            <div class="info-item">
+              <label class="info-label">
+                <i class="pi pi-check-circle" style="color: #4caf50"></i>
+                Estado
+              </label>
+              <span
+                class="badge"
+                [class.badge-success]="usuario.status"
+                [class.badge-danger]="!usuario.status"
+              >
+                <i
+                  [class]="
+                    usuario.status ? 'pi pi-check-circle' : 'pi pi-times-circle'
+                  "
+                ></i>
+                {{ usuario.status ? "Activo" : "Inactivo" }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">
+                <i class="pi pi-id-card" style="color: #9c27b0"></i>
+                ID de Usuario
+              </label>
+              <p class="info-value info-id">{{ usuario.uid }}</p>
             </div>
           </div>
-        </p-tabPanel>
-      </p-tabView>
-    </div>
 
-    <!-- Mensaje si no se encuentra el usuario -->
-    <div *ngIf="!cargando && !usuario" class="error-state">
-      <i class="pi pi-exclamation-triangle error-icon"></i>
-      <p class="error-text">Usuario no encontrado</p>
-      <p-button label="Volver a Usuarios" class="mt-4" (onClick)="volver()" />
+          <div class="divider"></div>
+
+          <!-- Asignaciones -->
+          <h3 class="section-title">
+            <i class="pi pi-sitemap" style="color: #ff9800"></i>
+            Asignaciones
+          </h3>
+
+          <div class="asignaciones-grid">
+            <div class="asignacion-box rol-box">
+              <div class="asignacion-header">
+                <i class="pi pi-shield"></i>
+                <span>Rol</span>
+              </div>
+              <p class="asignacion-value" *ngIf="usuario.rol">
+                {{ usuario.rol.nombre }}
+              </p>
+              <p
+                class="asignacion-description"
+                *ngIf="usuario.rol && usuario.rol.descripcion"
+              >
+                {{ usuario.rol.descripcion }}
+              </p>
+            </div>
+
+            <div class="asignacion-box area-box">
+              <div class="asignacion-header">
+                <i class="pi pi-building"></i>
+                <span>Área</span>
+              </div>
+              <p class="asignacion-value" *ngIf="usuario.area">
+                {{ usuario.area.nombre }}
+              </p>
+              <p
+                class="asignacion-description"
+                *ngIf="usuario.area && usuario.area.descripcion"
+              >
+                {{ usuario.area.descripcion }}
+              </p>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Fechas -->
+          <div class="fechas-grid">
+            <div class="fecha-item">
+              <label class="info-label">
+                <i class="pi pi-calendar-plus" style="color: #00bcd4"></i>
+                Fecha de Creación
+              </label>
+              <p class="info-value">
+                {{ usuario.fecha_creacion | date : "dd/MM/yyyy HH:mm" }}
+              </p>
+              <span class="time-ago">
+                ({{ usuario.fecha_creacion | timeAgo }})
+              </span>
+            </div>
+
+            <div class="fecha-item">
+              <label class="info-label">
+                <i class="pi pi-refresh" style="color: #673ab7"></i>
+                Última Actualización
+              </label>
+              <p class="info-value">
+                {{ usuario.fecha_actualizacion | date : "dd/MM/yyyy HH:mm" }}
+              </p>
+              <span class="time-ago">
+                ({{ usuario.fecha_actualizacion | timeAgo }})
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content: Estadísticas -->
+        <div class="tab-content" *ngIf="activeTabIndex === 1">
+          <!-- Loading Estadísticas -->
+          <div *ngIf="cargandoEstadisticas" class="loading-stats">
+            <div class="skeleton-stat"></div>
+            <div class="skeleton-stat"></div>
+            <div class="skeleton-stat"></div>
+          </div>
+
+          <!-- Estadísticas -->
+          <div *ngIf="!cargandoEstadisticas && estadisticas" class="stats-grid">
+            <div class="stat-card stat-blue">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Total Peticiones</p>
+                  <p class="stat-value">
+                    {{ estadisticas.totalPeticiones || 0 }}
+                  </p>
+                </div>
+                <i class="pi pi-list stat-icon"></i>
+              </div>
+            </div>
+
+            <div class="stat-card stat-green">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Resueltas</p>
+                  <p class="stat-value">
+                    {{ estadisticas.peticionesResueltas || 0 }}
+                  </p>
+                </div>
+                <i class="pi pi-check-circle stat-icon"></i>
+              </div>
+            </div>
+
+            <div class="stat-card stat-orange">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Pendientes</p>
+                  <p class="stat-value">
+                    {{ estadisticas.peticionesPendientes || 0 }}
+                  </p>
+                </div>
+                <i class="pi pi-clock stat-icon"></i>
+              </div>
+            </div>
+
+            <div class="stat-card stat-red">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Vencidas</p>
+                  <p class="stat-value">
+                    {{ estadisticas.peticionesVencidas || 0 }}
+                  </p>
+                </div>
+                <i class="pi pi-exclamation-triangle stat-icon"></i>
+              </div>
+            </div>
+
+            <div class="stat-card stat-purple">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Tasa de Resolución</p>
+                  <p class="stat-value">{{ tasaResolucion }}%</p>
+                </div>
+                <i class="pi pi-chart-line stat-icon"></i>
+              </div>
+            </div>
+
+            <div class="stat-card stat-indigo">
+              <div class="stat-content">
+                <div class="stat-info">
+                  <p class="stat-label">Tiempo Promedio</p>
+                  <p class="stat-value-small">
+                    {{ estadisticas.tiempoPromedioResolucion || 0 }}h
+                  </p>
+                </div>
+                <i class="pi pi-stopwatch stat-icon"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sin Estadísticas -->
+          <div
+            *ngIf="!cargandoEstadisticas && !estadisticas"
+            class="empty-state"
+          >
+            <i class="pi pi-info-circle empty-icon"></i>
+            <p class="empty-text">No hay estadísticas disponibles</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usuario No Encontrado -->
+      <div *ngIf="!usuario" class="error-state">
+        <i class="pi pi-exclamation-triangle error-icon"></i>
+        <p class="error-text">Usuario no encontrado</p>
+        <button class="btn btn-primary" (click)="volver()">
+          <i class="pi pi-arrow-left"></i>
+          <span>Volver a Usuarios</span>
+        </button>
+      </div>
     </div>
-  </p-card>
+  </div>
 </div>

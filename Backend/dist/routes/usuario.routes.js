@@ -10,6 +10,12 @@ const router = (0, express_1.Router)();
 const usuarioController = new usuario_controller_1.UsuarioController();
 // Todas las rutas requieren autenticación
 router.use(auth_middleware_1.authMiddleware);
+// Obtener usuarios conectados actualmente (Cualquier usuario autenticado)
+router.get("/conectados/lista", usuarioController.obtenerConectados);
+// Cambiar estado de presencia del usuario actual
+router.put("/mi-presencia", usuarioController.cambiarEstadoPresencia);
+// Actualizar última actividad del usuario actual
+router.post("/mi-actividad", usuarioController.actualizarActividad);
 // Obtener todos los usuarios (Admin, Directivo, Líder)
 router.get("/", (0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo", "Líder"), usuarioController.obtenerTodos);
 // Obtener usuarios por área

@@ -1,431 +1,624 @@
-/* ===================================== */
-/* CONTENEDOR PRINCIPAL */
-/* ===================================== */
-.container {
-  max-width: 800px;
+/* ============================================
+   VARIABLES CSS - COLORES INSTITUCIONALES
+   ============================================ */
+:root {
+  --color-yellow: #ffd700;
+  --color-yellow-dark: #ffc700;
+  --color-yellow-light: #ffe44d;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-light: #f5f5f5;
+  --color-gray-medium: #e0e0e0;
+  --color-gray-dark: #333333;
+  --color-success: #28a745;
+  --color-error: #dc3545;
+  --color-info: #17a2b8;
+  --color-warning: #ff9800;
+  --color-green: #4caf50;
 }
 
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.p-4 {
-  padding: 1rem;
-}
-
-/* ===================================== */
-/* CARD */
-/* ===================================== */
-::ng-deep .p-card {
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-::ng-deep .p-card .p-card-body {
-  padding: 2rem;
-}
-
-::ng-deep .p-card .p-card-header {
-  border-bottom: 1px solid var(--surface-border);
-}
-
-/* ===================================== */
-/* UTILITIES */
-/* ===================================== */
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.gap-3 {
-  gap: 0.75rem;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.mt-3 {
-  margin-top: 0.75rem;
-}
-
-.mt-4 {
-  margin-top: 1rem;
-}
-
-.block {
-  display: block;
-}
-
-.w-full {
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.container-editar {
+  max-width: 100%;
   width: 100%;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* ===================================== */
-/* HEADER */
-/* ===================================== */
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-h2 {
   margin: 0;
-  color: var(--text-color);
+  padding: 1rem 2rem;
+  min-height: 100vh;
+  background-color: #fafafa;
 }
 
-/* ===================================== */
-/* SKELETON LOADING */
-/* ===================================== */
-::ng-deep .p-skeleton {
-  border-radius: 8px;
-  background: var(--surface-ground);
+:host-context(.dark-mode) .container-editar {
+  background-color: #121212;
 }
 
-/* ===================================== */
-/* FORMULARIO */
-/* ===================================== */
-.field {
+.content-wrapper {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  animation: fadeInUp 0.4s ease;
+}
+
+/* ============================================
+   CARD PRINCIPAL
+   ============================================ */
+.usuario-card {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid var(--color-gray-medium);
+}
+
+:host-context(.dark-mode) .usuario-card {
+  background-color: #1e1e1e;
+  border-color: #444444;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.card-header {
+  background: linear-gradient(
+    135deg,
+    var(--color-yellow) 0%,
+    var(--color-yellow-dark) 100%
+  );
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.header-title i {
+  font-size: 1.65rem;
+}
+
+/* ============================================
+   CONTENIDO DEL FORMULARIO
+   ============================================ */
+.card-content {
+  padding: 1.5rem 2rem;
+}
+
+/* ============================================
+   GRID DEL FORMULARIO
+   ============================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
-label {
-  color: var(--text-color);
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ============================================
+   LABELS
+   ============================================ */
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-black);
+  letter-spacing: 0.3px;
+}
+
+:host-context(.dark-mode) .field-label {
+  color: var(--color-white);
+}
+
+.field-label i {
   font-size: 0.95rem;
-  font-weight: 500;
 }
 
-.text-red-500 {
-  color: #ef4444;
+.required {
+  color: var(--color-error);
+  font-weight: 700;
+  font-size: 1rem;
 }
 
-:host-context(.dark-theme) .text-red-500 {
-  color: #f87171;
-}
-
-/* Mensajes de error */
-small.text-red-500 {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-}
-
-/* ===================================== */
-/* INPUTS */
-/* ===================================== */
-::ng-deep .p-inputtext {
+/* ============================================
+   INPUTS
+   ============================================ */
+.field-input,
+.field-select {
   width: 100%;
-  border-radius: 8px;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-::ng-deep .p-inputtext:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-::ng-deep .p-inputtext.ng-invalid.ng-touched {
-  border-color: #ef4444;
-}
-
-::ng-deep .p-inputtext.ng-invalid.ng-touched:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-/* ===================================== */
-/* DROPDOWNS */
-/* ===================================== */
-::ng-deep .p-dropdown {
-  width: 100%;
+  border: 2px solid var(--color-gray-medium);
   border-radius: 8px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  transition: all 0.3s ease;
 }
 
-::ng-deep .p-dropdown .p-dropdown-trigger {
-  width: 2.5rem;
+.field-input:focus,
+.field-select:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
 }
 
-::ng-deep .p-dropdown:not(.p-disabled):hover {
-  border-color: var(--primary-color);
+.field-input::placeholder {
+  color: #999999;
 }
 
-::ng-deep .p-dropdown:not(.p-disabled).p-focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+:host-context(.dark-mode) .field-input,
+:host-context(.dark-mode) .field-select {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+  border-color: #555555;
 }
 
-::ng-deep .p-dropdown-panel {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+:host-context(.dark-mode) .field-input:focus,
+:host-context(.dark-mode) .field-select:focus {
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
 }
 
-/* ===================================== */
-/* PASSWORD */
-/* ===================================== */
-.password-section {
-  background: var(--surface-50);
-  padding: 1.5rem;
-  border-radius: 8px;
-  border-left: 4px solid var(--primary-color);
+:host-context(.dark-mode) .field-input::placeholder {
+  color: #888888;
 }
 
-:host-context(.dark-theme) .password-section {
-  background: var(--surface-800);
+/* ============================================
+   SELECT PERSONALIZADO
+   ============================================ */
+.field-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
-::ng-deep .p-password {
-  width: 100%;
+:host-context(.dark-mode) .field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 }
 
-::ng-deep .p-password input {
-  width: 100%;
-  border-radius: 8px;
-  padding: 0.75rem;
+:host-context(.dark-mode) .field-select option {
+  background-color: #2a2a2a;
+  color: var(--color-white);
 }
 
-::ng-deep .p-password-panel {
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* ============================================
+   CHECKBOX PERSONALIZADO
+   ============================================ */
+.checkbox-wrapper {
+  padding: 1rem 0;
 }
 
-::ng-deep .p-password .p-password-meter {
-  margin-top: 0.5rem;
-  height: 6px;
-  border-radius: 3px;
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
 }
 
-/* ===================================== */
-/* CHECKBOX */
-/* ===================================== */
-::ng-deep .p-checkbox {
-  width: 1.25rem;
-  height: 1.25rem;
+.custom-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
-::ng-deep .p-checkbox .p-checkbox-box {
-  width: 1.25rem;
-  height: 1.25rem;
+.checkbox-mark {
+  position: relative;
+  height: 22px;
+  width: 22px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-gray-dark);
   border-radius: 6px;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
-::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
-  border-color: var(--primary-color);
+:host-context(.dark-mode) .checkbox-mark {
+  background-color: #2a2a2a;
+  border-color: #cccccc;
 }
 
-::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.custom-checkbox input:checked ~ .checkbox-mark {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow-dark);
 }
 
-/* ===================================== */
-/* INPUT SWITCH */
-/* ===================================== */
-::ng-deep .p-inputswitch {
-  width: 3rem;
-  height: 1.75rem;
+.custom-checkbox input:checked ~ .checkbox-mark::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--color-black);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
 
-::ng-deep .p-inputswitch .p-inputswitch-slider {
-  border-radius: 1rem;
-  transition: all 0.2s;
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-black);
 }
 
-::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-  background: #22c55e;
+:host-context(.dark-mode) .checkbox-label {
+  color: var(--color-white);
 }
 
-.text-green-600 {
-  color: #16a34a;
+.checkbox-label i {
+  font-size: 1rem;
+}
+
+/* ============================================
+   SECCIÓN DE CONTRASEÑAS
+   ============================================ */
+.password-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  background-color: #fff9e6;
+  border-radius: 10px;
+  border-left: 4px solid var(--color-warning);
+  animation: slideDown 0.3s ease;
+}
+
+:host-context(.dark-mode) .password-section {
+  background-color: #332b00;
+  border-left-color: #ffb84d;
+}
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper .field-input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666666;
+  font-size: 1.125rem;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: var(--color-yellow-dark);
+}
+
+:host-context(.dark-mode) .password-toggle {
+  color: #cccccc;
+}
+
+:host-context(.dark-mode) .password-toggle:hover {
+  color: var(--color-yellow);
+}
+
+/* ============================================
+   SWITCH PERSONALIZADO
+   ============================================ */
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 28px;
+}
+
+.custom-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cccccc;
+  border-radius: 28px;
+  transition: all 0.4s ease;
+}
+
+:host-context(.dark-mode) .switch-slider {
+  background-color: #555555;
+}
+
+.switch-slider::before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.custom-switch input:checked + .switch-slider {
+  background-color: var(--color-yellow);
+}
+
+:host-context(.dark-mode) .custom-switch input:checked + .switch-slider {
+  background-color: var(--color-yellow-dark);
+}
+
+.custom-switch input:checked + .switch-slider::before {
+  transform: translateX(26px);
+  background-color: var(--color-black);
+}
+
+:host-context(.dark-mode)
+  .custom-switch
+  input:checked
+  + .switch-slider::before {
+  background-color: var(--color-black);
+}
+
+.status-active {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-success);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.status-inactive {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-error);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.status-active i,
+.status-inactive i {
+  font-size: 1.125rem;
+}
+
+/* ============================================
+   ERRORES DE VALIDACIÓN
+   ============================================ */
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-error);
+  font-size: 0.85rem;
   font-weight: 600;
+  margin-top: 0.25rem;
 }
 
-:host-context(.dark-theme) .text-green-600 {
-  color: #4ade80;
+.field-error i {
+  font-size: 0.9rem;
 }
 
-:host-context(.dark-theme) .text-red-600 {
-  color: #f87171;
+/* ============================================
+   BOTONES
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
-/* ===================================== */
-/* BOTONES */
-/* ===================================== */
-.form-actions {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--surface-border);
-}
-
-::ng-deep .p-button {
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-::ng-deep .p-button:hover {
+.btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
-::ng-deep .p-button:active {
-  transform: translateY(0);
+.btn:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
-::ng-deep .p-button.p-button-text {
-  padding: 0.5rem 1rem;
-}
-
-::ng-deep .p-button.p-button-text:hover {
-  background: var(--surface-hover);
-  transform: none;
-  box-shadow: none;
-}
-
-::ng-deep .p-button[severity="secondary"] {
-  background: var(--surface-200);
-  border-color: var(--surface-200);
-  color: var(--text-color);
-}
-
-::ng-deep .p-button[severity="secondary"]:hover {
-  background: var(--surface-300);
-  border-color: var(--surface-300);
-}
-
-:host-context(.dark-theme) ::ng-deep .p-button[severity="secondary"] {
-  background: var(--surface-700);
-  border-color: var(--surface-700);
-}
-
-:host-context(.dark-theme) ::ng-deep .p-button[severity="secondary"]:hover {
-  background: var(--surface-600);
-  border-color: var(--surface-600);
-}
-
-::ng-deep .p-button:disabled {
+.btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-::ng-deep .p-button .p-button-icon {
-  margin-right: 0.5rem;
+.btn i {
+  font-size: 1rem;
 }
 
-/* ===================================== */
-/* RESPONSIVE */
-/* ===================================== */
-@media (max-width: 768px) {
-  .container {
-    padding: 0.5rem;
-  }
+/* ============================================
+   BOTÓN VOLVER (EN HEADER)
+   ============================================ */
+.btn-back {
+  background-color: var(--color-black);
+  color: var(--color-yellow);
+  border: 2px solid var(--color-black);
+  position: relative;
+  z-index: 2;
+}
 
-  ::ng-deep .p-card .p-card-body {
-    padding: 1rem;
-  }
+.btn-back:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--color-yellow-light);
+  border-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
 
-  .text-2xl {
-    font-size: 1.25rem;
-  }
+/* ============================================
+   BOTÓN CANCELAR
+   ============================================ */
+.btn-cancel {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+}
 
-  .field {
-    margin-bottom: 1rem;
-  }
+.btn-cancel:hover:not(:disabled) {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
 
-  .password-section {
-    padding: 1rem;
-  }
+:host-context(.dark-mode) .btn-cancel {
+  background-color: #2a2a2a;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
 
-  .form-actions {
-    flex-direction: column;
-  }
+:host-context(.dark-mode) .btn-cancel:hover:not(:disabled) {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-white);
+}
 
-  .form-actions .gap-2 {
-    gap: 0.75rem;
-  }
+/* ============================================
+   BOTÓN GUARDAR
+   ============================================ */
+.btn-save {
+  background: linear-gradient(
+    135deg,
+    var(--color-yellow) 0%,
+    var(--color-yellow-dark) 100%
+  );
+  color: var(--color-black);
+  border: 2px solid var(--color-yellow-dark);
+  min-width: 180px;
+}
 
-  ::ng-deep .p-button {
-    width: 100%;
-    justify-content: center;
+.btn-save::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-save:hover:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-save:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Spinner personalizado */
+.pi-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
-@media (max-width: 576px) {
-  .container {
-    padding: 0.25rem;
-  }
-
-  ::ng-deep .p-card .p-card-body {
-    padding: 0.75rem;
-  }
-
-  label {
-    font-size: 0.875rem;
-  }
-
-  ::ng-deep .p-inputtext,
-  ::ng-deep .p-password input {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .flex.justify-between {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .flex.justify-between h2 {
-    font-size: 1.125rem;
-  }
-
-  ::ng-deep .p-button.p-button-text {
-    padding: 0.5rem;
-  }
+/* ============================================
+   FOOTER DE ACCIONES
+   ============================================ */
+.actions-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--color-gray-medium);
 }
 
-/* ===================================== */
-/* ANIMACIONES */
-/* ===================================== */
-@keyframes fadeIn {
+:host-context(.dark-mode) .actions-footer {
+  border-top-color: #444444;
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -433,365 +626,150 @@ small.text-red-500 {
   }
 }
 
-.container {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 @keyframes slideDown {
   from {
     opacity: 0;
     max-height: 0;
-    overflow: hidden;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
     max-height: 500px;
+    transform: translateY(0);
   }
 }
 
-.password-section {
-  animation: slideDown 0.3s ease-in-out;
-}
-
-/* ===================================== */
-/* ESTADOS DE VALIDACIÓN */
-/* ===================================== */
-::ng-deep .ng-invalid.ng-touched .p-inputtext,
-::ng-deep .ng-invalid.ng-touched .p-dropdown,
-::ng-deep .ng-invalid.ng-touched .p-password input {
-  border-color: #ef4444;
-  animation: shake 0.3s;
-}
-
-@keyframes shake {
+@keyframes pulse {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
   }
-  25% {
-    transform: translateX(-5px);
-  }
-  75% {
-    transform: translateX(5px);
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.5;
   }
 }
 
-/* ===================================== */
-/* ACCESIBILIDAD */
-/* ===================================== */
-*:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-label {
-  user-select: none;
-}
-
-/* Mejorar contraste en modo oscuro */
-:host-context(.dark-theme) label {
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) small {
-  color: var(--text-color-secondary);
-}
-
-/* ===================================== */
-/* MEJORAS VISUALES */
-/* ===================================== */
-::ng-deep .p-card .p-card-header .flex {
-  padding: 1.5rem;
-}
-
-.field:last-of-type {
-  margin-bottom: 0;
-}
-
-/* Separador visual antes de los botones */
-.form-actions::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 1px;
-  background: var(--surface-border);
-  margin-bottom: 1.5rem;
-}
-
-/* Hover suave en labels con checkbox */
-.flex.items-center label:hover {
-  color: var(--primary-color);
-  transition: color 0.2s;
-}
-
-/* ===================================== */
-/* LOADING STATES */
-/* ===================================== */
-::ng-deep .p-button .p-button-loading-icon {
-  margin-right: 0.5rem;
-}
-
-form:has(.p-button[loading="true"]) {
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-/* ===================================== */
-/* TOOLTIPS Y HINTS */
-/* ===================================== */
-::ng-deep .p-tooltip {
-  border-radius: 6px;
-  font-size: 0.875rem;
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-::ng-deep .p-tooltip .p-tooltip-text {
-  padding: 0;
-}
-
-/* ===================================== */
-/* FOCUS STATES MEJORADOS */
-/* ===================================== */
-::ng-deep .p-inputtext:focus,
-::ng-deep .p-password input:focus,
-::ng-deep .p-dropdown:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  outline: none;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-inputtext:focus,
-:host-context(.dark-theme) ::ng-deep .p-password input:focus,
-:host-context(.dark-theme) ::ng-deep .p-dropdown:focus {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
-}
-
-/* ===================================== */
-/* PLACEHOLDER */
-/* ===================================== */
-::ng-deep .p-inputtext::placeholder,
-::ng-deep .p-password input::placeholder {
-  color: var(--text-color-secondary);
-  opacity: 0.6;
-}
-
-/* ===================================== */
-/* ESTADOS DISABLED */
-/* ===================================== */
-::ng-deep .p-inputtext:disabled,
-::ng-deep .p-password input:disabled,
-::ng-deep .p-dropdown.p-disabled {
-  background: var(--surface-100);
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-:host-context(.dark-theme) ::ng-deep .p-inputtext:disabled,
-:host-context(.dark-theme) ::ng-deep .p-password input:disabled,
-:host-context(.dark-theme) ::ng-deep .p-dropdown.p-disabled {
-  background: var(--surface-800);
-}
-
-/* ===================================== */
-/* TRANSICIONES SUAVES */
-/* ===================================== */
-::ng-deep .p-inputtext,
-::ng-deep .p-password input,
-::ng-deep .p-dropdown,
-::ng-deep .p-button,
-::ng-deep .p-checkbox .p-checkbox-box,
-::ng-deep .p-inputswitch .p-inputswitch-slider {
-  transition: all 0.2s ease-in-out;
-}
-
-/* ===================================== */
-/* MEJORAS DE CONTRASTE */
-/* ===================================== */
-:host-context(.dark-theme) .text-red-600 {
-  color: #f87171;
-}
-
-:host-context(.dark-theme) .text-green-600 {
-  color: #4ade80;
-}
-
-:host-context(.dark-theme) small.text-red-500 {
-  color: #fca5a5;
-}
-
-/* ===================================== */
-/* RESPONSIVE UTILITIES ADICIONALES */
-/* ===================================== */
-@media (max-width: 480px) {
-  .container {
-    max-width: 100%;
+/* ============================================
+   RESPONSIVE - TABLET
+   ============================================ */
+@media (max-width: 1024px) {
+  .container-editar {
+    padding: 1rem 1.5rem;
   }
 
-  ::ng-deep .p-card {
-    border-radius: 0;
-    box-shadow: none;
+  .card-content {
+    padding: 1.25rem 1.5rem;
   }
 
   .password-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .container-editar {
     padding: 0.75rem;
   }
 
-  ::ng-deep .p-dropdown .p-dropdown-label {
-    font-size: 0.875rem;
+  .card-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  ::ng-deep .p-button {
-    font-size: 0.875rem;
-    padding: 0.625rem 1.25rem;
+  .header-title {
+    font-size: 1.25rem;
   }
 
-  h2 {
-    font-size: 1rem;
-  }
-}
-
-/* ===================================== */
-/* PRINT STYLES */
-/* ===================================== */
-@media print {
-  .form-actions,
-  ::ng-deep .p-button,
-  ::ng-deep .p-inputswitch {
-    display: none;
+  .btn-back {
+    width: 100%;
   }
 
-  ::ng-deep .p-card {
-    box-shadow: none;
-    border: 1px solid #ddd;
+  .card-content {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .password-section {
-    display: none;
+    grid-template-columns: 1fr;
+    padding: 1rem;
   }
 
-  ::ng-deep .p-inputtext,
-  ::ng-deep .p-dropdown {
-    border: 1px solid #333;
-  }
-}
-
-/* ===================================== */
-/* ESTILOS ADICIONALES PARA DROPDOWNS */
-/* ===================================== */
-::ng-deep .p-dropdown-panel .p-dropdown-items {
-  padding: 0.5rem 0;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item {
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  margin: 0.25rem 0.5rem;
-  transition: background-color 0.2s;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item:hover {
-  background: var(--surface-hover);
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background: var(--primary-color);
-  color: var(--primary-color-text);
-}
-
-/* ===================================== */
-/* MEJORAS PARA CHECKBOX */
-/* ===================================== */
-::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
-  color: white;
-}
-
-/* ===================================== */
-/* SKELETON ESPECÍFICO */
-/* ===================================== */
-::ng-deep .p-skeleton.p-skeleton-text {
-  height: 1.5rem;
-}
-
-/* ===================================== */
-/* ESPACIADO PARA LABELS CON ASTERISCO */
-/* ===================================== */
-label .text-red-500 {
-  font-size: 1.1em;
-  margin-left: 0.125rem;
-}
-
-/* ===================================== */
-/* HOVER EN CAMPOS DE FORMULARIO */
-/* ===================================== */
-::ng-deep .p-inputtext:not(:disabled):hover,
-::ng-deep .p-password input:not(:disabled):hover {
-  border-color: var(--primary-color);
-}
-
-/* ===================================== */
-/* OPTIMIZACIÓN PARA TOUCH DEVICES */
-/* ===================================== */
-@media (hover: none) and (pointer: coarse) {
-  ::ng-deep .p-button {
-    padding: 0.875rem 1.5rem;
+  .actions-footer {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
-  ::ng-deep .p-inputtext,
-  ::ng-deep .p-password input {
-    padding: 0.875rem;
-    font-size: 16px; /* Previene zoom en iOS */
-  }
-
-  ::ng-deep .p-dropdown {
-    min-height: 3rem;
-  }
-
-  ::ng-deep .p-checkbox .p-checkbox-box {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  ::ng-deep .p-inputswitch {
-    width: 3.5rem;
-    height: 2rem;
+  .btn {
+    width: 100%;
   }
 }
 
-/* ===================================== */
-/* ESTADOS HOVER PARA BOTONES */
-/* ===================================== */
-::ng-deep .p-button:not(:disabled):hover {
-  background: var(--primary-600);
-  border-color: var(--primary-600);
+/* ============================================
+   RESPONSIVE - EXTRA SMALL
+   ============================================ */
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1.125rem;
+  }
+
+  .field-label {
+    font-size: 0.85rem;
+  }
+
+  .field-input,
+  .field-select {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
 }
 
-::ng-deep .p-button[severity="secondary"]:not(:disabled):hover {
-  background: var(--surface-300);
-  border-color: var(--surface-300);
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+.btn:focus-visible,
+.field-input:focus-visible,
+.field-select:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
 }
 
-:host-context(.dark-theme)
-  ::ng-deep
-  .p-button[severity="secondary"]:not(:disabled):hover {
-  background: var(--surface-600);
-  border-color: var(--surface-600);
-}
-
-/* ===================================== */
-/* REDUCCIÓN DE MOVIMIENTO */
-/* ===================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
-  ::ng-deep * {
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+@media print {
+  .card-header .btn-back,
+  .actions-footer {
+    display: none;
+  }
+
+  .usuario-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .card-header {
+    background: #ffd700 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

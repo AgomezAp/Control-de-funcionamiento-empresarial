@@ -29,6 +29,7 @@ import { AreaEnum } from '../../../../core/models/area.model';
 
 // Constants
 import { MENSAJES } from '../../../../core/constants/mensajes.constants';
+import { LoaderComponent } from '../../../../shared/components/loader/loader/loader.component';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -44,6 +45,7 @@ import { MENSAJES } from '../../../../core/constants/mensajes.constants';
     SkeletonModule,
     PasswordModule,
     CheckboxModule,
+    LoaderComponent
   ],
   templateUrl: './editar-usuario.component.html',
   styleUrls: ['./editar-usuario.component.css'],
@@ -54,6 +56,9 @@ export class EditarUsuarioComponent implements OnInit {
   private notificacionService = inject(NotificacionService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   usuarioForm!: FormGroup;
   usuarioId!: number;

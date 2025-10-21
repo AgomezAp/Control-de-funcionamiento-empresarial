@@ -63,6 +63,7 @@
           <th>Área</th>
           <th>Rol</th>
           <th>Estado</th>
+          <th>Conexión</th>
           <th>Acciones</th>
         </tr>
       </ng-template>
@@ -83,6 +84,24 @@
               [value]="usuario.status ? 'Activo' : 'Inactivo'" 
               [severity]="usuario.status ? 'success' : 'danger'"
             ></p-tag>
+          </td>
+          <td>
+            <div class="flex align-items-center gap-2">
+              <span 
+                [pTooltip]="getTooltipEstadoPresencia(usuario)"
+                tooltipPosition="top"
+              >
+                <i 
+                  class="pi" 
+                  [ngClass]="getEstadoPresenciaConfig(usuario).icon"
+                  [style.color]="getColorEstadoPresencia(usuario)"
+                  [style.font-size]="'0.8rem'"
+                ></i>
+              </span>
+              <span class="text-sm">
+                {{ getLabelEstadoPresencia(usuario) }}
+              </span>
+            </div>
           </td>
           <td>
             <div class="flex gap-2">

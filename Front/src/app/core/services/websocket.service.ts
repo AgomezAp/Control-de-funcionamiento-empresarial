@@ -22,6 +22,8 @@ export class WebsocketService {
   private usuarioEscribiendo$ = new Subject<any>();
   private nuevaNotificacion$ = new Subject<any>();
   private contadorNotificaciones$ = new Subject<number>();
+  private usuariosConectados$ = new Subject<number[]>(); // Lista de IDs de usuarios conectados
+  private cambioEstadoPresencia$ = new Subject<any>(); // Cambio de estado de presencia
 
   constructor(private authService: AuthService) {}
 
@@ -115,6 +117,18 @@ export class WebsocketService {
       console.log('🔔 Contador de notificaciones actualizado:', count);
       this.contadorNotificaciones$.next(count);
     });
+
+    // Evento de usuarios conectados
+    this.socket.on('usuariosConectados', (data: { usuarios: number[], total: number }) => {
+      console.log('👥 Usuarios conectados actualizados:', data.total, 'usuarios');
+      this.usuariosConectados$.next(data.usuarios);
+    });
+
+    // Evento de cambio de estado de presencia
+    this.socket.on('cambioEstadoPresencia', (data: { userId: number, estadoPresencia: string }) => {
+      console.log('🔄 Cambio de estado de presencia:', data);
+      this.cambioEstadoPresencia$.next(data);
+    });
   }
 
   // Emitir eventos al servidor
@@ -188,6 +202,16 @@ export class WebsocketService {
 
   onContadorNotificaciones(): Observable<number> {
     return this.contadorNotificaciones$.asObservable();
+  }
+
+  // Observable para usuarios conectados
+  onUsuariosConectados(): Observable<number[]> {
+    return this.usuariosConectados$.asObservable();
+  }
+
+  // Observable para cambios de estado de presencia
+  onCambioEstadoPresencia(): Observable<any> {
+    return this.cambioEstadoPresencia$.asObservable();
   }
 
   // Verificar si está conectado

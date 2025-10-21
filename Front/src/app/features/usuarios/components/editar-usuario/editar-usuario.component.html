@@ -1,213 +1,259 @@
-<div class="container mx-auto p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex justify-between items-center p-4">
-        <h2 class="text-2xl font-bold">
-          {{ cargando ? "Cargando..." : "Editar Usuario" }}
+<div class="container-editar">
+  <app-loader *ngIf="cargando"></app-loader>
+
+  <div *ngIf="!cargando" class="content-wrapper">
+    <div class="usuario-card">
+      <!-- Header -->
+      <div class="card-header">
+        <h2 class="header-title">
+          <i class="pi pi-user-edit" style="color: #4caf50"></i>
+          <span>Editar Usuario</span>
         </h2>
-        <p-button
-          icon="pi pi-arrow-left"
-          label="Volver"
-          [text]="true"
-          (onClick)="volver()"
-        />
-      </div>
-    </ng-template>
-
-    <!-- Skeleton mientras carga -->
-    <div *ngIf="cargando" class="flex flex-col gap-4">
-      <p-skeleton height="3rem" />
-      <p-skeleton height="3rem" />
-      <p-skeleton height="3rem" />
-    </div>
-
-    <!-- Formulario -->
-    <form
-      *ngIf="!cargando && usuarioForm"
-      [formGroup]="usuarioForm"
-      (ngSubmit)="onSubmit()"
-      class="flex flex-col gap-4"
-    >
-      <!-- Nombre Completo -->
-      <div class="field">
-        <label for="nombre" class="block mb-2 font-semibold">
-          Nombre Completo <span class="text-red-500">*</span>
-        </label>
-        <input
-          pInputText
-          id="nombre"
-          formControlName="nombre_completo"
-          class="w-full"
-          placeholder="Ingrese el nombre completo"
-        />
-        <small
-          *ngIf="
-            usuarioForm.get('nombre_completo')?.invalid &&
-            usuarioForm.get('nombre_completo')?.touched
-          "
-          class="text-red-500"
-        >
-          El nombre es requerido (mínimo 3 caracteres)
-        </small>
+        <button class="btn btn-back" type="button" (click)="volver()">
+          <i class="pi pi-arrow-left"></i>
+          <span>Volver</span>
+        </button>
       </div>
 
-      <!-- Correo Electrónico -->
-      <div class="field">
-        <label for="correo" class="block mb-2 font-semibold">
-          Correo Electrónico <span class="text-red-500">*</span>
-        </label>
-        <input
-          pInputText
-          id="correo"
-          type="email"
-          formControlName="correo"
-          class="w-full"
-          placeholder="usuario@ejemplo.com"
-        />
-        <small
-          *ngIf="
-            usuarioForm.get('correo')?.invalid &&
-            usuarioForm.get('correo')?.touched
-          "
-          class="text-red-500"
-        >
-          Ingrese un correo válido
-        </small>
-      </div>
-
-      <!-- Cambiar Contraseña -->
-      <div class="field">
-        <div class="flex items-center gap-2 mb-2">
-          <p-checkbox
-            formControlName="cambiar_contrasena"
-            [binary]="true"
-            inputId="cambiarPass"
-          />
-          <label for="cambiarPass" class="font-semibold cursor-pointer">
-            Cambiar Contraseña
-          </label>
-        </div>
-
-        <div
-          *ngIf="usuarioForm.get('cambiar_contrasena')?.value"
-          class="flex flex-col gap-3 mt-3 password-section"
-        >
-          <div>
-            <label for="nueva_contrasena" class="block mb-2"
-              >Nueva Contraseña</label
-            >
-            <p-password
-              id="nueva_contrasena"
-              formControlName="nueva_contrasena"
-              [toggleMask]="true"
-              [feedback]="true"
-              placeholder="Nueva contraseña"
-              [style]="{ width: '100%' }"
-              [inputStyle]="{ width: '100%' }"
+      <!-- Formulario -->
+      <form
+        *ngIf="usuarioForm"
+        [formGroup]="usuarioForm"
+        (ngSubmit)="onSubmit()"
+        class="card-content"
+      >
+        <div class="form-grid">
+          <!-- Nombre Completo -->
+          <div class="form-field full-width">
+            <label for="nombre" class="field-label">
+              <i class="pi pi-user" style="color: #ffd700"></i>
+              Nombre Completo
+              <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              formControlName="nombre_completo"
+              class="field-input"
+              placeholder="Ingrese el nombre completo"
             />
             <small
               *ngIf="
-                usuarioForm.get('nueva_contrasena')?.invalid &&
-                usuarioForm.get('nueva_contrasena')?.touched
+                usuarioForm.get('nombre_completo')?.invalid &&
+                usuarioForm.get('nombre_completo')?.touched
               "
-              class="text-red-500"
+              class="field-error"
             >
-              La contraseña debe tener al menos 6 caracteres
+              <i class="pi pi-exclamation-circle"></i>
+              El nombre es requerido (mínimo 3 caracteres)
             </small>
           </div>
 
-          <div>
-            <label for="confirmar_nueva" class="block mb-2"
-              >Confirmar Nueva Contraseña</label
-            >
-            <p-password
-              id="confirmar_nueva"
-              formControlName="confirmar_nueva_contrasena"
-              [toggleMask]="true"
-              [feedback]="false"
-              placeholder="Confirme la contraseña"
-              [style]="{ width: '100%' }"
-              [inputStyle]="{ width: '100%' }"
+          <!-- Correo Electrónico -->
+          <div class="form-field full-width">
+            <label for="correo" class="field-label">
+              <i class="pi pi-envelope" style="color: #2196f3"></i>
+              Correo Electrónico
+              <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="correo"
+              formControlName="correo"
+              class="field-input"
+              placeholder="usuario@ejemplo.com"
             />
             <small
               *ngIf="
-                usuarioForm.get('confirmar_nueva_contrasena')?.invalid &&
-                usuarioForm.get('confirmar_nueva_contrasena')?.touched
+                usuarioForm.get('correo')?.invalid &&
+                usuarioForm.get('correo')?.touched
               "
-              class="text-red-500"
+              class="field-error"
             >
-              Las contraseñas no coinciden
+              <i class="pi pi-exclamation-circle"></i>
+              Ingrese un correo válido
             </small>
           </div>
+
+          <!-- Cambiar Contraseña -->
+          <div class="form-field full-width">
+            <div class="checkbox-wrapper">
+              <label class="custom-checkbox">
+                <input
+                  type="checkbox"
+                  formControlName="cambiar_contrasena"
+                  id="cambiarPass"
+                />
+                <span class="checkbox-mark"></span>
+                <span class="checkbox-label">
+                  <i class="pi pi-lock" style="color: #ff9800"></i>
+                  Cambiar Contraseña
+                </span>
+              </label>
+            </div>
+
+            <div
+              *ngIf="usuarioForm.get('cambiar_contrasena')?.value"
+              class="password-section"
+            >
+              <div class="form-field">
+                <label for="nueva_contrasena" class="field-label">
+                  Nueva Contraseña
+                </label>
+                <div class="password-input-wrapper">
+                  <input
+                    [type]="showNewPassword ? 'text' : 'password'"
+                    id="nueva_contrasena"
+                    formControlName="nueva_contrasena"
+                    class="field-input"
+                    placeholder="Nueva contraseña"
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    (click)="showNewPassword = !showNewPassword"
+                  >
+                    <i
+                      [class]="
+                        showNewPassword ? 'pi pi-eye-slash' : 'pi pi-eye'
+                      "
+                    ></i>
+                  </button>
+                </div>
+                <small
+                  *ngIf="
+                    usuarioForm.get('nueva_contrasena')?.invalid &&
+                    usuarioForm.get('nueva_contrasena')?.touched
+                  "
+                  class="field-error"
+                >
+                  <i class="pi pi-exclamation-circle"></i>
+                  La contraseña debe tener al menos 6 caracteres
+                </small>
+              </div>
+
+              <div class="form-field">
+                <label for="confirmar_nueva" class="field-label">
+                  Confirmar Nueva Contraseña
+                </label>
+                <div class="password-input-wrapper">
+                  <input
+                    [type]="showConfirmPassword ? 'text' : 'password'"
+                    id="confirmar_nueva"
+                    formControlName="confirmar_nueva_contrasena"
+                    class="field-input"
+                    placeholder="Confirme la contraseña"
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    (click)="showConfirmPassword = !showConfirmPassword"
+                  >
+                    <i
+                      [class]="
+                        showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'
+                      "
+                    ></i>
+                  </button>
+                </div>
+                <small
+                  *ngIf="
+                    usuarioForm.get('confirmar_nueva_contrasena')?.invalid &&
+                    usuarioForm.get('confirmar_nueva_contrasena')?.touched
+                  "
+                  class="field-error"
+                >
+                  <i class="pi pi-exclamation-circle"></i>
+                  Las contraseñas no coinciden
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rol -->
+          <div class="form-field">
+            <label for="rol" class="field-label">
+              <i class="pi pi-shield" style="color: #9c27b0"></i>
+              Rol
+              <span class="required">*</span>
+            </label>
+            <select id="rol" formControlName="rol_id" class="field-select">
+              <option value="" disabled>Seleccione un rol</option>
+              <option *ngFor="let rol of roles" [value]="rol.value">
+                {{ rol.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Área -->
+          <div class="form-field">
+            <label for="area" class="field-label">
+              <i class="pi pi-building" style="color: #00bcd4"></i>
+              Área
+              <span class="required">*</span>
+            </label>
+            <select id="area" formControlName="area_id" class="field-select">
+              <option value="" disabled>Seleccione un área</option>
+              <option *ngFor="let area of areas" [value]="area.value">
+                {{ area.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Estado -->
+          <div class="form-field full-width">
+            <label for="status" class="field-label">
+              <i class="pi pi-check-circle" style="color: #4caf50"></i>
+              Estado
+            </label>
+            <div class="switch-wrapper">
+              <label class="custom-switch">
+                <input type="checkbox" id="status" formControlName="status" />
+                <span class="switch-slider"></span>
+              </label>
+              <span
+                [class]="
+                  usuarioForm.get('status')?.value
+                    ? 'status-active'
+                    : 'status-inactive'
+                "
+              >
+                <i
+                  [class]="
+                    usuarioForm.get('status')?.value
+                      ? 'pi pi-check-circle'
+                      : 'pi pi-times-circle'
+                  "
+                ></i>
+                {{ usuarioForm.get("status")?.value ? "Activo" : "Inactivo" }}
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Rol -->
-      <div class="field">
-        <label for="rol" class="block mb-2 font-semibold">
-          Rol <span class="text-red-500">*</span>
-        </label>
-        <p-dropdown
-          id="rol"
-          formControlName="rol_id"
-          [options]="roles"
-          placeholder="Seleccione un rol"
-          optionLabel="label"
-          optionValue="value"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Área -->
-      <div class="field">
-        <label for="area" class="block mb-2 font-semibold">
-          Área <span class="text-red-500">*</span>
-        </label>
-        <p-dropdown
-          id="area"
-          formControlName="area_id"
-          [options]="areas"
-          placeholder="Seleccione un área"
-          optionLabel="label"
-          optionValue="value"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Estado (Solo Admin) -->
-      <div class="field">
-        <label for="status" class="block mb-2 font-semibold">Estado</label>
-        <div class="flex items-center gap-2">
-          <p-inputSwitch id="status" formControlName="status" />
-          <span
-            [class]="
-              usuarioForm.get('status')?.value
-                ? 'text-green-600'
-                : 'text-red-600'
-            "
+        <!-- Botones de acción -->
+        <div class="actions-footer">
+          <button
+            class="btn btn-cancel"
+            type="button"
+            (click)="volver()"
+            [disabled]="guardando"
           >
-            {{ usuarioForm.get("status")?.value ? "Activo" : "Inactivo" }}
-          </span>
-        </div>
-      </div>
+            <i class="pi pi-times"></i>
+            <span>Cancelar</span>
+          </button>
 
-      <!-- Botones -->
-      <div class="flex justify-end gap-2 mt-4 form-actions">
-        <p-button
-          label="Cancelar"
-          severity="secondary"
-          [outlined]="true"
-          (onClick)="volver()"
-          type="button"
-        />
-        <p-button
-          label="Guardar Cambios"
-          icon="pi pi-save"
-          [disabled]="usuarioForm.invalid || guardando"
-          [loading]="guardando"
-          type="submit"
-        />
-      </div>
-    </form>
-  </p-card>
+          <button
+            class="btn btn-save"
+            type="submit"
+            [disabled]="usuarioForm.invalid || guardando"
+          >
+            <i class="pi pi-save" *ngIf="!guardando"></i>
+            <i class="pi pi-spin pi-spinner" *ngIf="guardando"></i>
+            <span>{{ guardando ? "Guardando..." : "Guardar Cambios" }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsuarioController = void 0;
 const usuario_service_1 = require("../services/usuario.service");
 const response_util_1 = require("../utils/response.util");
+const webSocket_service_1 = require("../services/webSocket.service");
 const usuarioService = new usuario_service_1.UsuarioService();
 class UsuarioController {
     obtenerTodos(req, res) {
@@ -71,6 +72,68 @@ class UsuarioController {
             }
             catch (error) {
                 return response_util_1.ApiResponse.error(res, error.message || "Error al obtener usuarios por área", error.statusCode || 500);
+            }
+        });
+    }
+    /**
+     * Obtener IDs de usuarios conectados actualmente
+     */
+    obtenerConectados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const usuariosConectadosIds = webSocket_service_1.webSocketService.getConnectedUsers();
+                return response_util_1.ApiResponse.success(res, {
+                    usuarios: usuariosConectadosIds,
+                    total: usuariosConectadosIds.length,
+                    timestamp: new Date(),
+                }, "Usuarios conectados obtenidos exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al obtener usuarios conectados", error.statusCode || 500);
+            }
+        });
+    }
+    /**
+     * Cambiar estado de presencia del usuario actual
+     */
+    cambiarEstadoPresencia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!req.usuario) {
+                    return response_util_1.ApiResponse.error(res, "Usuario no autenticado", 401);
+                }
+                const { estadoPresencia } = req.body;
+                if (!estadoPresencia) {
+                    return response_util_1.ApiResponse.error(res, "El estado de presencia es requerido", 400);
+                }
+                const usuario = yield usuarioService.cambiarEstadoPresencia(req.usuario.uid, estadoPresencia, req.usuario);
+                // Emitir evento de cambio de estado vía WebSocket
+                webSocket_service_1.webSocketService.emit("cambioEstadoPresencia", {
+                    userId: req.usuario.uid,
+                    estadoPresencia,
+                    timestamp: new Date(),
+                });
+                return response_util_1.ApiResponse.success(res, usuario, `Estado de presencia cambiado a ${estadoPresencia}`);
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al cambiar estado de presencia", error.statusCode || 500);
+            }
+        });
+    }
+    /**
+     * Actualizar última actividad del usuario actual
+     */
+    actualizarActividad(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!req.usuario) {
+                    return response_util_1.ApiResponse.error(res, "Usuario no autenticado", 401);
+                }
+                yield usuarioService.actualizarActividad(req.usuario.uid);
+                return response_util_1.ApiResponse.success(res, null, "Actividad actualizada");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al actualizar actividad", error.statusCode || 500);
             }
         });
     }

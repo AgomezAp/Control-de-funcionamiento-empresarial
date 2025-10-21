@@ -1,11 +1,14 @@
 import { Area } from "./area.model";
 import { Role } from "./role.model";
+import { EstadoPresencia } from "./estado-presencia.model";
 
 export interface Usuario {
   uid: number;
   nombre_completo: string;
   correo: string;
   status: boolean;
+  estado_presencia: EstadoPresencia;
+  ultima_actividad: Date;
   rol_id: number;
   area_id: number;
   fecha_creacion: Date;

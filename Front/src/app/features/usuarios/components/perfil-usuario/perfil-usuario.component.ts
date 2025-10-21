@@ -21,6 +21,7 @@ import { Usuario } from '../../../../core/models/usuario.model';
 
 // Pipes
 import { TimeAgoPipe } from '../../../../shared/pipes/time-ago.pipe';
+import { LoaderComponent } from '../../../../shared/components/loader/loader/loader.component';
 
 @Component({
   selector: 'app-perfil-usuario',
@@ -33,6 +34,7 @@ import { TimeAgoPipe } from '../../../../shared/pipes/time-ago.pipe';
     DividerModule,
     SkeletonModule,
     TabViewModule,
+    LoaderComponent,
     TimeAgoPipe,
   ],
   templateUrl: './perfil-usuario.component.html',

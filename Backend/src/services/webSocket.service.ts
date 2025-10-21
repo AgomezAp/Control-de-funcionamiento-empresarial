@@ -88,6 +88,9 @@ class WebSocketService {
           email: socket.userEmail,
           timestamp: new Date(),
         });
+
+        // Emitir lista actualizada de usuarios conectados a todos
+        this.broadcastConnectedUsers();
       }
 
       // JOIN ROOM - Unirse a una sala
@@ -132,6 +135,9 @@ class WebSocketService {
             email: socket.userEmail,
             timestamp: new Date(),
           });
+
+          // Emitir lista actualizada de usuarios conectados a todos
+          this.broadcastConnectedUsers();
         }
       });
     });
@@ -254,6 +260,19 @@ class WebSocketService {
    */
   public isUserConnected(userId: number): boolean {
     return this.connectedUsers.has(userId);
+  }
+
+  /**
+   * Broadcast de lista de usuarios conectados a todos los clientes
+   */
+  private broadcastConnectedUsers(): void {
+    const connectedUserIds = this.getConnectedUsers();
+    this.emit('usuariosConectados', {
+      usuarios: connectedUserIds,
+      total: connectedUserIds.length,
+      timestamp: new Date(),
+    });
+    console.log(`📡 Lista de usuarios conectados emitida: ${connectedUserIds.length} usuarios`);
   }
 
   /**

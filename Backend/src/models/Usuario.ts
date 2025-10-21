@@ -7,10 +7,12 @@ export class Usuario extends Model {
   public correo!: string;
   public contrasena!: string;
   public status!: boolean;
+  public estado_presencia!: "Activo" | "Ausente" | "No Molestar" | "Away";
   public rol_id!: number;
   public area_id!: number;
   public fecha_creacion!: Date;
   public fecha_actualizacion!: Date;
+  public ultima_actividad!: Date;
 }
 
 Usuario.init(
@@ -40,6 +42,16 @@ Usuario.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    estado_presencia: {
+      type: DataTypes.ENUM("Activo", "Ausente", "No Molestar", "Away"),
+      allowNull: false,
+      defaultValue: "Activo",
+    },
+    ultima_actividad: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     rol_id: {
       type: DataTypes.INTEGER,

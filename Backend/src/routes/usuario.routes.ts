@@ -11,6 +11,24 @@ const usuarioController = new UsuarioController();
 // Todas las rutas requieren autenticación
 router.use(authMiddleware);
 
+// Obtener usuarios conectados actualmente (Cualquier usuario autenticado)
+router.get(
+  "/conectados/lista",
+  usuarioController.obtenerConectados
+);
+
+// Cambiar estado de presencia del usuario actual
+router.put(
+  "/mi-presencia",
+  usuarioController.cambiarEstadoPresencia
+);
+
+// Actualizar última actividad del usuario actual
+router.post(
+  "/mi-actividad",
+  usuarioController.actualizarActividad
+);
+
 // Obtener todos los usuarios (Admin, Directivo, Líder)
 router.get(
   "/",

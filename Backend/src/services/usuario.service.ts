@@ -154,4 +154,70 @@ export class UsuarioService {
       ],
     });
   }
+
+  /**
+   * Cambiar estado de presencia (Activo, Ausente, No Molestar, Away)
+   * El usuario puede cambiar su propio estado, pero no puede poner "Inactivo" (eso es status=false del admin)
+   */
+  async cambiarEstadoPresencia(
+    uid: number,
+    estadoPresencia: "Activo" | "Ausente" | "No Molestar" | "Away",
+    usuarioActual: any
+  ) {
+    const usuario = await Usuario.findByPk(uid);
+
+    if (!usuario) {
+      throw new NotFoundError("Usuario no encontrado");
+    }
+
+    // Solo puede cambiar su propio estado de presencia
+    if (usuarioActual.uid !== uid) {
+      throw new ForbiddenError("Solo puedes cambiar tu propio estado de presencia");
+    }
+
+    // Validar estados permitidos
+    const estadosPermitidos = ["Activo", "Ausente", "No Molestar", "Away"];
+    if (!estadosPermitidos.includes(estadoPresencia)) {
+      throw new ValidationError("Estado de presencia inválido");
+    }
+
+    const valorAnterior = usuario.estado_presencia;
+    await usuario.update({ 
+      estado_presencia: estadoPresencia,
+      ultima_actividad: new Date() 
+    });
+
+    // Registrar en auditoría
+    await this.auditoriaService.registrarCambio({
+      tabla_afectada: "usuarios",
+      registro_id: uid,
+      tipo_cambio: "UPDATE",
+      campo_modificado: "estado_presencia",
+      valor_anterior: valorAnterior,
+      valor_nuevo: estadoPresencia,
+      usuario_id: usuarioActual.uid,
+      descripcion: `Cambio de estado de presencia a ${estadoPresencia}`,
+    });
+
+    return usuario;
+  }
+
+  /**
+   * Actualizar última actividad del usuario
+   */
+  async actualizarActividad(uid: number) {
+    const usuario = await Usuario.findByPk(uid);
+
+    if (!usuario) {
+      throw new NotFoundError("Usuario no encontrado");
+    }
+
+    await usuario.update({ 
+      ultima_actividad: new Date(),
+      // Si estaba Away, cambiar automáticamente a Activo
+      estado_presencia: usuario.estado_presencia === "Away" ? "Activo" : usuario.estado_presencia
+    });
+
+    return usuario;
+  }
 }

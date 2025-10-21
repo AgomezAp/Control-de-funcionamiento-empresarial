@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api.constants';
 import { ApiResponse } from '../models/api-response.model';
 import { Usuario } from '../models/usuario.model';
+import { EstadoPresencia } from '../models/estado-presencia.model';
 
 @Injectable({
   providedIn: 'root'
@@ -83,5 +84,28 @@ export class UsuarioService {
    */
   getByRole(roleId: number): Observable<ApiResponse<Usuario[]>> {
     return this.http.get<ApiResponse<Usuario[]>>(`${API_ENDPOINTS.USUARIOS.BASE}/role/${roleId}`);
+  }
+
+  /**
+   * Cambiar estado de presencia del usuario actual
+   */
+  cambiarEstadoPresencia(estadoPresencia: EstadoPresencia): Observable<ApiResponse<Usuario>> {
+    return this.http.put<ApiResponse<Usuario>>(`${environment.apiUrl}/usuarios/mi-presencia`, {
+      estadoPresencia
+    });
+  }
+
+  /**
+   * Actualizar última actividad del usuario actual
+   */
+  actualizarActividad(): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${environment.apiUrl}/usuarios/mi-actividad`, {});
+  }
+
+  /**
+   * Obtener lista de usuarios conectados
+   */
+  getUsuariosConectados(): Observable<ApiResponse<{ usuarios: number[], total: number }>> {
+    return this.http.get<ApiResponse<{ usuarios: number[], total: number }>>(`${environment.apiUrl}/usuarios/conectados/lista`);
   }
 }
