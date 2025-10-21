@@ -32,6 +32,7 @@ class PeticionService {
     }
     crear(data, usuarioActual) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             // Verificar que el cliente existe
             const clienteData = yield Cliente_1.default.findByPk(data.cliente_id);
             if (!clienteData) {
@@ -66,6 +67,8 @@ class PeticionService {
                 temporizadorActivo = true;
                 fechaInicioTemporizador = new Date();
             }
+            // Si el área es "Gestión Administrativa", queda pendiente (sin auto-asignación)
+            // Los usuarios de Gestión Administrativa aceptan manualmente sus peticiones
             // Crear la petición
             const peticion = yield Peticion_1.default.create({
                 cliente_id: data.cliente_id,
@@ -113,9 +116,67 @@ class PeticionService {
                 // Enviar notificación al pautador
                 yield notificacion_service_1.default.notificarAsignacion(peticionCompleta, usuarioPautador, usuarioActual);
             }
-            else {
+            else if (data.area === "Diseño") {
                 // Si es de Diseño, emitir evento de nueva petición
                 webSocket_service_1.webSocketService.emitNuevaPeticion(peticionCompleta);
+                // Notificar a todos los diseñadores activos
+                const areaDiseño = yield Area_1.default.findOne({ where: { nombre: "Diseño" } });
+                console.log('🔍 Área Diseño encontrada:', areaDiseño === null || areaDiseño === void 0 ? void 0 : areaDiseño.id);
+                if (areaDiseño) {
+                    const diseñadores = yield Usuario_1.default.findAll({
+                        where: {
+                            area_id: areaDiseño.id,
+                            status: true
+                        }
+                    });
+                    console.log(`📢 Enviando notificaciones a ${diseñadores.length} diseñadores`);
+                    // Enviar notificación a cada diseñador
+                    for (const diseñador of diseñadores) {
+                        console.log(`  → Notificando a: ${diseñador.nombre_completo} (ID: ${diseñador.uid})`);
+                        yield notificacion_service_1.default.crear({
+                            usuario_id: diseñador.uid,
+                            tipo: "sistema",
+                            titulo: "Nueva petición de diseño disponible",
+                            mensaje: `${usuarioActual.nombre_completo} ha creado una nueva petición de ${((_a = peticionCompleta.cliente) === null || _a === void 0 ? void 0 : _a.nombre) || "un cliente"}`,
+                            peticion_id: peticion.id,
+                        });
+                    }
+                    console.log('✅ Notificaciones enviadas correctamente');
+                }
+                else {
+                    console.log('⚠️ No se encontró el área de Diseño');
+                }
+            }
+            else if (data.area === "Gestión Administrativa") {
+                // Si es de Gestión Administrativa, emitir evento de nueva petición
+                webSocket_service_1.webSocketService.emitNuevaPeticion(peticionCompleta);
+                // Notificar a todos los usuarios de Gestión Administrativa activos
+                const areaGestion = yield Area_1.default.findOne({ where: { nombre: "Gestión Administrativa" } });
+                console.log('🔍 Área Gestión Administrativa encontrada:', areaGestion === null || areaGestion === void 0 ? void 0 : areaGestion.id);
+                if (areaGestion) {
+                    const usuariosGestion = yield Usuario_1.default.findAll({
+                        where: {
+                            area_id: areaGestion.id,
+                            status: true
+                        }
+                    });
+                    console.log(`📢 Enviando notificaciones a ${usuariosGestion.length} usuarios de Gestión Administrativa`);
+                    // Enviar notificación a cada usuario de Gestión Administrativa
+                    for (const usuario of usuariosGestion) {
+                        console.log(`  → Notificando a: ${usuario.nombre_completo} (ID: ${usuario.uid})`);
+                        yield notificacion_service_1.default.crear({
+                            usuario_id: usuario.uid,
+                            tipo: "sistema",
+                            titulo: "Nueva petición administrativa disponible",
+                            mensaje: `${usuarioActual.nombre_completo} ha creado una nueva petición de ${((_b = peticionCompleta.cliente) === null || _b === void 0 ? void 0 : _b.nombre) || "un cliente"}`,
+                            peticion_id: peticion.id,
+                        });
+                    }
+                    console.log('✅ Notificaciones enviadas correctamente');
+                }
+                else {
+                    console.log('⚠️ No se encontró el área de Gestión Administrativa');
+                }
             }
             return peticionCompleta;
         });
@@ -138,7 +199,7 @@ class PeticionService {
             // Permisos según rol
             if (usuarioActual.rol === "Usuario") {
                 const area = yield Area_1.default.findOne({ where: { nombre: usuarioActual.area } });
-                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Pautas" || (area === null || area === void 0 ? void 0 : area.nombre) === "Diseño") {
+                if ((area === null || area === void 0 ? void 0 : area.nombre) === "Pautas" || (area === null || area === void 0 ? void 0 : area.nombre) === "Diseño" || (area === null || area === void 0 ? void 0 : area.nombre) === "Gestión Administrativa") {
                     // Usuario puede ver las que creó o las que le fueron asignadas
                     whereClause[sequelize_1.Op.or] = [
                         { creador_id: usuarioActual.uid },
@@ -349,6 +410,8 @@ class PeticionService {
                     peticion_id: peticion.id,
                 });
             }
+            // Enviar notificación al usuario que aceptó la petición
+            yield notificacion_service_1.default.notificarAsignacion(peticionActualizada, usuarioActual, creador || usuarioActual);
             return peticionActualizada;
         });
     }

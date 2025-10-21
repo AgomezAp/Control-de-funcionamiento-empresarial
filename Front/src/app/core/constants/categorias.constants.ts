@@ -1,3 +1,18 @@
+/**
+ * ⚠️ ARCHIVO DEPRECADO ⚠️
+ * 
+ * Este archivo ha sido deprecado y ya NO se utiliza en la aplicación.
+ * Las categorías ahora se obtienen dinámicamente desde el backend a través de la API REST.
+ * 
+ * @deprecated Usar CategoriaService.getAll() o métodos específicos del servicio
+ * @see Backend/src/services/categoria.service.ts - Fuente de verdad única
+ * @see Backend/src/scripts/init-data.ts - Datos iniciales de categorías
+ * @see Front/src/app/core/services/categoria.service.ts - Servicio que consume la API
+ * 
+ * Este archivo se mantiene como BACKUP temporal para referencia.
+ * Fecha de deprecación: Octubre 21, 2025
+ */
+
 import { AreaTipo } from '../models/categoria.model';
 
 export const CATEGORIAS_DISENO = [
@@ -37,4 +52,15 @@ export const CATEGORIAS_PAUTAS = [
   { id: 31, nombre: 'Apelación', area_tipo: AreaTipo.PAUTAS, costo: 18000, es_variable: false, requiere_descripcion_extra: false },
 ];
 
-export const TODAS_CATEGORIAS = [...CATEGORIAS_DISENO, ...CATEGORIAS_PAUTAS];
+export const CATEGORIAS_GESTION_ADMINISTRATIVA = [
+  { id: 32, nombre: 'Revisión de documentos', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 50000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 33, nombre: 'Gestión de contratos', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 100000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 34, nombre: 'Elaboración de informes', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 75000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 35, nombre: 'Archivo y organización', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 30000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 36, nombre: 'Gestión de correspondencia', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 40000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 37, nombre: 'Actualización de base de datos', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 60000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 38, nombre: 'Coordinación de reuniones', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 35000, es_variable: false, requiere_descripcion_extra: false },
+  { id: 39, nombre: 'Soporte administrativo general', area_tipo: AreaTipo.GESTION_ADMINISTRATIVA, costo: 0, es_variable: true, requiere_descripcion_extra: true },
+];
+
+export const TODAS_CATEGORIAS = [...CATEGORIAS_DISENO, ...CATEGORIAS_PAUTAS, ...CATEGORIAS_GESTION_ADMINISTRATIVA];

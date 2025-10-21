@@ -16,6 +16,8 @@
         ]"
         class="btn btn-primary"
         (click)="crearNueva()"
+        pTooltip="Crear nueva petición"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-plus"></i>
         Crear Nueva
@@ -44,6 +46,8 @@
         class="btn btn-icon"
         [class.active]="mostrarFiltros"
         (click)="mostrarFiltros = !mostrarFiltros"
+        pTooltip="Mostrar/Ocultar filtros"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-filter"></i>
         <span
@@ -56,6 +60,8 @@
       <button
         class="btn btn-icon"
         (click)="cambiarVista(vistaActual === 'tabla' ? 'cards' : 'tabla')"
+        [pTooltip]="vistaActual === 'tabla' ? 'Cambiar a vista de tarjetas' : 'Cambiar a vista de tabla'"
+        tooltipPosition="bottom"
       >
         <i
           [class]="vistaActual === 'tabla' ? 'pi pi-th-large' : 'pi pi-list'"
@@ -71,7 +77,12 @@
         <i class="pi pi-filter"></i>
         <h3>Filtros Avanzados</h3>
       </div>
-      <button class="btn-close" (click)="mostrarFiltros = false">
+      <button 
+        class="btn-close" 
+        (click)="mostrarFiltros = false"
+        pTooltip="Cerrar filtros"
+        tooltipPosition="left"
+      >
         <i class="pi pi-times"></i>
       </button>
     </div>
@@ -158,11 +169,21 @@
 
     <!-- Botones de Filtros -->
     <div class="filters-actions">
-      <button class="btn btn-secondary" (click)="limpiarFiltros()">
+      <button 
+        class="btn btn-secondary" 
+        (click)="limpiarFiltros()"
+        pTooltip="Limpiar todos los filtros"
+        tooltipPosition="top"
+      >
         <i class="pi pi-filter-slash"></i>
         Limpiar
       </button>
-      <button class="btn btn-primary" (click)="aplicarFiltros()">
+      <button 
+        class="btn btn-primary" 
+        (click)="aplicarFiltros()"
+        pTooltip="Aplicar filtros seleccionados"
+        tooltipPosition="top"
+      >
         <i class="pi pi-check"></i>
         Aplicar Filtros
       </button>
@@ -369,19 +390,47 @@
         {{ peticiones.length }} peticiones
       </div>
       <div class="pagination-controls">
-        <button class="pagination-btn">
+        <button 
+          class="pagination-btn"
+          pTooltip="Primera página"
+          tooltipPosition="top"
+        >
           <i class="pi pi-angle-double-left"></i>
         </button>
-        <button class="pagination-btn">
+        <button 
+          class="pagination-btn"
+          pTooltip="Página anterior"
+          tooltipPosition="top"
+        >
           <i class="pi pi-angle-left"></i>
         </button>
-        <button class="pagination-btn active">1</button>
-        <button class="pagination-btn">2</button>
-        <button class="pagination-btn">3</button>
-        <button class="pagination-btn">
+        <button 
+          class="pagination-btn active"
+          pTooltip="Página 1"
+          tooltipPosition="top"
+        >1</button>
+        <button 
+          class="pagination-btn"
+          pTooltip="Página 2"
+          tooltipPosition="top"
+        >2</button>
+        <button 
+          class="pagination-btn"
+          pTooltip="Página 3"
+          tooltipPosition="top"
+        >3</button>
+        <button 
+          class="pagination-btn"
+          pTooltip="Página siguiente"
+          tooltipPosition="top"
+        >
           <i class="pi pi-angle-right"></i>
         </button>
-        <button class="pagination-btn">
+        <button 
+          class="pagination-btn"
+          pTooltip="Última página"
+          tooltipPosition="top"
+        >
           <i class="pi pi-angle-double-right"></i>
         </button>
       </div>
@@ -477,13 +526,20 @@
 
       <!-- Card Footer -->
       <div class="card-footer-custom">
-        <button class="card-btn btn-outline" (click)="verDetalle(peticion.id)">
+        <button 
+          class="card-btn btn-outline" 
+          (click)="verDetalle(peticion.id)"
+          pTooltip="Ver detalle completo"
+          tooltipPosition="top"
+        >
           <i class="pi pi-eye"></i>
           Ver
         </button>
         <button
           class="card-btn btn-outline"
           (click)="exportarPeticionPDF(peticion)"
+          pTooltip="Exportar a PDF"
+          tooltipPosition="top"
         >
           <i class="pi pi-file-pdf"></i>
           PDF
@@ -491,6 +547,8 @@
         <button
           class="card-btn btn-outline"
           (click)="imprimirPeticion(peticion)"
+          pTooltip="Imprimir petición"
+          tooltipPosition="top"
         >
           <i class="pi pi-print"></i>
           Imprimir
@@ -505,6 +563,8 @@
           class="card-btn btn-warning"
           (click)="pausarTemporizador(peticion)"
           [disabled]="loadingAccion"
+          pTooltip="Pausar temporizador"
+          tooltipPosition="top"
         >
           <i class="pi pi-pause"></i>
           Pausar
@@ -514,6 +574,8 @@
           class="card-btn btn-success"
           (click)="reanudarTemporizador(peticion)"
           [disabled]="loadingAccion"
+          pTooltip="Reanudar temporizador"
+          tooltipPosition="top"
         >
           <i class="pi pi-play"></i>
           Reanudar
@@ -522,6 +584,8 @@
           *ngIf="canAcceptPeticion(peticion)"
           class="card-btn btn-success"
           (click)="aceptarPeticion(peticion)"
+          pTooltip="Aceptar petición"
+          tooltipPosition="top"
         >
           <i class="pi pi-check"></i>
           Aceptar

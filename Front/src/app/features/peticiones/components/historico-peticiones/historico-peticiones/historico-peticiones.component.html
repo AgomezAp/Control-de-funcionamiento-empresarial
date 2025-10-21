@@ -112,11 +112,27 @@
                 <button
                   class="action-btn view-btn"
                   (click)="verDetalle(peticion.peticion_id_original || peticion.id)"
-                  title="Ver detalle"
+                  pTooltip="Ver detalle completo"
+                  tooltipPosition="top"
                 >
                   <i class="pi pi-eye"></i>
                 </button>
-         
+                <button
+                  class="action-btn pdf-btn"
+                  (click)="exportarPDF(peticion)"
+                  pTooltip="Exportar a PDF"
+                  tooltipPosition="top"
+                >
+                  <i class="pi pi-file-pdf"></i>
+                </button>
+                <button
+                  class="action-btn print-btn"
+                  (click)="imprimir(peticion)"
+                  pTooltip="Imprimir petición"
+                  tooltipPosition="top"
+                >
+                  <i class="pi pi-print"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -137,7 +153,8 @@
           class="pagination-btn"
           [disabled]="currentPage === 1"
           (click)="goToPage(1)"
-          title="Primera página"
+          pTooltip="Primera página"
+          tooltipPosition="top"
         >
           <i class="pi pi-angle-double-left"></i>
         </button>
@@ -146,7 +163,8 @@
           class="pagination-btn"
           [disabled]="currentPage === 1"
           (click)="goToPage(currentPage - 1)"
-          title="Página anterior"
+          pTooltip="Página anterior"
+          tooltipPosition="top"
         >
           <i class="pi pi-angle-left"></i>
         </button>
@@ -156,6 +174,8 @@
           class="pagination-btn"
           [class.active]="page === currentPage"
           (click)="goToPage(page)"
+          pTooltip="Página {{ page }}"
+          tooltipPosition="top"
         >
           {{ page }}
         </button>
@@ -164,7 +184,8 @@
           class="pagination-btn"
           [disabled]="currentPage === totalPages"
           (click)="goToPage(currentPage + 1)"
-          title="Página siguiente"
+          pTooltip="Página siguiente"
+          tooltipPosition="top"
         >
           <i class="pi pi-angle-right"></i>
         </button>
@@ -173,7 +194,8 @@
           class="pagination-btn"
           [disabled]="currentPage === totalPages"
           (click)="goToPage(totalPages)"
-          title="Última página"
+          pTooltip="Última página"
+          tooltipPosition="top"
         >
           <i class="pi pi-angle-double-right"></i>
         </button>

@@ -82,10 +82,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 0.5rem;
   background: var(--gradient-yellow);
   border-radius: 16px;
-  box-shadow: 0 10px 40px var(--yellow-glow);
   flex-shrink: 0;
 }
 

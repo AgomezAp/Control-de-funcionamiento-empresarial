@@ -46,9 +46,9 @@ Peticion.init({
         comment: "Se toma de la categoría o se ingresa manual si es variable",
     },
     area: {
-        type: sequelize_1.DataTypes.ENUM("Pautas", "Diseño"),
+        type: sequelize_1.DataTypes.ENUM("Pautas", "Diseño", "Gestión Administrativa"),
         allowNull: false,
-        comment: "Área a la que pertenece la petición: Pautas o Diseño",
+        comment: "Área a la que pertenece la petición: Pautas, Diseño o Gestión Administrativa",
     },
     estado: {
         type: sequelize_1.DataTypes.ENUM("Pendiente", "En Progreso", "Pausada", "Resuelta", "Cancelada"),

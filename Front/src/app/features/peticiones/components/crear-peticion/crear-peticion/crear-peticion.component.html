@@ -5,7 +5,12 @@
       <i class="pi pi-plus-circle header-icon"></i>
       <h2 class="page-title">Crear Nueva Petición</h2>
     </div>
-    <button class="btn btn-cancel" (click)="cancelar()">
+    <button 
+      class="btn btn-cancel" 
+      (click)="cancelar()"
+      pTooltip="Cancelar y salir sin guardar"
+      tooltipPosition="bottom"
+    >
       <i class="pi pi-times"></i>
       Cancelar
     </button>
@@ -79,17 +84,19 @@
     <!-- PASO 2: Seleccionar Categoría -->
     <div *ngIf="activeIndex === 1" class="step-content">
       <form [formGroup]="formCategoria" class="step-form">
-        <!-- Seleccionar Área -->
-        <div class="form-field">
+        <!-- Seleccionar Área (visible para Admin, Pautas y Diseño) -->
+        <div class="form-field" *ngIf="mostrarSelectArea">
           <label for="area" class="form-label">
             <i class="pi pi-briefcase"></i>
             Área
             <span class="required">*</span>
           </label>
-          <select id="area" formControlName="area" class="form-select">
+          <select id="area" formControlName="area" class="form-select" (change)="onAreaChange($event)">
             <option value="">Seleccione el área</option>
             <option value="Diseño">Diseño</option>
             <option value="Pautas">Pautas</option>
+            <!-- Solo Admin puede seleccionar Gestión Administrativa -->
+            <option value="Gestión Administrativa" *ngIf="currentUser?.rol === 'Admin'">Gestión Administrativa</option>
           </select>
           <small
             class="form-hint"
@@ -99,6 +106,14 @@
             Las peticiones de Pautas se asignan automáticamente al pautador del
             cliente
           </small>
+        </div>
+
+        <!-- Mensaje informativo cuando el área está fija -->
+        <div class="form-field" *ngIf="!mostrarSelectArea">
+          <div class="info-message">
+            <i class="pi pi-info-circle"></i>
+            <span>Creando petición para el área de <strong>{{ formCategoria.get('area')?.value }}</strong></span>
+          </div>
         </div>
 
         <div class="form-field">
@@ -265,6 +280,8 @@
       class="btn btn-secondary"
       (click)="prevStep()"
       *ngIf="activeIndex > 0"
+      pTooltip="Volver al paso anterior"
+      tooltipPosition="top"
     >
       <i class="pi pi-arrow-left"></i>
       Anterior
@@ -274,6 +291,8 @@
       class="btn btn-primary"
       (click)="nextStep()"
       *ngIf="activeIndex < items.length - 1"
+      pTooltip="Continuar al siguiente paso"
+      tooltipPosition="top"
     >
       Siguiente
       <i class="pi pi-arrow-right"></i>
@@ -284,6 +303,8 @@
       (click)="crearPeticion()"
       *ngIf="activeIndex === items.length - 1"
       [disabled]="submitting"
+      pTooltip="Crear la petición con los datos ingresados"
+      tooltipPosition="top"
     >
       <i [class]="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></i>
       {{ submitting ? "Creando..." : "Crear Petición" }}

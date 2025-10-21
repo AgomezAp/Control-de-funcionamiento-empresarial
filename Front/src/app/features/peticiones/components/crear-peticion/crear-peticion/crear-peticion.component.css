@@ -1393,6 +1393,42 @@
 }
 
 /* ============================================
+   INFO MESSAGE (Área fija)
+   ============================================ */
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #1565c0;
+  margin-bottom: 1rem;
+}
+
+.info-message i {
+  font-size: 1.2rem;
+  color: #2196f3;
+}
+
+.info-message strong {
+  font-weight: 600;
+  color: #0d47a1;
+}
+
+:host-context(.dark-mode) .info-message {
+  background-color: rgba(33, 150, 243, 0.15);
+  border-left-color: #64b5f6;
+  color: #90caf9;
+}
+
+:host-context(.dark-mode) .info-message strong {
+  color: #bbdefb;
+}
+
+/* ============================================
    RESPONSIVE - STEPS
    ============================================ */
 @media (max-width: 768px) {

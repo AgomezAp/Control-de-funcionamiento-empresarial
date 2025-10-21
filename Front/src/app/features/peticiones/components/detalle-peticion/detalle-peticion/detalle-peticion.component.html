@@ -6,7 +6,12 @@
   <div *ngIf="!loading && peticion" class="peticion-container">
     <!-- Header Compacto -->
     <div class="page-header">
-      <button class="btn-back" (click)="volver()">
+      <button 
+        class="btn-back" 
+        (click)="volver()"
+        pTooltip="Volver atrás"
+        tooltipPosition="bottom"
+      >
         <i class="pi pi-arrow-left"></i>
         Volver
       </button>
@@ -25,6 +30,8 @@
         *ngIf="peticion.estado === 'Pendiente'"
         class="btn btn-success"
         [routerLink]="['/peticiones', peticion.id, 'aceptar']"
+        pTooltip="Aceptar y comenzar a trabajar en esta petición"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-check"></i>
         Aceptar
@@ -33,6 +40,8 @@
         *ngIf="peticion.estado === 'En Progreso' && peticion.temporizador_activo && canPauseOrResume()"
         class="btn btn-warning"
         (click)="pausarTemporizador()"
+        pTooltip="Pausar el temporizador de esta petición"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-pause"></i>
         Pausar Temporizador
@@ -41,6 +50,8 @@
         *ngIf="peticion.estado === 'Pausada' && canPauseOrResume()"
         class="btn btn-success"
         (click)="reanudarTemporizador()"
+        pTooltip="Reanudar el temporizador de esta petición"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-play"></i>
         Reanudar Temporizador
@@ -49,6 +60,8 @@
         *ngIf="peticion.estado === 'En Progreso'"
         class="btn btn-success"
         (click)="marcarResuelta()"
+        pTooltip="Marcar esta petición como resuelta"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-check-circle"></i>
         Marcar Resuelta

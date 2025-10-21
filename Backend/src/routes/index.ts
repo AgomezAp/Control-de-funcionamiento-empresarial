@@ -6,6 +6,7 @@ import peticionRoutes from "./peticion.routes";
 import estadisticaRoutes from "./estadistica.routes";
 import facturacionRoutes from "./facturacion.routes";
 import notificacionRoutes from "./notificacion.routes";
+import categoriaRoutes from "./categoria.routes";
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use("/peticiones", peticionRoutes);
 router.use("/estadisticas", estadisticaRoutes);
 router.use("/facturacion", facturacionRoutes);
 router.use("/notificaciones", notificacionRoutes);
+router.use("/categorias", categoriaRoutes);
 
 export default router;

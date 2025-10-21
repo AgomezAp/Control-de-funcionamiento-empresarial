@@ -72,6 +72,9 @@ export class PeticionService {
       fechaInicioTemporizador = new Date();
     }
 
+    // Si el área es "Gestión Administrativa", queda pendiente (sin auto-asignación)
+    // Los usuarios de Gestión Administrativa aceptan manualmente sus peticiones
+
     // Crear la petición
     const peticion = await Peticion.create({
       cliente_id: data.cliente_id,
@@ -134,9 +137,72 @@ export class PeticionService {
         usuarioPautador!,
         usuarioActual
       );
-    } else {
+    } else if (data.area === "Diseño") {
       // Si es de Diseño, emitir evento de nueva petición
       webSocketService.emitNuevaPeticion(peticionCompleta);
+      
+      // Notificar a todos los diseñadores activos
+      const areaDiseño = await Area.findOne({ where: { nombre: "Diseño" } });
+      console.log('🔍 Área Diseño encontrada:', areaDiseño?.id);
+      
+      if (areaDiseño) {
+        const diseñadores = await Usuario.findAll({
+          where: {
+            area_id: areaDiseño.id,
+            status: true
+          }
+        });
+
+        console.log(`📢 Enviando notificaciones a ${diseñadores.length} diseñadores`);
+
+        // Enviar notificación a cada diseñador
+        for (const diseñador of diseñadores) {
+          console.log(`  → Notificando a: ${diseñador.nombre_completo} (ID: ${diseñador.uid})`);
+          await notificacionService.crear({
+            usuario_id: diseñador.uid,
+            tipo: "sistema",
+            titulo: "Nueva petición de diseño disponible",
+            mensaje: `${usuarioActual.nombre_completo} ha creado una nueva petición de ${peticionCompleta.cliente?.nombre || "un cliente"}`,
+            peticion_id: peticion.id,
+          });
+        }
+        console.log('✅ Notificaciones enviadas correctamente');
+      } else {
+        console.log('⚠️ No se encontró el área de Diseño');
+      }
+    } else if (data.area === "Gestión Administrativa") {
+      // Si es de Gestión Administrativa, emitir evento de nueva petición
+      webSocketService.emitNuevaPeticion(peticionCompleta);
+      
+      // Notificar a todos los usuarios de Gestión Administrativa activos
+      const areaGestion = await Area.findOne({ where: { nombre: "Gestión Administrativa" } });
+      console.log('🔍 Área Gestión Administrativa encontrada:', areaGestion?.id);
+      
+      if (areaGestion) {
+        const usuariosGestion = await Usuario.findAll({
+          where: {
+            area_id: areaGestion.id,
+            status: true
+          }
+        });
+
+        console.log(`📢 Enviando notificaciones a ${usuariosGestion.length} usuarios de Gestión Administrativa`);
+
+        // Enviar notificación a cada usuario de Gestión Administrativa
+        for (const usuario of usuariosGestion) {
+          console.log(`  → Notificando a: ${usuario.nombre_completo} (ID: ${usuario.uid})`);
+          await notificacionService.crear({
+            usuario_id: usuario.uid,
+            tipo: "sistema",
+            titulo: "Nueva petición administrativa disponible",
+            mensaje: `${usuarioActual.nombre_completo} ha creado una nueva petición de ${peticionCompleta.cliente?.nombre || "un cliente"}`,
+            peticion_id: peticion.id,
+          });
+        }
+        console.log('✅ Notificaciones enviadas correctamente');
+      } else {
+        console.log('⚠️ No se encontró el área de Gestión Administrativa');
+      }
     }
 
     return peticionCompleta;
@@ -164,7 +230,7 @@ export class PeticionService {
     if (usuarioActual.rol === "Usuario") {
       const area = await Area.findOne({ where: { nombre: usuarioActual.area } });
 
-      if (area?.nombre === "Pautas" || area?.nombre === "Diseño") {
+      if (area?.nombre === "Pautas" || area?.nombre === "Diseño" || area?.nombre === "Gestión Administrativa") {
         // Usuario puede ver las que creó o las que le fueron asignadas
         whereClause[Op.or] = [
           { creador_id: usuarioActual.uid },
@@ -409,6 +475,13 @@ export class PeticionService {
         peticion_id: peticion.id,
       });
     }
+
+    // Enviar notificación al usuario que aceptó la petición
+    await notificacionService.notificarAsignacion(
+      peticionActualizada,
+      usuarioActual,
+      creador || usuarioActual
+    );
 
     return peticionActualizada;
   }

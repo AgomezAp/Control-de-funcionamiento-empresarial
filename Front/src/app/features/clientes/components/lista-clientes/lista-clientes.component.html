@@ -10,6 +10,8 @@
         *appHasRole="[RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER]"
         class="btn btn-primary"
         (click)="crearCliente()"
+        pTooltip="Crear un nuevo cliente"
+        tooltipPosition="bottom"
       >
         <i class="pi pi-plus"></i>
         <span>Crear Cliente</span>
@@ -37,7 +39,8 @@
           *ngIf="globalFilterValue"
           class="clear-search-btn"
           (click)="clearFilter()"
-          title="Limpiar búsqueda"
+          pTooltip="Limpiar búsqueda"
+          tooltipPosition="bottom"
         >
           <i class="pi pi-times"></i>
         </button>
@@ -128,7 +131,8 @@
                   <button
                     class="action-btn view-btn"
                     (click)="verDetalle(cliente.id)"
-                    title="Ver detalle"
+                    pTooltip="Ver detalle del cliente"
+                    tooltipPosition="top"
                   >
                     <i class="pi pi-eye"></i>
                   </button>
@@ -140,7 +144,8 @@
                     ]"
                     class="action-btn edit-btn"
                     (click)="editarCliente(cliente.id)"
-                    title="Editar"
+                    pTooltip="Editar cliente"
+                    tooltipPosition="top"
                   >
                     <i class="pi pi-pencil"></i>
                   </button>
@@ -148,7 +153,8 @@
                     *appHasRole="[RoleEnum.ADMIN]"
                     class="action-btn delete-btn"
                     (click)="eliminarCliente(cliente)"
-                    title="Eliminar"
+                    pTooltip="Eliminar cliente"
+                    tooltipPosition="top"
                   >
                     <i class="pi pi-trash"></i>
                   </button>
@@ -172,7 +178,8 @@
             class="pagination-btn"
             (click)="goToPage(1)"
             [disabled]="currentPage === 1"
-            title="Primera página"
+            pTooltip="Primera página"
+            tooltipPosition="top"
           >
             <i class="pi pi-angle-double-left"></i>
           </button>
@@ -180,7 +187,8 @@
             class="pagination-btn"
             (click)="goToPage(currentPage - 1)"
             [disabled]="currentPage === 1"
-            title="Página anterior"
+            pTooltip="Página anterior"
+            tooltipPosition="top"
           >
             <i class="pi pi-angle-left"></i>
           </button>
@@ -191,6 +199,8 @@
               class="pagination-page"
               [class.active]="page === currentPage"
               (click)="goToPage(page)"
+              pTooltip="Página {{ page }}"
+              tooltipPosition="top"
             >
               {{ page }}
             </button>
@@ -200,7 +210,8 @@
             class="pagination-btn"
             (click)="goToPage(currentPage + 1)"
             [disabled]="currentPage === totalPages"
-            title="Página siguiente"
+            pTooltip="Página siguiente"
+            tooltipPosition="top"
           >
             <i class="pi pi-angle-right"></i>
           </button>
@@ -208,7 +219,8 @@
             class="pagination-btn"
             (click)="goToPage(totalPages)"
             [disabled]="currentPage === totalPages"
-            title="Última página"
+            pTooltip="Última página"
+            tooltipPosition="top"
           >
             <i class="pi pi-angle-double-right"></i>
           </button>

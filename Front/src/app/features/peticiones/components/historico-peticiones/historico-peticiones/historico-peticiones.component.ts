@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
+// PrimeNG
+import { TooltipModule } from 'primeng/tooltip';
+
 // Services
 import { PeticionService } from '../../../../../core/services/peticion.service';
 
@@ -22,6 +25,7 @@ import { LoaderComponent } from '../../../../../shared/components/loader/loader/
   imports: [
     CommonModule,
     RouterModule,
+    TooltipModule,
     TimeAgoPipe,
     CurrencycopPipe,
     LoaderComponent,

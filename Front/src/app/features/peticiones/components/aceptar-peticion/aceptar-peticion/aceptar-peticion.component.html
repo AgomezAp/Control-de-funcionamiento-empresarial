@@ -2,50 +2,73 @@
   <app-loader *ngIf="loading"></app-loader>
 
   <div *ngIf="!loading && peticion" class="content-wrapper">
-    <p-card styleClass="peticion-card">
+    <div class="peticion-card">
       <!-- Header -->
-      <ng-template pTemplate="header">
-        <div class="card-header">
-          <h2 class="header-title">
-            <i class="pi pi-check-circle"></i>
-            <span>Aceptar Petición</span>
-          </h2>
-        </div>
-      </ng-template>
+      <div class="card-header">
+        <h2 class="header-title">
+          <i class="pi pi-check-circle" style="color: #4caf50"></i>
+          <span>Aceptar Petición</span>
+        </h2>
+      </div>
 
       <!-- Contenido Principal -->
       <div class="card-content">
         <!-- Resumen de la Petición -->
         <div class="peticion-summary">
+          <h3 class="section-title">
+            <i class="pi pi-info-circle" style="color: #ffd700"></i>
+            Resumen de la Petición
+          </h3>
+
           <div class="summary-grid">
             <div class="summary-item">
-              <span class="label">ID</span>
-              <span class="value">#{{ peticion.id }}</span>
+              <span class="label">
+                <i class="pi pi-hashtag"></i>
+                ID
+              </span>
+              <span class="value id-value">#{{ peticion.id }}</span>
             </div>
-            
+
             <div class="summary-item">
-              <span class="label">Estado</span>
-              <p-tag [value]="peticion.estado" severity="info" styleClass="custom-tag"></p-tag>
+              <span class="label">
+                <i class="pi pi-flag"></i>
+                Estado
+              </span>
+              <span class="badge badge-info">{{ peticion.estado }}</span>
             </div>
-            
+
             <div class="summary-item">
-              <span class="label">Cliente</span>
+              <span class="label">
+                <i class="pi pi-user"></i>
+                Cliente
+              </span>
               <span class="value">{{ peticion.cliente?.nombre }}</span>
             </div>
-            
+
             <div class="summary-item">
-              <span class="label">Categoría</span>
+              <span class="label">
+                <i class="pi pi-tag"></i>
+                Categoría
+              </span>
               <span class="value">{{ peticion.categoria?.nombre }}</span>
             </div>
-            
+
             <div class="summary-item full-width">
-              <span class="label">Descripción</span>
+              <span class="label">
+                <i class="pi pi-align-left"></i>
+                Descripción
+              </span>
               <span class="value description">{{ peticion.descripcion }}</span>
             </div>
-            
-            <div class="summary-item">
-              <span class="label">Costo</span>
-              <span class="value costo">{{ peticion.costo | currencyCop }}</span>
+
+            <div class="summary-item highlight">
+              <span class="label">
+                <i class="pi pi-dollar"></i>
+                Costo
+              </span>
+              <span class="value costo">{{
+                peticion.costo | currencyCop
+              }}</span>
             </div>
           </div>
         </div>
@@ -53,38 +76,44 @@
         <!-- Información del Temporizador -->
         <div class="info-section">
           <div class="info-message">
-            <i class="pi pi-info-circle"></i>
-            <p>
-              Al aceptar esta petición, el temporizador iniciará automáticamente 
-              para registrar el tiempo empleado en su desarrollo.
-            </p>
+            <div class="info-icon">
+              <i class="pi pi-clock" style="color: #ff9800"></i>
+            </div>
+            <div class="info-text">
+              <h4>Inicio Automático del Temporizador</h4>
+              <p>
+                Al aceptar esta petición, el temporizador iniciará
+                automáticamente para registrar el tiempo empleado en su
+                desarrollo.
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Botones de acción -->
         <div class="actions-footer">
           <button
-            pButton
-            label="Cancelar"
-            icon="pi pi-times"
-            class="btn-cancelar"
+            class="btn btn-cancel"
             type="button"
             (click)="cancelar()"
-          ></button>
+            [disabled]="submitting"
+          >
+            <i class="pi pi-times"></i>
+            <span>Cancelar</span>
+          </button>
+
           <button
-            pButton
-            label="Aceptar Petición"
-            icon="pi pi-check"
-            class="btn-aceptar"
+            class="btn btn-accept"
             type="button"
             (click)="aceptar()"
             [disabled]="submitting"
-            [loading]="submitting"
-          ></button>
+          >
+            <i class="pi pi-check" *ngIf="!submitting"></i>
+            <i class="pi pi-spin pi-spinner" *ngIf="submitting"></i>
+            <span>{{ submitting ? "Aceptando..." : "Aceptar Petición" }}</span>
+          </button>
         </div>
       </div>
-    </p-card>
+    </div>
   </div>
 </div>
-
-<p-toast></p-toast>

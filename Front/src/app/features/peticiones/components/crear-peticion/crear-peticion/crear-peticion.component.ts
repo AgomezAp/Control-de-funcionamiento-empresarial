@@ -63,6 +63,10 @@ export class CrearPeticionComponent implements OnInit {
   clienteSeleccionado: Cliente | null = null;
   categoriaSeleccionada: Categoria | null = null;
 
+  // Usuario actual
+  currentUser: any = null;
+  mostrarSelectArea: boolean = true;
+
   // Loading
   loading = false;
   submitting = false;
@@ -81,10 +85,42 @@ export class CrearPeticionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser();
+    
     this.initStepper();
     this.initForms();
+    this.configurarFormularioPorUsuario();
     this.loadClientes();
     this.loadCategorias();
+  }
+
+  configurarFormularioPorUsuario(): void {
+    const currentUser = this.authService.getCurrentUser();
+    console.log('👤 Usuario actual:', currentUser?.nombre_completo, '- Área:', currentUser?.area, '- Rol:', currentUser?.rol);
+    
+    if (currentUser?.rol === 'Admin') {
+      // Admin puede seleccionar cualquier área (Diseño, Pautas, Gestión Administrativa)
+      this.mostrarSelectArea = true;
+      this.formCategoria.patchValue({ area: 'Diseño' });
+      console.log('✅ Admin: Área configurada como "Diseño" por defecto (puede cambiar)');
+    } else if (currentUser?.area === 'Diseño') {
+      // Diseño puede crear peticiones para Diseño o Pautas (selector visible)
+      this.mostrarSelectArea = true;
+      this.formCategoria.patchValue({ area: 'Diseño' });
+      console.log('✅ Diseño: Área configurada como "Diseño" por defecto (puede cambiar a Pautas)');
+    } else if (currentUser?.area === 'Pautas') {
+      // Pautas puede crear peticiones para Pautas o Diseño (selector visible)
+      this.mostrarSelectArea = true;
+      this.formCategoria.patchValue({ area: 'Pautas' });
+      console.log('✅ Pautas: Área configurada como "Pautas" por defecto (puede cambiar a Diseño)');
+    } else if (currentUser?.area === 'Gestión Administrativa') {
+      // Gestión Administrativa SOLO puede crear peticiones de su área (fijo)
+      this.mostrarSelectArea = false;
+      this.formCategoria.patchValue({ area: 'Gestión Administrativa' });
+      this.formCategoria.get('area')?.disable();
+      console.log('✅ Gestión Administrativa: Área FIJA en "Gestión Administrativa"');
+      console.log('📋 Valor después de patchValue:', this.formCategoria.getRawValue().area);
+    }
   }
 
   initStepper(): void {
@@ -133,22 +169,30 @@ export class CrearPeticionComponent implements OnInit {
   loadCategorias(): void {
     this.categoriaService.getAll().subscribe({
       next: (categorias) => {
-        const currentUser = this.authService.getCurrentUser();
-
-        if (currentUser?.rol === 'Admin') {
-          this.categorias = categorias;
-          this.categoriasFiltradas = categorias;
+        console.log('📦 Categorías cargadas desde backend:', categorias.length);
+        
+        // Cargar TODAS las categorías sin filtrar inicialmente
+        this.categorias = categorias;
+        
+        // Obtener el área actual del formulario (puede estar deshabilitado, usar getRawValue)
+        const areaActual = this.formCategoria.get('area')?.value || 
+                          this.formCategoria.getRawValue().area || '';
+        
+        console.log('🔍 Área actual para filtrar:', areaActual);
+        
+        if (areaActual) {
+          this.categoriasFiltradas = categorias.filter(
+            (cat) => cat.area_tipo === areaActual
+          );
+          console.log(`✅ Categorías filtradas para "${areaActual}":`, this.categoriasFiltradas.length);
+          console.log('📋 Categorías:', this.categoriasFiltradas.map(c => c.nombre));
         } else {
-          const areaUsuario = currentUser?.area || '';
-          this.categorias = categorias.filter((cat) => {
-            const catArea = String(cat.area_tipo);
-            return catArea === areaUsuario;
-          });
-          this.categoriasFiltradas = this.categorias;
+          this.categoriasFiltradas = categorias;
+          console.log('📋 Mostrando todas las categorías (sin filtro)');
         }
       },
       error: (error) => {
-        console.error('Error al cargar categorías:', error);
+        console.error('❌ Error al cargar categorías:', error);
         this.showToast(
           'error',
           'Error',
@@ -217,6 +261,30 @@ export class CrearPeticionComponent implements OnInit {
       this.clientes.find((c) => c.id === clienteId) || null;
   }
 
+  onAreaChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const areaSeleccionada = target.value;
+
+    console.log('🔄 Área seleccionada:', areaSeleccionada);
+    console.log('📦 Total categorías disponibles:', this.categorias.length);
+
+    // Filtrar categorías según el área seleccionada
+    if (areaSeleccionada) {
+      this.categoriasFiltradas = this.categorias.filter(
+        (cat) => cat.area_tipo === areaSeleccionada
+      );
+      console.log(`✅ Categorías filtradas para "${areaSeleccionada}":`, this.categoriasFiltradas.length);
+      console.log('📋 Categorías:', this.categoriasFiltradas.map(c => c.nombre));
+    } else {
+      this.categoriasFiltradas = this.categorias;
+      console.log('📋 Mostrando todas las categorías');
+    }
+
+    // Limpiar la categoría seleccionada al cambiar el área
+    this.formCategoria.patchValue({ categoria_id: '' });
+    this.categoriaSeleccionada = null;
+  }
+
   onCategoriaChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const categoriaId = Number(target.value);
@@ -257,15 +325,21 @@ export class CrearPeticionComponent implements OnInit {
       return;
     }
 
+    // Obtener el área correctamente (incluso si está deshabilitado)
+    const areaValue = this.formCategoria.get('area')?.value || 
+                      this.formCategoria.getRawValue().area;
+
     const data: PeticionCreate = {
       cliente_id: Number(this.formCliente.value.cliente_id),
       categoria_id: Number(this.formCategoria.value.categoria_id),
-      area: this.formCategoria.value.area,
+      area: areaValue,
       descripcion: this.formDescripcion.value.descripcion,
       descripcion_extra:
         this.formDescripcion.value.descripcion_extra || undefined,
       costo: this.getCostoFinal(),
     };
+
+    console.log('📤 Datos a enviar:', data);
 
     this.submitting = true;
     this.peticionService.create(data).subscribe({

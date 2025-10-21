@@ -37,13 +37,15 @@ class NotificacionService {
                 // Obtener la notificación con las relaciones
                 const notificacionCompleta = yield this.obtenerPorId(notificacion.id);
                 // Emitir la notificación en tiempo real al usuario específico
+                console.log(`📡 Intentando enviar notificación vía WebSocket a usuario ${data.usuario_id}`);
                 webSocket_service_1.default.emitToUser(data.usuario_id, "nuevaNotificacion", notificacionCompleta);
                 // También emitir el contador de notificaciones no leídas
                 const noLeidas = yield this.contarNoLeidas(data.usuario_id);
+                console.log(`🔔 Contador no leídas para usuario ${data.usuario_id}: ${noLeidas}`);
                 webSocket_service_1.default.emitToUser(data.usuario_id, "contadorNotificaciones", {
                     total: noLeidas,
                 });
-                console.log(`📬 Notificación creada y enviada a usuario ${data.usuario_id}`);
+                console.log(`✅ Notificación creada y enviada a usuario ${data.usuario_id}`);
                 return notificacionCompleta;
             }
             catch (error) {

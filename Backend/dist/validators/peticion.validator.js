@@ -16,8 +16,8 @@ exports.crearPeticionValidator = [
     (0, express_validator_1.body)("area")
         .notEmpty()
         .withMessage("El área es requerida")
-        .isIn(["Pautas", "Diseño"])
-        .withMessage("El área debe ser 'Pautas' o 'Diseño'"),
+        .isIn(["Pautas", "Diseño", "Gestión Administrativa"])
+        .withMessage("El área debe ser 'Pautas', 'Diseño' o 'Gestión Administrativa'"),
     (0, express_validator_1.body)("descripcion")
         .trim()
         .notEmpty()
@@ -57,8 +57,8 @@ exports.cambiarEstadoPeticionValidator = [
     (0, express_validator_1.body)("estado")
         .notEmpty()
         .withMessage("El estado es requerido")
-        .isIn(["Pendiente", "En Progreso", "Resuelta", "Cancelada"])
-        .withMessage("El estado debe ser: Pendiente, En Progreso, Resuelta o Cancelada"),
+        .isIn(["Pendiente", "En Progreso", "Pausada", "Resuelta", "Cancelada"])
+        .withMessage("El estado debe ser: Pendiente, En Progreso, Pausada, Resuelta o Cancelada"),
 ];
 exports.aceptarPeticionValidator = [
     (0, express_validator_1.param)("id").isInt().withMessage("El ID debe ser un número válido"),

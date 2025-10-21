@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG (solo para modales)
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 // Services
@@ -32,6 +33,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
     FormsModule,
     ToastModule,
     ConfirmDialogModule,
+    TooltipModule,
     HasRoleDirective,
     LoaderComponent,
     EmptyStateComponent,

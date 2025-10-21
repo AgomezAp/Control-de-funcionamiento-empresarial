@@ -16,8 +16,8 @@ export const crearPeticionValidator = [
   body("area")
     .notEmpty()
     .withMessage("El área es requerida")
-    .isIn(["Pautas", "Diseño"])
-    .withMessage("El área debe ser 'Pautas' o 'Diseño'"),
+    .isIn(["Pautas", "Diseño", "Gestión Administrativa"])
+    .withMessage("El área debe ser 'Pautas', 'Diseño' o 'Gestión Administrativa'"),
 
   body("descripcion")
     .trim()
@@ -67,8 +67,8 @@ export const cambiarEstadoPeticionValidator = [
   body("estado")
     .notEmpty()
     .withMessage("El estado es requerido")
-    .isIn(["Pendiente", "En Progreso", "Resuelta", "Cancelada"])
-    .withMessage("El estado debe ser: Pendiente, En Progreso, Resuelta o Cancelada"),
+    .isIn(["Pendiente", "En Progreso", "Pausada", "Resuelta", "Cancelada"])
+    .withMessage("El estado debe ser: Pendiente, En Progreso, Pausada, Resuelta o Cancelada"),
 ];
 
 export const aceptarPeticionValidator = [
