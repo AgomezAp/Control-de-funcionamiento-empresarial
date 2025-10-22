@@ -46,6 +46,13 @@ router.post(
   peticionController.crear
 );
 
+// Transferir peticiones (Admin, Directivo, Líder)
+router.post(
+  "/transferir",
+  roleAuth("Admin", "Directivo", "Líder"),
+  peticionController.transferirPeticiones
+);
+
 // Obtener todas las peticiones (con filtros opcionales)
 router.get("/", peticionController.obtenerTodos);
 

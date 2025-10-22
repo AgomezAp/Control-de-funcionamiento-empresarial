@@ -93,6 +93,15 @@ export class SidebarComponent implements OnInit {
             icon: 'pi pi-history',
             routerLink: ['/peticiones/historico'],
           },
+          ...(this.canTransferPeticiones()
+            ? [
+                {
+                  label: 'Transferir',
+                  icon: 'pi pi-arrow-right-arrow-left',
+                  routerLink: ['/peticiones/transferir'],
+                },
+              ]
+            : []),
         ],
       },
       {
@@ -233,6 +242,13 @@ export class SidebarComponent implements OnInit {
   }
 
   canViewAreaStats(): boolean {
+    if (!this.currentUser) return false;
+    return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
+      this.currentUser.rol
+    );
+  }
+
+  canTransferPeticiones(): boolean {
     if (!this.currentUser) return false;
     return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
       this.currentUser.rol

@@ -269,6 +269,41 @@ export class PeticionController {
     }
   }
 
+  /**
+   * Transferir peticiones de un usuario a otro(s)
+   * Solo permitido para Admin, Directivo y Líder
+   */
+  async transferirPeticiones(req: Request, res: Response) {
+    try {
+      const { usuario_origen_id, peticiones_ids, usuarios_destino_ids, motivo } = req.body;
+
+      // Validaciones básicas
+      if (!usuario_origen_id || !peticiones_ids || !Array.isArray(peticiones_ids) || peticiones_ids.length === 0) {
+        return ApiResponse.error(res, "Datos inválidos: se requiere usuario origen y peticiones", 400);
+      }
+
+      if (!usuarios_destino_ids || !Array.isArray(usuarios_destino_ids) || usuarios_destino_ids.length === 0) {
+        return ApiResponse.error(res, "Debe especificar al menos un usuario destino", 400);
+      }
+
+      const resultado = await peticionService.transferirPeticiones(
+        usuario_origen_id,
+        peticiones_ids,
+        usuarios_destino_ids,
+        motivo || "Transferencia de peticiones",
+        req.usuario
+      );
+
+      return ApiResponse.success(res, resultado, "Peticiones transferidas exitosamente");
+    } catch (error: any) {
+      return ApiResponse.error(
+        res,
+        error.message || "Error al transferir peticiones",
+        error.statusCode || 500
+      );
+    }
+  }
+
   async obtenerTiempoEmpleado(req: Request, res: Response) {
     try {
       const { id } = req.params;

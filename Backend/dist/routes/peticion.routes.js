@@ -21,6 +21,8 @@ router.get("/resumen/global", (0, roleAuth_middleware_1.roleAuth)("Admin", "Dire
 router.get("/cliente-mes", (0, validation_middleware_1.validate)(peticion_validator_1.obtenerPeticionesPorClienteMesValidator), peticionController.obtenerPorClienteYMes);
 // Crear petición
 router.post("/", (0, validation_middleware_1.validate)(peticion_validator_1.crearPeticionValidator), peticionController.crear);
+// Transferir peticiones (Admin, Directivo, Líder)
+router.post("/transferir", (0, roleAuth_middleware_1.roleAuth)("Admin", "Directivo", "Líder"), peticionController.transferirPeticiones);
 // Obtener todas las peticiones (con filtros opcionales)
 router.get("/", peticionController.obtenerTodos);
 // Obtener petición por ID

@@ -183,6 +183,29 @@ class PeticionController {
             }
         });
     }
+    /**
+     * Transferir peticiones de un usuario a otro(s)
+     * Solo permitido para Admin, Directivo y Líder
+     */
+    transferirPeticiones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { usuario_origen_id, peticiones_ids, usuarios_destino_ids, motivo } = req.body;
+                // Validaciones básicas
+                if (!usuario_origen_id || !peticiones_ids || !Array.isArray(peticiones_ids) || peticiones_ids.length === 0) {
+                    return response_util_1.ApiResponse.error(res, "Datos inválidos: se requiere usuario origen y peticiones", 400);
+                }
+                if (!usuarios_destino_ids || !Array.isArray(usuarios_destino_ids) || usuarios_destino_ids.length === 0) {
+                    return response_util_1.ApiResponse.error(res, "Debe especificar al menos un usuario destino", 400);
+                }
+                const resultado = yield peticionService.transferirPeticiones(usuario_origen_id, peticiones_ids, usuarios_destino_ids, motivo || "Transferencia de peticiones", req.usuario);
+                return response_util_1.ApiResponse.success(res, resultado, "Peticiones transferidas exitosamente");
+            }
+            catch (error) {
+                return response_util_1.ApiResponse.error(res, error.message || "Error al transferir peticiones", error.statusCode || 500);
+            }
+        });
+    }
     obtenerTiempoEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

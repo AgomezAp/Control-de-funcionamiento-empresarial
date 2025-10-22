@@ -52,6 +52,14 @@ export const PETICIONES_ROUTES: Routes = [
         data: { breadcrumb: 'Histórico' }
       },
       {
+        path: 'transferir',
+        loadComponent: () =>
+          import('./components/transferir-peticiones/transferir-peticiones.component').then(
+            (m) => m.TransferirPeticionesComponent
+          ),
+        data: { breadcrumb: 'Transferir Peticiones', roles: ['Admin', 'Directivo', 'Líder'] }
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./components/detalle-peticion/detalle-peticion/detalle-peticion.component').then(

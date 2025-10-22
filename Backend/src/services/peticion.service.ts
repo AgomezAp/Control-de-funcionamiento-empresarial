@@ -935,6 +935,173 @@ export class PeticionService {
     return peticionActualizada;
   }
 
+  /**
+   * Transferir peticiones de un usuario a otro(s)
+   * Distribuye las peticiones equitativamente entre los usuarios destino
+   */
+  async transferirPeticiones(
+    usuarioOrigenId: number,
+    peticionesIds: number[],
+    usuariosDestinoIds: number[],
+    motivo: string,
+    usuarioActual: any
+  ) {
+    // Verificar permisos (Admin, Directivo, Líder)
+    const rolesPermitidos = ["Admin", "Directivo", "Líder"];
+    if (!rolesPermitidos.includes(usuarioActual.rol)) {
+      throw new ForbiddenError("No tienes permisos para transferir peticiones");
+    }
+
+    // Verificar que el usuario origen existe
+    const usuarioOrigen = await Usuario.findByPk(usuarioOrigenId);
+    if (!usuarioOrigen) {
+      throw new NotFoundError("Usuario origen no encontrado");
+    }
+
+    // Verificar que todos los usuarios destino existen y están activos
+    const usuariosDestino = await Usuario.findAll({
+      where: {
+        uid: usuariosDestinoIds,
+        status: true, // Solo usuarios activos
+      },
+    });
+
+    if (usuariosDestino.length !== usuariosDestinoIds.length) {
+      throw new ValidationError("Uno o más usuarios destino no existen o están inactivos");
+    }
+
+    // Obtener las peticiones a transferir
+    const peticiones = await Peticion.findAll({
+      where: {
+        id: peticionesIds,
+        asignado_a: usuarioOrigenId,
+        estado: {
+          [Op.in]: ["Pendiente", "En Progreso", "Pausada"], // No transferir resueltas/canceladas
+        },
+      },
+      include: [
+        { model: Cliente, as: "cliente" },
+        { model: Categoria, as: "categoria" },
+      ],
+    });
+
+    if (peticiones.length === 0) {
+      throw new ValidationError("No hay peticiones válidas para transferir");
+    }
+
+    if (peticiones.length !== peticionesIds.length) {
+      throw new ValidationError(
+        "Algunas peticiones no existen, no pertenecen al usuario origen o ya están finalizadas"
+      );
+    }
+
+    // Distribuir peticiones equitativamente entre usuarios destino
+    const peticionesTransferidas: any[] = [];
+    const usuariosConPeticiones = new Map<number, number>(); // uid -> cantidad
+
+    // Inicializar contador para cada usuario destino
+    usuariosDestinoIds.forEach(uid => usuariosConPeticiones.set(uid, 0));
+
+    // Distribuir peticiones de forma round-robin
+    let indiceUsuarioActual = 0;
+    for (const peticion of peticiones) {
+      const usuarioDestinoId = usuariosDestinoIds[indiceUsuarioActual];
+      const usuarioDestino = usuariosDestino.find(u => u.uid === usuarioDestinoId)!;
+
+      // Actualizar asignación
+      await peticion.update({
+        asignado_a: usuarioDestinoId,
+        // Si estaba en progreso con temporizador, pausarlo
+        ...(peticion.temporizador_activo && {
+          temporizador_activo: false,
+          fecha_pausa_temporizador: new Date(),
+          tiempo_empleado_segundos: await this.calcularTiempoEmpleado(peticion),
+        }),
+      });
+
+      // Registrar auditoría
+      await this.auditoriaService.registrarCambio({
+        tabla_afectada: "peticiones",
+        registro_id: peticion.id,
+        tipo_cambio: "ASIGNACION",
+        campo_modificado: "asignado_a",
+        valor_anterior: usuarioOrigenId.toString(),
+        valor_nuevo: usuarioDestinoId.toString(),
+        usuario_id: usuarioActual.uid,
+        descripcion: `Transferencia de petición: ${motivo}`,
+      });
+
+      // Crear notificación para el usuario destino
+      await notificacionService.crear({
+        usuario_id: usuarioDestinoId,
+        tipo: "asignacion",
+        titulo: "Petición transferida",
+        mensaje: `Se te ha asignado la petición #${peticion.id} del cliente ${(peticion as any).cliente.nombre}`,
+        peticion_id: peticion.id,
+      });
+
+      peticionesTransferidas.push({
+        peticion_id: peticion.id,
+        usuario_destino_id: usuarioDestinoId,
+        usuario_destino_nombre: usuarioDestino.nombre_completo,
+      });
+
+      // Incrementar contador y avanzar al siguiente usuario
+      usuariosConPeticiones.set(usuarioDestinoId, usuariosConPeticiones.get(usuarioDestinoId)! + 1);
+      indiceUsuarioActual = (indiceUsuarioActual + 1) % usuariosDestinoIds.length;
+    }
+
+    // Crear notificación para el usuario origen
+    await notificacionService.crear({
+      usuario_id: usuarioOrigenId,
+      tipo: "sistema",
+      titulo: "Peticiones transferidas",
+      mensaje: `Se han transferido ${peticiones.length} peticiones a otros usuarios. Motivo: ${motivo}`,
+    });
+
+    // Emitir eventos WebSocket
+    webSocketService.emit("peticionesTransferidas", {
+      usuario_origen_id: usuarioOrigenId,
+      usuarios_destino_ids: usuariosDestinoIds,
+      cantidad: peticiones.length,
+      motivo,
+    });
+
+    return {
+      total_transferidas: peticiones.length,
+      usuario_origen: {
+        id: usuarioOrigen.uid,
+        nombre: usuarioOrigen.nombre_completo,
+      },
+      distribucion: Array.from(usuariosConPeticiones.entries()).map(([uid, cantidad]) => {
+        const usuario = usuariosDestino.find(u => u.uid === uid)!;
+        return {
+          usuario_id: uid,
+          usuario_nombre: usuario.nombre_completo,
+          peticiones_asignadas: cantidad,
+        };
+      }),
+      detalle: peticionesTransferidas,
+    };
+  }
+
+  /**
+   * Calcular tiempo empleado actual incluyendo temporizador activo
+   */
+  private async calcularTiempoEmpleado(peticion: Peticion): Promise<number> {
+    let tiempoTotal = peticion.tiempo_empleado_segundos;
+    
+    if (peticion.temporizador_activo && peticion.fecha_inicio_temporizador) {
+      const ahora = new Date();
+      const tiempoTranscurrido = Math.floor(
+        (ahora.getTime() - peticion.fecha_inicio_temporizador.getTime()) / 1000
+      );
+      tiempoTotal += tiempoTranscurrido;
+    }
+
+    return tiempoTotal;
+  }
+
   async obtenerTiempoEmpleado(id: number) {
     const peticion = await Peticion.findByPk(id);
     if (!peticion) throw new NotFoundError("Petición no encontrada");

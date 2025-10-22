@@ -161,4 +161,17 @@ export class PeticionService {
       API_ENDPOINTS.PETICIONES.RESUMEN_GLOBAL
     );
   }
+
+  // Transferir peticiones entre usuarios
+  transferirPeticiones(payload: {
+    usuario_origen_id: number;
+    peticiones_ids: number[];
+    usuarios_destino_ids: number[];
+    motivo: string;
+  }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${API_ENDPOINTS.PETICIONES.BASE}/transferir`,
+      payload
+    );
+  }
 }

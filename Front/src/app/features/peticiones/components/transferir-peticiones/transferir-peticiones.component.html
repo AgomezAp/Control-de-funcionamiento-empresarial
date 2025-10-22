@@ -1,0 +1,348 @@
+<div class="transferir-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="header-title">
+        <i class="pi pi-arrow-right-arrow-left"></i>
+        <span>Transferir Peticiones</span>
+      </h2>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-back" type="button" (click)="volver()">
+        <i class="pi pi-arrow-left"></i>
+        <span>Volver</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulario de Selección -->
+  <div class="selection-card">
+    <div class="selection-grid">
+      <!-- Usuario Origen -->
+      <div class="form-field">
+        <label for="usuario-origen" class="field-label">
+          <i class="pi pi-user" style="color: #2196f3"></i>
+          Usuario Origen
+          <span class="required">*</span>
+        </label>
+        <select
+          id="usuario-origen"
+          class="field-select"
+          [(ngModel)]="usuarioOrigenSeleccionado"
+          (change)="onUsuarioOrigenSeleccionado()"
+          [disabled]="loading"
+        >
+          <option [ngValue]="null">Selecciona el usuario origen</option>
+          <option *ngFor="let usuario of usuarios" [ngValue]="usuario">
+            {{ usuario.nombre_completo }} ({{ usuario.area?.nombre }})
+          </option>
+        </select>
+        <small class="field-hint"
+          >Usuario del cual se transferirán las peticiones</small
+        >
+      </div>
+
+      <!-- Usuarios Destino -->
+      <div class="form-field">
+        <label for="usuarios-destino" class="field-label">
+          <i class="pi pi-users" style="color: #4caf50"></i>
+          Usuarios Destino
+          <span class="required">*</span>
+        </label>
+        <div class="multi-select-wrapper">
+          <button
+            type="button"
+            class="multi-select-toggle"
+            [disabled]="!usuarioOrigenSeleccionado"
+            (click)="toggleMultiSelect()"
+          >
+            <span *ngIf="usuariosDestinoSeleccionados.length === 0">
+              Selecciona uno o más usuarios destino
+            </span>
+            <span *ngIf="usuariosDestinoSeleccionados.length > 0">
+              {{ usuariosDestinoSeleccionados.length }} usuario(s)
+              seleccionado(s)
+            </span>
+            <i class="pi pi-chevron-down"></i>
+          </button>
+
+          <div
+            class="multi-select-dropdown"
+            *ngIf="showMultiSelect && usuarioOrigenSeleccionado"
+          >
+            <div class="multi-select-search">
+              <i class="pi pi-search"></i>
+              <input
+                type="text"
+                placeholder="Buscar usuarios..."
+                [(ngModel)]="searchUsuarioDestino"
+                (input)="filterUsuariosDestino()"
+              />
+            </div>
+            <div class="multi-select-options">
+              <label
+                *ngFor="let usuario of usuariosDestinoFiltrados"
+                class="multi-select-option"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isUsuarioDestinoSeleccionado(usuario)"
+                  (change)="toggleUsuarioDestino(usuario)"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="option-text">
+                  {{ usuario.nombre_completo }}
+                  <span class="option-area">({{ usuario.area?.nombre }})</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chips de usuarios seleccionados -->
+        <div
+          class="selected-chips"
+          *ngIf="usuariosDestinoSeleccionados.length > 0"
+        >
+          <span
+            *ngFor="let usuario of usuariosDestinoSeleccionados"
+            class="chip"
+          >
+            {{ usuario.nombre_completo }}
+            <i class="pi pi-times" (click)="removeUsuarioDestino(usuario)"></i>
+          </span>
+        </div>
+
+        <small class="field-hint"
+          >Usuario(s) que recibirán las peticiones</small
+        >
+      </div>
+
+      <!-- Motivo -->
+      <div class="form-field full-width">
+        <label for="motivo" class="field-label">
+          <i class="pi pi-comment" style="color: #ff9800"></i>
+          Motivo de Transferencia
+          <span class="required">*</span>
+        </label>
+        <textarea
+          id="motivo"
+          class="field-textarea"
+          [(ngModel)]="motivo"
+          rows="3"
+          placeholder="Ej: Usuario de vacaciones, Usuario reasignado, Redistribución de carga..."
+          [disabled]="!usuarioOrigenSeleccionado"
+        ></textarea>
+        <small class="field-hint">Describe el motivo de la transferencia</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Peticiones -->
+  <div class="peticiones-card" *ngIf="usuarioOrigenSeleccionado">
+    <div class="card-header-section">
+      <div class="card-title">
+        <i class="pi pi-list"></i>
+        <span
+          >Peticiones de {{ usuarioOrigenSeleccionado.nombre_completo }}</span
+        >
+      </div>
+      <span class="badge badge-info" *ngIf="peticiones.length > 0">
+        {{ peticiones.length }} disponibles
+      </span>
+    </div>
+
+    <!-- Búsqueda y Contador -->
+    <div class="table-controls">
+      <div class="search-box">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          placeholder="Buscar petición..."
+          [(ngModel)]="searchTerm"
+          (input)="filterPeticiones()"
+        />
+      </div>
+      <span
+        class="badge badge-success"
+        *ngIf="peticionesSeleccionadas.length > 0"
+      >
+        {{ peticionesSeleccionadas.length }} seleccionadas
+      </span>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loadingPeticiones" class="loading-table">
+      <div class="spinner"></div>
+      <p>Cargando peticiones...</p>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper" *ngIf="!loadingPeticiones">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th class="th-checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="todasSeleccionadas()"
+                  (change)="toggleTodasPeticiones()"
+                />
+                <span class="checkbox-custom"></span>
+              </label>
+            </th>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Área</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let peticion of peticionesPaginadas"
+            [class.selected]="isPeticionSeleccionada(peticion)"
+          >
+            <td>
+              <label class="table-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isPeticionSeleccionada(peticion)"
+                  (change)="togglePeticion(peticion)"
+                />
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <strong>#{{ peticion.id }}</strong>
+            </td>
+            <td>{{ peticion.cliente?.nombre || "N/A" }}</td>
+            <td>{{ peticion.categoria?.nombre || "N/A" }}</td>
+            <td>
+              <span class="descripcion-cell" [title]="peticion.descripcion">
+                {{ peticion.descripcion }}
+              </span>
+            </td>
+            <td>
+              <span class="chip chip-area">
+                <i
+                  [class]="
+                    peticion.area === 'Diseño'
+                      ? 'pi pi-palette'
+                      : 'pi pi-megaphone'
+                  "
+                ></i>
+                {{ peticion.area }}
+              </span>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="'badge-' + getEstadoClass(peticion.estado)"
+              >
+                {{ peticion.estado }}
+              </span>
+            </td>
+            <td>{{ peticion.fecha_creacion | date : "dd/MM/yyyy" }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="peticionesFiltradas.length === 0">
+        <i class="pi pi-inbox"></i>
+        <p>Este usuario no tiene peticiones disponibles para transferir</p>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination" *ngIf="peticionesFiltradas.length > rowsPerPage">
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage === 1"
+        (click)="previousPage()"
+      >
+        <i class="pi pi-chevron-left"></i>
+      </button>
+      <span class="pagination-info">
+        Página {{ currentPage }} de {{ totalPages }}
+      </span>
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        <i class="pi pi-chevron-right"></i>
+      </button>
+      <select
+        class="pagination-select"
+        [(ngModel)]="rowsPerPage"
+        (change)="onRowsPerPageChange()"
+      >
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Resumen y Acción -->
+  <div
+    class="resumen-card"
+    *ngIf="usuarioOrigenSeleccionado && peticiones.length > 0"
+  >
+    <div class="resumen-content">
+      <div class="resumen-info">
+        <h4>Resumen de Transferencia</h4>
+        <ul class="resumen-list">
+          <li>
+            <i class="pi pi-user icon-blue"></i>
+            <strong>Origen:</strong>
+            {{ usuarioOrigenSeleccionado.nombre_completo }}
+          </li>
+          <li>
+            <i class="pi pi-users icon-green"></i>
+            <strong>Destino:</strong>
+            <span
+              *ngIf="usuariosDestinoSeleccionados.length === 0"
+              class="text-muted"
+            >
+              Ninguno seleccionado
+            </span>
+            <span
+              *ngFor="let usuario of usuariosDestinoSeleccionados"
+              class="chip chip-small"
+            >
+              {{ usuario.nombre_completo }}
+            </span>
+          </li>
+          <li>
+            <i class="pi pi-file icon-orange"></i>
+            <strong>Peticiones:</strong>
+            {{ peticionesSeleccionadas.length }} seleccionadas
+          </li>
+        </ul>
+      </div>
+      <div class="resumen-action">
+        <button
+          class="btn btn-primary btn-lg"
+          [disabled]="!puedeTransferir() || transferiendo"
+          (click)="transferirPeticiones()"
+        >
+          <i class="pi pi-spin pi-spinner" *ngIf="transferiendo"></i>
+          <i class="pi pi-arrow-right-arrow-left" *ngIf="!transferiendo"></i>
+          <span>{{
+            transferiendo ? "Transfiriendo..." : "Transferir Peticiones"
+          }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Componentes PrimeNG requeridos -->
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
