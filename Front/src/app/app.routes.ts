@@ -4,12 +4,30 @@ import { authGuard } from './core/guards/auth.guard';
 import { RoleEnum } from './core/models/role.model';
 import { roleGuard } from './core/guards/role.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout/main-layout.component';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from './core/services/auth.service';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full',
+    canActivate: [authGuard],
+    canActivateChild: [
+      () => {
+        const authService = inject(AuthService);
+        const router = inject(Router);
+        const currentUser = authService.getCurrentUser();
+        
+        // Si es Gestión Administrativa, redirigir a peticiones
+        if (currentUser?.area === 'Gestión Administrativa') {
+          return router.createUrlTree(['/peticiones']);
+        }
+        
+        // Para otros usuarios, redirigir a dashboard
+        return router.createUrlTree(['/dashboard']);
+      }
+    ],
+    children: [],
   },
 
   // Rutas públicas (Login, Registro)

@@ -57,75 +57,82 @@ export class SidebarComponent implements OnInit {
   buildMenu(): void {
     if (!this.currentUser) return;
 
-    this.menuItems = [
-      {
+    this.menuItems = [];
+
+    // Dashboard - SOLO si NO es Gestión Administrativa
+    if (!this.isGestionAdministrativa()) {
+      this.menuItems.push({
         label: 'Dashboard',
         icon: 'pi pi-home',
         routerLink: ['/dashboard'],
-      },
-      {
-        label: 'Peticiones',
-        icon: 'pi pi-file-edit',
-        expanded: false,
-        items: [
-          {
-            label: 'Todas',
-            icon: 'pi pi-list',
-            routerLink: ['/peticiones'],
-          },
-          {
-            label: 'Crear Nueva',
-            icon: 'pi pi-plus-circle',
-            routerLink: ['/peticiones/crear-nueva'],
-          },
-          {
-            label: 'Pendientes',
-            icon: 'pi pi-clock',
-            routerLink: ['/peticiones/pendientes'],
-          },
-          {
-            label: 'En Progreso',
-            icon: 'pi pi-sync',
-            routerLink: ['/peticiones/en-progreso'],
-          },
-          {
-            label: 'Histórico',
-            icon: 'pi pi-history',
-            routerLink: ['/peticiones/historico'],
-          },
-          ...(this.canTransferPeticiones()
-            ? [
-                {
-                  label: 'Transferir',
-                  icon: 'pi pi-arrow-right-arrow-left',
-                  routerLink: ['/peticiones/transferir'],
-                },
-              ]
-            : []),
-        ],
-      },
-      {
-        label: 'Clientes',
-        icon: 'pi pi-users',
-        expanded: false,
-        items: [
-          {
-            label: 'Todos',
-            icon: 'pi pi-list',
-            routerLink: ['/clientes'],
-          },
-          ...(this.canCreateClients()
-            ? [
-                {
-                  label: 'Crear Nuevo',
-                  icon: 'pi pi-user-plus',
-                  routerLink: ['/clientes/crear'],
-                },
-              ]
-            : []),
-        ],
-      },
-    ];
+      });
+    }
+
+    // Peticiones - Para todos
+    this.menuItems.push({
+      label: 'Peticiones',
+      icon: 'pi pi-file-edit',
+      expanded: false,
+      items: [
+        {
+          label: 'Todas',
+          icon: 'pi pi-list',
+          routerLink: ['/peticiones'],
+        },
+        {
+          label: 'Crear Nueva',
+          icon: 'pi pi-plus-circle',
+          routerLink: ['/peticiones/crear-nueva'],
+        },
+        {
+          label: 'Pendientes',
+          icon: 'pi pi-clock',
+          routerLink: ['/peticiones/pendientes'],
+        },
+        {
+          label: 'En Progreso',
+          icon: 'pi pi-sync',
+          routerLink: ['/peticiones/en-progreso'],
+        },
+        {
+          label: 'Histórico',
+          icon: 'pi pi-history',
+          routerLink: ['/peticiones/historico'],
+        },
+        ...(this.canTransferPeticiones()
+          ? [
+              {
+                label: 'Transferir',
+                icon: 'pi pi-arrow-right-arrow-left',
+                routerLink: ['/peticiones/transferir'],
+              },
+            ]
+          : []),
+      ],
+    });
+
+    // Clientes
+    this.menuItems.push({
+      label: 'Clientes',
+      icon: 'pi pi-users',
+      expanded: false,
+      items: [
+        {
+          label: 'Todos',
+          icon: 'pi pi-list',
+          routerLink: ['/clientes'],
+        },
+        ...(this.canCreateClients()
+          ? [
+              {
+                label: 'Crear Nuevo',
+                icon: 'pi pi-user-plus',
+                routerLink: ['/clientes/crear'],
+              },
+            ]
+          : []),
+      ],
+    });
 
     // Agregar Usuarios
     if (
@@ -156,37 +163,44 @@ export class SidebarComponent implements OnInit {
       });
     }
 
-    // Agregar Estadísticas
-    this.menuItems.push({
-      label: 'Estadísticas',
-      icon: 'pi pi-chart-line',
-      expanded: false,
-      items: [
-        {
-          label: 'Mis Estadísticas',
-          icon: 'pi pi-chart-bar',
-          routerLink: ['/estadisticas/mis-estadisticas'],
-        },
-        ...(this.canViewAreaStats()
-          ? [
-              {
-                label: 'Por Área',
-                icon: 'pi pi-building',
-                routerLink: ['/estadisticas/area'],
-              },
-            ]
-          : []),
-        ...(this.currentUser.rol === RoleEnum.ADMIN
-          ? [
-              {
-                label: 'Globales',
-                icon: 'pi pi-globe',
-                routerLink: ['/estadisticas/globales'],
-              },
-            ]
-          : []),
-      ],
-    });
+
+    // Agregar Estadísticas (solo si no es Gestión Administrativa)
+    if (!this.isGestionAdministrativa()) {
+      this.menuItems.push({
+        label: 'Estadísticas',
+        icon: 'pi pi-chart-line',
+        expanded: false,
+        items: [
+          ...(this.canViewMisEstadisticas()
+            ? [
+                {
+                  label: 'Mis Estadísticas',
+                  icon: 'pi pi-chart-bar',
+                  routerLink: ['/estadisticas/mis-estadisticas'],
+                },
+              ]
+            : []),
+          ...(this.canViewAreaStats()
+            ? [
+                {
+                  label: 'Por Área',
+                  icon: 'pi pi-building',
+                  routerLink: ['/estadisticas/area'],
+                },
+              ]
+            : []),
+          ...(this.currentUser.rol === RoleEnum.ADMIN
+            ? [
+                {
+                  label: 'Globales',
+                  icon: 'pi pi-globe',
+                  routerLink: ['/estadisticas/globales'],
+                },
+              ]
+            : []),
+        ],
+      });
+    }
 
     // Agregar Facturación
     if ([RoleEnum.ADMIN, RoleEnum.DIRECTIVO].includes(this.currentUser.rol)) {
@@ -250,8 +264,22 @@ export class SidebarComponent implements OnInit {
 
   canTransferPeticiones(): boolean {
     if (!this.currentUser) return false;
+    // Gestión Administrativa NO puede transferir peticiones
+    if (this.currentUser.area === 'Gestión Administrativa') return false;
     return [RoleEnum.ADMIN, RoleEnum.DIRECTIVO, RoleEnum.LIDER].includes(
       this.currentUser.rol
     );
+  }
+
+  canViewMisEstadisticas(): boolean {
+    if (!this.currentUser) return false;
+    // Gestión Administrativa NO necesita ver estadísticas (no manejan costos)
+    if (this.currentUser.area === 'Gestión Administrativa') return false;
+    return true;
+  }
+
+  isGestionAdministrativa(): boolean {
+    if (!this.currentUser) return false;
+    return this.currentUser.area === 'Gestión Administrativa';
   }
 }

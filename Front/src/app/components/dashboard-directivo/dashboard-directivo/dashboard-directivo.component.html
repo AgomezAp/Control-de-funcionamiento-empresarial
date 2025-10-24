@@ -42,7 +42,8 @@
       </div>
     </p-card>
 
-    <p-card styleClass="kpi-card">
+    <!-- Costo Total Área: OCULTO para Gestión Administrativa -->
+    <p-card styleClass="kpi-card" *ngIf="!esGestionAdministrativa">
       <div class="kpi-content">
         <div class="kpi-icon" style="background-color: rgba(255, 193, 7, 0.1);">
           <i class="pi pi-dollar" style="color: #FFC107;"></i>
@@ -69,7 +70,7 @@
           <th>Creadas</th>
           <th>Resueltas</th>
           <th>Tiempo Promedio</th>
-          <th>Costo Generado</th>
+          <th *ngIf="!esGestionAdministrativa">Costo Generado</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-stat>
@@ -82,7 +83,7 @@
             <app-badge [label]="stat.peticionesResueltas.toString()" severity="success"></app-badge>
           </td>
           <td>{{ formatNumber(stat.tiempoPromedio) }} horas</td>
-          <td>{{ stat.costoGenerado | currencyCop }}</td>
+          <td *ngIf="!esGestionAdministrativa">{{ stat.costoGenerado | currencyCop }}</td>
         </tr>
       </ng-template>
     </p-table>

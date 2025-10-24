@@ -56,8 +56,11 @@ export class CrearPeticionComponent implements OnInit {
 
   // Data
   clientes: Cliente[] = [];
+  clientesFiltrados: Cliente[] = [];
   categorias: Categoria[] = [];
   categoriasFiltradas: Categoria[] = [];
+  paises: string[] = [];
+  paisSeleccionado: string = '';
 
   // Selected Data
   clienteSeleccionado: Cliente | null = null;
@@ -66,6 +69,7 @@ export class CrearPeticionComponent implements OnInit {
   // Usuario actual
   currentUser: any = null;
   mostrarSelectArea: boolean = true;
+  esGestionAdministrativa: boolean = false;
 
   // Loading
   loading = false;
@@ -116,6 +120,7 @@ export class CrearPeticionComponent implements OnInit {
     } else if (currentUser?.area === 'Gestión Administrativa') {
       // Gestión Administrativa SOLO puede crear peticiones de su área (fijo)
       this.mostrarSelectArea = false;
+      this.esGestionAdministrativa = true;
       this.formCategoria.patchValue({ area: 'Gestión Administrativa' });
       this.formCategoria.get('area')?.disable();
       console.log('✅ Gestión Administrativa: Área FIJA en "Gestión Administrativa"');
@@ -155,6 +160,11 @@ export class CrearPeticionComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data) {
           this.clientes = response.data;
+          this.clientesFiltrados = response.data;
+          
+          // Extraer lista de países únicos
+          this.paises = [...new Set(response.data.map(c => c.pais))].sort();
+          console.log('🌍 Países disponibles:', this.paises);
         }
         this.loading = false;
       },
@@ -164,6 +174,30 @@ export class CrearPeticionComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  onPaisChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.paisSeleccionado = target.value;
+    
+    if (this.paisSeleccionado) {
+      this.clientesFiltrados = this.clientes.filter(
+        c => c.pais === this.paisSeleccionado
+      );
+      console.log(`🌍 Filtrando por país: ${this.paisSeleccionado} - ${this.clientesFiltrados.length} clientes encontrados`);
+      this.showToast('info', 'Filtro aplicado', `${this.clientesFiltrados.length} clientes de ${this.paisSeleccionado}`);
+    } else {
+      this.clientesFiltrados = this.clientes;
+      console.log('🌍 Mostrando todos los clientes');
+    }
+    
+    // Limpiar selección de cliente si ya había uno seleccionado
+    this.formCliente.patchValue({ cliente_id: '' });
+    this.clienteSeleccionado = null;
+  }
+
+  getClientesPorPais(pais: string): number {
+    return this.clientes.filter(c => c.pais === pais).length;
   }
 
   loadCategorias(): void {
@@ -291,7 +325,10 @@ export class CrearPeticionComponent implements OnInit {
     this.categoriaSeleccionada =
       this.categorias.find((c) => c.id === categoriaId) || null;
 
-    if (this.categoriaSeleccionada?.requiere_descripcion_extra) {
+    // Solo requerir descripción extra si:
+    // 1. La categoría lo requiere Y
+    // 2. NO es Gestión Administrativa
+    if (this.categoriaSeleccionada?.requiere_descripcion_extra && !this.esGestionAdministrativa) {
       this.formDescripcion
         .get('descripcion_extra')
         ?.setValidators(Validators.required);

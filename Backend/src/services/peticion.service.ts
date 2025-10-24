@@ -22,7 +22,7 @@ export class PeticionService {
       descripcion: string;
       descripcion_extra?: string;
       costo?: number;
-      area: "Pautas" | "Diseño";
+      area: "Pautas" | "Diseño" | "Gestión Administrativa";
       tiempo_limite_horas?: number;
     },
     usuarioActual: any
@@ -40,7 +40,8 @@ export class PeticionService {
     }
 
     // Si la categoría requiere descripción extra, validar que venga
-    if (categoria.requiere_descripcion_extra && !data.descripcion_extra) {
+    // EXCEPCIÓN: No validar para Gestión Administrativa
+    if (categoria.requiere_descripcion_extra && !data.descripcion_extra && data.area !== "Gestión Administrativa") {
       throw new ValidationError(
         `La categoría "${categoria.nombre}" requiere descripción adicional`
       );
@@ -375,14 +376,16 @@ export class PeticionService {
   async obtenerPendientes(area?: string) {
     const whereClause: any = { estado: "Pendiente" };
 
+    // ✅ CORRECCIÓN: Filtrar directamente por el campo "area" de la petición
+    // en lugar de por categorías (permite filtrar Pautas correctamente)
     if (area) {
-      const categoria = await Categoria.findAll({
-        where: { area_tipo: area },
-        attributes: ["id"],
-      });
-
-      const categoriasIds = categoria.map((c) => c.id);
-      whereClause.categoria_id = categoriasIds;
+      // Si el área es "Pautas", mostrar peticiones de Pautas Y Gestión Administrativa
+      if (area === "Pautas") {
+        whereClause.area = ["Pautas", "Gestión Administrativa"];
+      } else {
+        // Para Diseño u otras áreas, solo mostrar sus propias peticiones
+        whereClause.area = area;
+      }
     }
 
     return await Peticion.findAll({
@@ -419,14 +422,23 @@ export class PeticionService {
       throw new ValidationError("Solo se pueden aceptar peticiones pendientes");
     }
 
-    // Verificar que el usuario sea del área correcta
-    const categoria = await Categoria.findByPk(peticion.categoria_id);
+    // ✅ CORRECCIÓN: Verificar permisos según el área de la petición
     const usuarioArea = await Area.findOne({ where: { nombre: usuarioActual.area } });
 
-    if (categoria?.area_tipo !== usuarioArea?.nombre) {
-      throw new ForbiddenError(
-        `Solo usuarios del área de ${categoria?.area_tipo} pueden aceptar esta petición`
-      );
+    // Los pautadores pueden aceptar peticiones de Pautas Y Gestión Administrativa
+    if (usuarioArea?.nombre === "Pautas") {
+      if (peticion.area !== "Pautas" && peticion.area !== "Gestión Administrativa") {
+        throw new ForbiddenError(
+          `Solo usuarios de Pautas pueden aceptar peticiones de Pautas y Gestión Administrativa`
+        );
+      }
+    } else {
+      // Otras áreas solo pueden aceptar sus propias peticiones
+      if (peticion.area !== usuarioArea?.nombre) {
+        throw new ForbiddenError(
+          `Solo usuarios del área de ${peticion.area} pueden aceptar esta petición`
+        );
+      }
     }
 
     // Iniciar temporizador automáticamente

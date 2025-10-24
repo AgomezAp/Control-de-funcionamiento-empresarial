@@ -5,6 +5,7 @@ import Categoria from "../models/Categoria";
 import Usuario from "../models/Usuario";
 import Cliente from "../models/Cliente";
 import Peticion from "../models/Peticion";
+import ReporteCliente, { TipoProblema, PrioridadReporte, EstadoReporte } from "../models/ReporteCliente";
 import "../models/Relaciones"; // Importar relaciones
 import bcrypt from "bcrypt";
 
@@ -303,59 +304,59 @@ async function initData() {
     console.log("📝 Creando categorías de Gestión Administrativa...");
     const categoriasGestionAdmin = [
       {
-        nombre: "Revisión de documentos",
-        area_tipo: "Gestión Administrativa",
-        costo: 50000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Gestión de contratos",
-        area_tipo: "Gestión Administrativa",
-        costo: 100000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Elaboración de informes",
-        area_tipo: "Gestión Administrativa",
-        costo: 75000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Archivo y organización",
-        area_tipo: "Gestión Administrativa",
-        costo: 30000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Gestión de correspondencia",
-        area_tipo: "Gestión Administrativa",
-        costo: 40000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Actualización de base de datos",
-        area_tipo: "Gestión Administrativa",
-        costo: 60000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Coordinación de reuniones",
-        area_tipo: "Gestión Administrativa",
-        costo: 35000,
-        es_variable: false,
-        requiere_descripcion_extra: false,
-      },
-      {
-        nombre: "Soporte administrativo general",
+        nombre: "Reporte de problema - Cliente",
         area_tipo: "Gestión Administrativa",
         costo: 0,
-        es_variable: true,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Solicitud de soporte técnico",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Incidencia con campaña",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Problema con diseño web",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Consulta general del cliente",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Seguimiento de solicitud",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Escalamiento de caso",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
+        requiere_descripcion_extra: true,
+      },
+      {
+        nombre: "Otro - Especificar",
+        area_tipo: "Gestión Administrativa",
+        costo: 0,
+        es_variable: false,
         requiere_descripcion_extra: true,
       },
     ];
@@ -444,6 +445,16 @@ async function initData() {
         estado_presencia: "Activo",
         ultima_actividad: new Date(),
       },
+      {
+        nombre_completo: "Laura Gómez - Gestión Administrativa",
+        correo: "laura.admin@empresa.com",
+        contrasena: passwordHash,
+        rol_id: rolesCreados.Usuario.id,
+        area_id: areasCreadas["Gestión Administrativa"].id,
+        status: true,
+        estado_presencia: "Activo",
+        ultima_actividad: new Date(),
+      },
     ];
 
     const usuariosCreados: any[] = [];
@@ -461,6 +472,7 @@ async function initData() {
     const lider = usuariosCreados[5]; // Luis Rodríguez
     const directivo = usuariosCreados[6]; // Roberto Fernández
     const admin = usuariosCreados[0];
+    const gestionAdmin = usuariosCreados[7]; // Laura Gómez
 
     // Crear clientes de prueba
     console.log("📝 Creando clientes de prueba...");
@@ -723,6 +735,79 @@ async function initData() {
     }
     console.log("✅ Peticiones creadas");
 
+    // Crear reportes de clientes de prueba
+    console.log("📝 Creando reportes de clientes de prueba...");
+    const reportes = [
+      // Reporte pendiente - Problema con campaña
+      {
+        cliente_id: clientesCreados[0].id,
+        tipo_problema: TipoProblema.CAMPANA,
+        descripcion_problema: "Cliente reporta que los anuncios de Facebook no están apareciendo desde hace 2 días. Urgente revisar configuración de la campaña.",
+        prioridad: PrioridadReporte.URGENTE,
+        estado: EstadoReporte.PENDIENTE,
+        creado_por: gestionAdmin.uid,
+        fecha_creacion: new Date(ahora.getTime() - 2 * 60 * 60 * 1000), // Hace 2 horas
+        notas_internas: "Cliente llamó 3 veces. Muy molesto.",
+      },
+      // Reporte en atención - Problema diseño web
+      {
+        cliente_id: clientesCreados[1].id,
+        tipo_problema: TipoProblema.DISENO_WEB,
+        descripcion_problema: "El logo en la página principal se ve pixelado en dispositivos móviles. Cliente solicita ajuste urgente.",
+        prioridad: PrioridadReporte.ALTA,
+        estado: EstadoReporte.EN_ATENCION,
+        creado_por: gestionAdmin.uid,
+        atendido_por: disenador1.uid,
+        fecha_creacion: new Date(ahora.getTime() - 5 * 60 * 60 * 1000), // Hace 5 horas
+        fecha_atencion: new Date(ahora.getTime() - 4 * 60 * 60 * 1000), // Hace 4 horas
+        peticiones_relacionadas: [], // Se vinculará después cuando se cree la petición
+        notas_internas: "Carlos ya está trabajando en el ajuste.",
+      },
+      // Reporte pendiente - Consulta general
+      {
+        cliente_id: clientesCreados[2].id,
+        tipo_problema: TipoProblema.CONSULTA_GENERAL,
+        descripcion_problema: "Cliente pregunta sobre el estado de su última petición de diseño y cuándo estará lista.",
+        prioridad: PrioridadReporte.MEDIA,
+        estado: EstadoReporte.PENDIENTE,
+        creado_por: gestionAdmin.uid,
+        fecha_creacion: new Date(ahora.getTime() - 1 * 60 * 60 * 1000), // Hace 1 hora
+      },
+      // Reporte resuelto - Soporte técnico
+      {
+        cliente_id: clientesCreados[3].id,
+        tipo_problema: TipoProblema.SOPORTE_TECNICO,
+        descripcion_problema: "Cliente reportó error 404 en varias páginas de su sitio web. Se resolvió actualizando enlaces rotos.",
+        prioridad: PrioridadReporte.ALTA,
+        estado: EstadoReporte.RESUELTO,
+        creado_por: gestionAdmin.uid,
+        atendido_por: disenador2.uid,
+        fecha_creacion: new Date(ahora.getTime() - 24 * 60 * 60 * 1000), // Hace 1 día
+        fecha_atencion: new Date(ahora.getTime() - 23 * 60 * 60 * 1000), // Hace 23 horas
+        fecha_resolucion: new Date(ahora.getTime() - 20 * 60 * 60 * 1000), // Hace 20 horas
+        peticiones_relacionadas: [],
+        notas_internas: "Ana identificó 5 enlaces rotos y los corrigió. Cliente confirmó que todo funciona.",
+      },
+      // Reporte en atención - Escalamiento
+      {
+        cliente_id: clientesCreados[4].id,
+        tipo_problema: TipoProblema.ESCALAMIENTO,
+        descripcion_problema: "Cliente muy insatisfecho con tiempo de respuesta en su última solicitud. Requiere atención inmediata del líder o directivo.",
+        prioridad: PrioridadReporte.URGENTE,
+        estado: EstadoReporte.EN_ATENCION,
+        creado_por: gestionAdmin.uid,
+        atendido_por: pautador1.uid,
+        fecha_creacion: new Date(ahora.getTime() - 3 * 60 * 60 * 1000), // Hace 3 horas
+        fecha_atencion: new Date(ahora.getTime() - 2 * 60 * 60 * 1000), // Hace 2 horas
+        notas_internas: "Escalado a Juan Pérez para seguimiento personalizado.",
+      },
+    ];
+
+    for (const reporte of reportes) {
+      await ReporteCliente.create(reporte);
+    }
+    console.log("✅ Reportes de clientes creados");
+
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     console.log("✅ Datos iniciales cargados correctamente");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -736,6 +821,7 @@ async function initData() {
     console.log(`   - ${usuarios.length} Usuarios`);
     console.log(`   - ${clientes.length} Clientes`);
     console.log(`   - ${peticiones.length} Peticiones`);
+    console.log(`   - ${reportes.length} Reportes de Clientes`);
     console.log("");
     console.log("👥 Usuarios creados:");
     console.log("   📧 admin@empresa.com (Admin) - Password: 123456");
@@ -745,6 +831,7 @@ async function initData() {
     console.log("   📧 ana.diseno@empresa.com (Diseñadora) - Password: 123456");
     console.log("   📧 luis.lider@empresa.com (Líder) - Password: 123456");
     console.log("   📧 roberto.directivo@empresa.com (Directivo) - Password: 123456");
+    console.log("   📧 laura.admin@empresa.com (Gestión Administrativa) - Password: 123456");
     console.log("");
     console.log("📊 Estados de peticiones:");
     console.log("   ✅ Resueltas: 3");
@@ -752,6 +839,11 @@ async function initData() {
     console.log("   ⏸️ Pausadas: 2");
     console.log("   ⏳ Pendientes: 2");
     console.log("   ❌ Canceladas: 1");
+    console.log("");
+    console.log("📋 Estados de reportes:");
+    console.log("   ⏳ Pendientes: 2");
+    console.log("   🔄 En Atención: 2");
+    console.log("   ✅ Resueltos: 1");
     console.log("");
     console.log("🎉 ¡Listo! Ya puedes empezar a usar la aplicación");
 

@@ -12,6 +12,7 @@ const estadistica_routes_1 = __importDefault(require("./estadistica.routes"));
 const facturacion_routes_1 = __importDefault(require("./facturacion.routes"));
 const notificacion_routes_1 = __importDefault(require("./notificacion.routes"));
 const categoria_routes_1 = __importDefault(require("./categoria.routes"));
+const reportes_clientes_routes_1 = __importDefault(require("./reportes-clientes.routes"));
 const router = (0, express_1.Router)();
 // Definir todas las rutas
 router.use("/auth", auth_routes_1.default);
@@ -22,4 +23,5 @@ router.use("/estadisticas", estadistica_routes_1.default);
 router.use("/facturacion", facturacion_routes_1.default);
 router.use("/notificaciones", notificacion_routes_1.default);
 router.use("/categorias", categoria_routes_1.default);
+router.use("/reportes-clientes", reportes_clientes_routes_1.default);
 exports.default = router;

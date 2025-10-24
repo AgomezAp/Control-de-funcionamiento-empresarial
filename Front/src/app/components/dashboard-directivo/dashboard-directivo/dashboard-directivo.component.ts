@@ -32,6 +32,7 @@ export class DashboardDirectivoComponent implements OnInit {
   equipoStats: any[] = [];
   chartPeticiones: any;
   chartOptions: any;
+  esGestionAdministrativa: boolean = false;
 
   constructor(
     private peticionService: PeticionService,
@@ -43,6 +44,7 @@ export class DashboardDirectivoComponent implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.areaUsuario = currentUser.area;
+      this.esGestionAdministrativa = currentUser.area === 'Gestión Administrativa';
       this.loadDashboardData();
     }
   }

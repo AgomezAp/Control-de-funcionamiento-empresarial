@@ -6,6 +6,7 @@ export class PeticionHistorico extends Model {
   public peticion_id_original!: number;
   public cliente_id!: number;
   public categoria_id!: number;
+  public area!: "Pautas" | "Diseño" | "Gestión Administrativa";
   public descripcion!: string;
   public descripcion_extra!: string | null;
   public costo!: number;
@@ -38,6 +39,11 @@ PeticionHistorico.init(
     categoria_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    area: {
+      type: DataTypes.ENUM("Pautas", "Diseño", "Gestión Administrativa"),
+      allowNull: false,
+      defaultValue: "Diseño",
     },
     descripcion: {
       type: DataTypes.TEXT,

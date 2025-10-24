@@ -8,6 +8,7 @@
     "dev": "nodemon dist/index.js",
     "start": "nodemon dist/index.js",
     "init-data": "ts-node src/scripts/init-data.ts",
+    "agregar-area-historico": "ts-node src/migrations/agregar-area-historico.ts",
     "typescript": "tsc --watch"
   },
   "keywords": [],

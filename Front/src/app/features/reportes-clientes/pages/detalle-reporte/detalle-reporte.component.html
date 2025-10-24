@@ -1,0 +1,271 @@
+<div class="detalle-reporte p-4" *ngIf="reporte">
+  <div class="header mb-4">
+    <div class="flex justify-content-between align-items-center">
+      <div class="flex align-items-center gap-3">
+        <button 
+          pButton 
+          icon="pi pi-arrow-left" 
+          class="p-button-text"
+          (click)="volver()">
+        </button>
+        <div>
+          <h2 class="text-3xl font-bold m-0">Reporte #{{ reporte.id }}</h2>
+          <p class="text-gray-600 mt-2">{{ reporte.cliente?.nombre }}</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button 
+          pButton 
+          label="Asignarme" 
+          icon="pi pi-user-plus" 
+          class="p-button-primary"
+          *ngIf="!reporte.tecnico"
+          (click)="asignarmeReporte()">
+        </button>
+        <button 
+          pButton 
+          label="Cambiar Estado" 
+          icon="pi pi-pencil" 
+          class="p-button-success"
+          (click)="abrirDialogoEstado()">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Información Principal -->
+    <div class="col-12 lg:col-8">
+      <p-card header="Información del Reporte" class="mb-4">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <div class="mb-4">
+              <label class="text-sm text-gray-600 block mb-2">Tipo de Problema</label>
+              <div class="flex align-items-center gap-2">
+                <i [class]="getTipoProblemaIcon(reporte.tipo_problema)" class="text-2xl text-primary"></i>
+                <span class="text-lg font-medium">{{ reporte.tipo_problema }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="mb-4">
+              <label class="text-sm text-gray-600 block mb-2">Prioridad</label>
+              <p-tag 
+                [value]="reporte.prioridad" 
+                [severity]="getPrioridadColor(reporte.prioridad)"
+                styleClass="text-lg">
+              </p-tag>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="mb-4">
+              <label class="text-sm text-gray-600 block mb-2">Descripción del Problema</label>
+              <p class="text-base line-height-3">{{ reporte.descripcion_problema }}</p>
+            </div>
+          </div>
+
+          <div class="col-12" *ngIf="reporte.notas_internas">
+            <div class="mb-4 p-3 bg-blue-50 border-round">
+              <label class="text-sm text-gray-600 block mb-2">
+                <i class="pi pi-info-circle mr-2"></i>Notas Internas
+              </label>
+              <p class="text-base line-height-3 m-0">{{ reporte.notas_internas }}</p>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Timeline -->
+      <p-card header="Cronología">
+        <p-timeline [value]="[
+          {
+            status: 'Creado',
+            date: formatearFecha(reporte.fecha_creacion),
+            icon: 'pi pi-plus-circle',
+            color: '#3B82F6'
+          },
+          {
+            status: 'En Atención',
+            date: formatearFecha(reporte.fecha_atencion),
+            icon: 'pi pi-user',
+            color: reporte.fecha_atencion ? '#10B981' : '#D1D5DB'
+          },
+          {
+            status: 'Resuelto',
+            date: formatearFecha(reporte.fecha_resolucion),
+            icon: 'pi pi-check-circle',
+            color: reporte.fecha_resolucion ? '#22C55E' : '#D1D5DB'
+          }
+        ]" align="alternate">
+          <ng-template pTemplate="content" let-event>
+            <div class="p-3 bg-white border-round surface-border border-1">
+              <div class="font-bold mb-1">{{ event.status }}</div>
+              <div class="text-sm text-gray-600">{{ event.date }}</div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="opposite" let-event>
+            <small class="text-gray-500">{{ event.date }}</small>
+          </ng-template>
+          <ng-template pTemplate="marker" let-event>
+            <span class="flex align-items-center justify-content-center text-white border-circle w-2rem h-2rem"
+                  [style.background-color]="event.color">
+              <i [class]="event.icon"></i>
+            </span>
+          </ng-template>
+        </p-timeline>
+      </p-card>
+    </div>
+
+    <!-- Panel Lateral -->
+    <div class="col-12 lg:col-4">
+      <!-- Estado Actual -->
+      <p-card class="mb-4">
+        <div class="text-center">
+          <div class="text-sm text-gray-600 mb-2">Estado Actual</div>
+          <p-tag 
+            [value]="reporte.estado" 
+            [severity]="getEstadoColor(reporte.estado)"
+            styleClass="text-lg px-4 py-2">
+          </p-tag>
+        </div>
+      </p-card>
+
+      <!-- Detalles -->
+      <p-card header="Detalles" class="mb-4">
+        <div class="space-y-3">
+          <div>
+            <div class="text-xs text-gray-600 mb-1">Creado por</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-user text-gray-600"></i>
+              <span class="text-sm font-medium">{{ reporte.creador?.nombre_completo || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div>
+            <div class="text-xs text-gray-600 mb-1">Técnico Asignado</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-user-plus text-gray-600"></i>
+              <span class="text-sm font-medium" *ngIf="reporte.tecnico">{{ reporte.tecnico.nombre_completo }}</span>
+              <span class="text-sm text-gray-400" *ngIf="!reporte.tecnico">Sin asignar</span>
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div>
+            <div class="text-xs text-gray-600 mb-1">Fecha de Creación</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-calendar text-gray-600"></i>
+              <span class="text-sm">{{ formatearFecha(reporte.fecha_creacion) }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="reporte.fecha_atencion">
+            <div class="text-xs text-gray-600 mb-1">Tiempo de Respuesta</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-clock text-gray-600"></i>
+              <span class="text-sm font-bold text-blue-600">{{ calcularTiempoRespuesta() }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="reporte.fecha_resolucion">
+            <div class="text-xs text-gray-600 mb-1">Tiempo de Resolución</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-stopwatch text-gray-600"></i>
+              <span class="text-sm font-bold text-green-600">{{ calcularTiempoResolucion() }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="reporte.peticiones_relacionadas && reporte.peticiones_relacionadas.length > 0">
+            <p-divider></p-divider>
+            <div class="text-xs text-gray-600 mb-1">Peticiones Vinculadas</div>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-link text-gray-600"></i>
+              <span class="text-sm font-bold">{{ reporte.peticiones_relacionadas.length }} petición(es)</span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Cliente -->
+      <p-card header="Cliente" *ngIf="reporte.cliente">
+        <div class="space-y-2">
+          <div>
+            <div class="text-xs text-gray-600 mb-1">Nombre</div>
+            <div class="text-sm font-medium">{{ reporte.cliente.nombre }}</div>
+          </div>
+          <div *ngIf="reporte.cliente.cedula">
+            <div class="text-xs text-gray-600 mb-1">Cédula/NIT</div>
+            <div class="text-sm">{{ reporte.cliente.cedula }}</div>
+          </div>
+          <div *ngIf="reporte.cliente.correo">
+            <div class="text-xs text-gray-600 mb-1">Correo</div>
+            <div class="text-sm">{{ reporte.cliente.correo }}</div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>
+
+<!-- Diálogo Cambiar Estado -->
+<p-dialog 
+  header="Cambiar Estado del Reporte" 
+  [(visible)]="mostrarDialogoEstado"
+  [modal]="true"
+  [style]="{width: '500px'}">
+  
+  <div class="p-fluid">
+    <div class="field mb-4">
+      <label for="nuevoEstado" class="block mb-2">Nuevo Estado *</label>
+      <p-dropdown 
+        id="nuevoEstado"
+        [options]="estadosDisponibles" 
+        [(ngModel)]="nuevoEstado"
+        optionLabel="label" 
+        optionValue="value"
+        placeholder="Selecciona un estado">
+      </p-dropdown>
+    </div>
+
+    <div class="field">
+      <label for="notasEstado" class="block mb-2">Notas (opcional)</label>
+      <textarea 
+        id="notasEstado"
+        pInputTextarea 
+        [(ngModel)]="notasEstado"
+        rows="4"
+        placeholder="Agrega notas sobre el cambio de estado...">
+      </textarea>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button 
+      pButton 
+      label="Cancelar" 
+      icon="pi pi-times" 
+      class="p-button-text"
+      (click)="mostrarDialogoEstado = false">
+    </button>
+    <button 
+      pButton 
+      label="Actualizar" 
+      icon="pi pi-check" 
+      class="p-button-success"
+      (click)="actualizarEstado()">
+    </button>
+  </ng-template>
+</p-dialog>
+
+<!-- Loading -->
+<div *ngIf="loading" class="flex align-items-center justify-content-center" style="height: 400px;">
+  <p-progressBar mode="indeterminate" [style]="{'width': '300px'}"></p-progressBar>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

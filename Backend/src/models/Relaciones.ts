@@ -9,6 +9,7 @@ import PeriodoFacturacion from "./PeriodoFacturacion";
 import AuditoriaCambios from "./AuditoriaCambio";
 import EstadisticaUsuario from "./EstadisticasUsuario";
 import Notificacion from "./Notificacion";
+import ReporteCliente from "./ReporteCliente";
 
 // ========================================
 // RELACIONES DE USUARIO
@@ -186,6 +187,39 @@ Peticion.hasMany(Notificacion, {
 });
 
 // ========================================
+// RELACIONES DE REPORTES CLIENTES
+// ========================================
+ReporteCliente.belongsTo(Cliente, {
+  foreignKey: "cliente_id",
+  as: "cliente",
+});
+
+ReporteCliente.belongsTo(Usuario, {
+  foreignKey: "creado_por",
+  as: "creador",
+});
+
+ReporteCliente.belongsTo(Usuario, {
+  foreignKey: "atendido_por",
+  as: "tecnico",
+});
+
+Cliente.hasMany(ReporteCliente, {
+  foreignKey: "cliente_id",
+  as: "reportes",
+});
+
+Usuario.hasMany(ReporteCliente, {
+  foreignKey: "creado_por",
+  as: "reportes_creados",
+});
+
+Usuario.hasMany(ReporteCliente, {
+  foreignKey: "atendido_por",
+  as: "reportes_atendidos",
+});
+
+// ========================================
 // EXPORTAR TODOS LOS MODELOS
 // ========================================
 export {
@@ -200,4 +234,5 @@ export {
   AuditoriaCambios,
   EstadisticaUsuario,
   Notificacion,
+  ReporteCliente,
 };

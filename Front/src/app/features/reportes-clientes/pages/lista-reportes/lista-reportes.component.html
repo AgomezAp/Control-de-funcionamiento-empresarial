@@ -1,0 +1,160 @@
+<div class="lista-reportes p-4">
+  <div class="header mb-4">
+    <div class="flex justify-content-between align-items-center">
+      <div>
+        <h2 class="text-3xl font-bold m-0">Lista de Reportes</h2>
+        <p class="text-gray-600 mt-2">Todos los reportes de clientes</p>
+      </div>
+      <button 
+        pButton 
+        label="Nuevo Reporte" 
+        icon="pi pi-plus" 
+        class="p-button-success"
+        (click)="crearReporte()">
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <p-card class="mb-4">
+    <div class="grid">
+      <div class="col-12 md:col-3">
+        <label class="block text-sm font-medium mb-2">Estado</label>
+        <p-dropdown 
+          [options]="estadosReporte" 
+          [(ngModel)]="filtros.estado"
+          optionLabel="label" 
+          optionValue="value"
+          placeholder="Todos los estados"
+          [showClear]="true"
+          styleClass="w-full">
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-3">
+        <label class="block text-sm font-medium mb-2">Prioridad</label>
+        <p-dropdown 
+          [options]="prioridades" 
+          [(ngModel)]="filtros.prioridad"
+          optionLabel="label" 
+          optionValue="value"
+          placeholder="Todas las prioridades"
+          [showClear]="true"
+          styleClass="w-full">
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-3">
+        <label class="block text-sm font-medium mb-2">Tipo de Problema</label>
+        <p-dropdown 
+          [options]="tiposProblema" 
+          [(ngModel)]="filtros.tipo_problema"
+          optionLabel="label" 
+          optionValue="value"
+          placeholder="Todos los tipos"
+          [showClear]="true"
+          styleClass="w-full">
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-3 flex align-items-end">
+        <button 
+          pButton 
+          label="Filtrar" 
+          icon="pi pi-filter" 
+          class="p-button-primary mr-2"
+          (click)="aplicarFiltros()">
+        </button>
+        <button 
+          pButton 
+          label="Limpiar" 
+          icon="pi pi-times" 
+          class="p-button-secondary"
+          (click)="limpiarFiltros()">
+        </button>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Tabla de Reportes -->
+  <p-card>
+    <p-table 
+      [value]="reportes" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reportes"
+      styleClass="p-datatable-sm">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Prioridad</th>
+          <th>Estado</th>
+          <th>Fecha Creación</th>
+          <th>Técnico</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-reporte>
+        <tr>
+          <td>{{ reporte.id }}</td>
+          <td>
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-building text-gray-600"></i>
+              <span class="font-medium">{{ reporte.cliente?.nombre || 'N/A' }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex align-items-center gap-2">
+              <i [class]="getTipoProblemaIcon(reporte.tipo_problema)" class="text-gray-600"></i>
+              <span>{{ reporte.tipo_problema }}</span>
+            </div>
+          </td>
+          <td>
+            <p-tag 
+              [value]="reporte.prioridad" 
+              [severity]="getPrioridadColor(reporte.prioridad)">
+            </p-tag>
+          </td>
+          <td>
+            <p-tag 
+              [value]="reporte.estado" 
+              [severity]="getEstadoColor(reporte.estado)">
+            </p-tag>
+          </td>
+          <td>{{ formatearFecha(reporte.fecha_creacion) }}</td>
+          <td>
+            <span *ngIf="reporte.tecnico">{{ reporte.tecnico.nombre_completo }}</span>
+            <span *ngIf="!reporte.tecnico" class="text-gray-400">Sin asignar</span>
+          </td>
+          <td>
+            <button 
+              pButton 
+              icon="pi pi-eye" 
+              class="p-button-rounded p-button-text p-button-sm"
+              pTooltip="Ver detalle"
+              (click)="verDetalle(reporte.id)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="text-center py-5">
+            <i class="pi pi-inbox text-5xl text-gray-400 mb-3"></i>
+            <p class="text-gray-500">No se encontraron reportes</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

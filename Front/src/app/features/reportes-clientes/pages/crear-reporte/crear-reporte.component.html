@@ -1,0 +1,232 @@
+<div class="crear-reporte p-4">
+  <div class="header mb-4">
+    <div class="flex align-items-center gap-3">
+      <button 
+        pButton 
+        icon="pi pi-arrow-left" 
+        class="p-button-text"
+        (click)="cancelar()">
+      </button>
+      <div>
+        <h2 class="text-3xl font-bold m-0">Crear Nuevo Reporte</h2>
+        <p class="text-gray-600 mt-2">Reportar problema de un cliente</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col-12 lg:col-8">
+      <p-card>
+        <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+          <div class="p-fluid">
+            <!-- Cliente -->
+            <div class="field mb-4">
+              <label for="cliente" class="block mb-2 font-medium">
+                Cliente <span class="text-red-500">*</span>
+              </label>
+              <p-dropdown 
+                id="cliente"
+                formControlName="cliente_id"
+                [options]="clientes" 
+                optionLabel="nombre" 
+                optionValue="id"
+                placeholder="Selecciona un cliente"
+                [filter]="true"
+                filterBy="nombre"
+                [showClear]="true"
+                styleClass="w-full">
+              </p-dropdown>
+              <small class="p-error" *ngIf="isFieldInvalid('cliente_id')">
+                Cliente es requerido
+              </small>
+            </div>
+
+            <!-- Tipo de Problema -->
+            <div class="field mb-4">
+              <label for="tipoProblema" class="block mb-2 font-medium">
+                Tipo de Problema <span class="text-red-500">*</span>
+              </label>
+              <p-dropdown 
+                id="tipoProblema"
+                formControlName="tipo_problema"
+                [options]="tiposProblema" 
+                optionLabel="label" 
+                optionValue="value"
+                placeholder="Selecciona el tipo de problema"
+                styleClass="w-full">
+              </p-dropdown>
+              <small class="p-error" *ngIf="isFieldInvalid('tipo_problema')">
+                Tipo de problema es requerido
+              </small>
+            </div>
+
+            <!-- Prioridad -->
+            <div class="field mb-4">
+              <label for="prioridad" class="block mb-2 font-medium">
+                Prioridad <span class="text-red-500">*</span>
+              </label>
+              <p-dropdown 
+                id="prioridad"
+                formControlName="prioridad"
+                [options]="prioridades" 
+                optionLabel="label" 
+                optionValue="value"
+                placeholder="Selecciona la prioridad"
+                styleClass="w-full">
+                <ng-template let-prioridad pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <p-tag 
+                      [value]="prioridad.label" 
+                      [severity]="prioridad.severity">
+                    </p-tag>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <small class="p-error" *ngIf="isFieldInvalid('prioridad')">
+                Prioridad es requerida
+              </small>
+            </div>
+
+            <!-- Descripción del Problema -->
+            <div class="field mb-4">
+              <label for="descripcion" class="block mb-2 font-medium">
+                Descripción del Problema <span class="text-red-500">*</span>
+              </label>
+              <textarea 
+                id="descripcion"
+                pInputTextarea 
+                formControlName="descripcion_problema"
+                rows="6"
+                placeholder="Describe detalladamente el problema reportado por el cliente..."
+                [autoResize]="true">
+              </textarea>
+              <small class="p-error" *ngIf="isFieldInvalid('descripcion_problema')">
+                La descripción es requerida (mínimo 10 caracteres)
+              </small>
+            </div>
+
+            <!-- Notas Internas -->
+            <div class="field mb-4">
+              <label for="notas" class="block mb-2 font-medium">
+                Notas Internas <span class="text-gray-500">(Opcional)</span>
+              </label>
+              <textarea 
+                id="notas"
+                pInputTextarea 
+                formControlName="notas_internas"
+                rows="3"
+                placeholder="Agrega notas internas sobre el reporte..."
+                [autoResize]="true">
+              </textarea>
+              <small class="text-gray-500">
+                Estas notas son solo para uso interno del equipo
+              </small>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-content-end gap-2 mt-4">
+              <button 
+                pButton 
+                type="button"
+                label="Cancelar" 
+                icon="pi pi-times" 
+                class="p-button-secondary"
+                (click)="cancelar()"
+                [disabled]="submitting">
+              </button>
+              <button 
+                pButton 
+                type="submit"
+                label="Crear Reporte" 
+                icon="pi pi-check" 
+                class="p-button-success"
+                [loading]="submitting">
+              </button>
+            </div>
+          </div>
+        </form>
+      </p-card>
+    </div>
+
+    <!-- Panel de Ayuda -->
+    <div class="col-12 lg:col-4">
+      <p-card header="Guía de Prioridades" class="mb-4">
+        <div class="space-y-3">
+          <div class="p-3 bg-red-50 border-round">
+            <div class="flex align-items-center gap-2 mb-2">
+              <p-tag value="Urgente" severity="danger"></p-tag>
+            </div>
+            <p class="text-sm m-0">
+              Problemas críticos que afectan operaciones del cliente inmediatamente.
+            </p>
+          </div>
+
+          <div class="p-3 bg-yellow-50 border-round">
+            <div class="flex align-items-center gap-2 mb-2">
+              <p-tag value="Alta" severity="warning"></p-tag>
+            </div>
+            <p class="text-sm m-0">
+              Problemas importantes que requieren atención pronta.
+            </p>
+          </div>
+
+          <div class="p-3 bg-blue-50 border-round">
+            <div class="flex align-items-center gap-2 mb-2">
+              <p-tag value="Media" severity="info"></p-tag>
+            </div>
+            <p class="text-sm m-0">
+              Problemas que pueden esperar pero deben ser atendidos.
+            </p>
+          </div>
+
+          <div class="p-3 bg-green-50 border-round">
+            <div class="flex align-items-center gap-2 mb-2">
+              <p-tag value="Baja" severity="success"></p-tag>
+            </div>
+            <p class="text-sm m-0">
+              Consultas o problemas menores sin urgencia.
+            </p>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card header="Tipos de Problema" styleClass="mb-4">
+        <div class="space-y-2">
+          <div class="flex align-items-start gap-2">
+            <i class="pi pi-megaphone text-primary mt-1"></i>
+            <div>
+              <div class="font-bold text-sm">Campaña</div>
+              <div class="text-xs text-gray-600">Problemas con campañas publicitarias</div>
+            </div>
+          </div>
+          <p-divider></p-divider>
+          <div class="flex align-items-start gap-2">
+            <i class="pi pi-palette text-primary mt-1"></i>
+            <div>
+              <div class="font-bold text-sm">Diseño Web</div>
+              <div class="text-xs text-gray-600">Problemas con sitios web</div>
+            </div>
+          </div>
+          <p-divider></p-divider>
+          <div class="flex align-items-start gap-2">
+            <i class="pi pi-wrench text-primary mt-1"></i>
+            <div>
+              <div class="font-bold text-sm">Soporte Técnico</div>
+              <div class="text-xs text-gray-600">Problemas técnicos generales</div>
+            </div>
+          </div>
+          <p-divider></p-divider>
+          <div class="flex align-items-start gap-2">
+            <i class="pi pi-question-circle text-primary mt-1"></i>
+            <div>
+              <div class="font-bold text-sm">Consulta General</div>
+              <div class="text-xs text-gray-600">Consultas y preguntas</div>
+            </div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

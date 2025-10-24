@@ -42,6 +42,29 @@
     <!-- PASO 1: Seleccionar Cliente -->
     <div *ngIf="activeIndex === 0" class="step-content">
       <form [formGroup]="formCliente" class="step-form">
+        <!-- Filtro por País -->
+        <div class="form-field">
+          <label for="pais_filtro" class="form-label">
+            <i class="pi pi-globe"></i>
+            Filtrar por País
+            <span class="optional">(Opcional - facilita la búsqueda)</span>
+          </label>
+          <select
+            id="pais_filtro"
+            class="form-select"
+            (change)="onPaisChange($event)"
+          >
+            <option value="">Todos los países ({{ clientes.length }} clientes)</option>
+            <option *ngFor="let pais of paises" [value]="pais">
+              {{ pais }} ({{ getClientesPorPais(pais) }} clientes)
+            </option>
+          </select>
+          <small class="form-help" *ngIf="paisSeleccionado">
+            <i class="pi pi-filter"></i>
+            Mostrando {{ clientesFiltrados.length }} clientes de {{ paisSeleccionado }}
+          </small>
+        </div>
+
         <div class="form-field">
           <label for="cliente_id" class="form-label">
             <i class="pi pi-building"></i>
@@ -54,11 +77,14 @@
             class="form-select"
             (change)="onClienteChange($event)"
           >
-            <option value="">Seleccione un cliente</option>
-            <option *ngFor="let cliente of clientes" [value]="cliente.id">
-              {{ cliente.nombre }}
+            <option value="">{{ paisSeleccionado ? 'Seleccione un cliente' : 'Seleccione un cliente ('+clientesFiltrados.length+' disponibles)' }}</option>
+            <option *ngFor="let cliente of clientesFiltrados" [value]="cliente.id">
+              {{ cliente.nombre }} {{ paisSeleccionado ? '' : '(' + cliente.pais + ')' }}
             </option>
           </select>
+          <small class="field-help" *ngIf="!paisSeleccionado && clientes.length > 20">
+            💡 Tip: Use el filtro de país arriba para encontrar clientes más rápido
+          </small>
         </div>
 
         <!-- Info del Cliente Seleccionado -->
@@ -199,8 +225,9 @@
         </div>
 
         <!-- Descripción Extra (si es requerida) -->
+        <!-- OCULTO para Gestión Administrativa -->
         <div
-          *ngIf="categoriaSeleccionada?.requiere_descripcion_extra"
+          *ngIf="categoriaSeleccionada?.requiere_descripcion_extra && !esGestionAdministrativa"
           class="form-field"
         >
           <label for="descripcion_extra" class="form-label">
@@ -252,7 +279,8 @@
             <p class="summary-value description">{{ resumen.descripcion }}</p>
           </div>
 
-          <div *ngIf="resumen.descripcionExtra" class="summary-item full-width">
+          <!-- OCULTO para Gestión Administrativa -->
+          <div *ngIf="resumen.descripcionExtra && !esGestionAdministrativa" class="summary-item full-width">
             <label class="summary-label">
               <i class="pi pi-align-left"></i>
               Descripción Extra

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Notificacion = exports.EstadisticaUsuario = exports.AuditoriaCambios = exports.PeriodoFacturacion = exports.PeticionHistorico = exports.Peticion = exports.Categoria = exports.Cliente = exports.Area = exports.Role = exports.Usuario = void 0;
+exports.ReporteCliente = exports.Notificacion = exports.EstadisticaUsuario = exports.AuditoriaCambios = exports.PeriodoFacturacion = exports.PeticionHistorico = exports.Peticion = exports.Categoria = exports.Cliente = exports.Area = exports.Role = exports.Usuario = void 0;
 const Usuario_1 = __importDefault(require("./Usuario"));
 exports.Usuario = Usuario_1.default;
 const Role_1 = __importDefault(require("./Role"));
@@ -26,6 +26,8 @@ const EstadisticasUsuario_1 = __importDefault(require("./EstadisticasUsuario"));
 exports.EstadisticaUsuario = EstadisticasUsuario_1.default;
 const Notificacion_1 = __importDefault(require("./Notificacion"));
 exports.Notificacion = Notificacion_1.default;
+const ReporteCliente_1 = __importDefault(require("./ReporteCliente"));
+exports.ReporteCliente = ReporteCliente_1.default;
 // ========================================
 // RELACIONES DE USUARIO
 // ========================================
@@ -169,4 +171,31 @@ Usuario_1.default.hasMany(Notificacion_1.default, {
 Peticion_1.default.hasMany(Notificacion_1.default, {
     foreignKey: "peticion_id",
     as: "notificaciones",
+});
+// ========================================
+// RELACIONES DE REPORTES CLIENTES
+// ========================================
+ReporteCliente_1.default.belongsTo(Cliente_1.default, {
+    foreignKey: "cliente_id",
+    as: "cliente",
+});
+ReporteCliente_1.default.belongsTo(Usuario_1.default, {
+    foreignKey: "creado_por",
+    as: "creador",
+});
+ReporteCliente_1.default.belongsTo(Usuario_1.default, {
+    foreignKey: "atendido_por",
+    as: "tecnico",
+});
+Cliente_1.default.hasMany(ReporteCliente_1.default, {
+    foreignKey: "cliente_id",
+    as: "reportes",
+});
+Usuario_1.default.hasMany(ReporteCliente_1.default, {
+    foreignKey: "creado_por",
+    as: "reportes_creados",
+});
+Usuario_1.default.hasMany(ReporteCliente_1.default, {
+    foreignKey: "atendido_por",
+    as: "reportes_atendidos",
 });

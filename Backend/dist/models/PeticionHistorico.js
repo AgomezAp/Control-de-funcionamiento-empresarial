@@ -28,6 +28,11 @@ PeticionHistorico.init({
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
     },
+    area: {
+        type: sequelize_1.DataTypes.ENUM("Pautas", "Diseño", "Gestión Administrativa"),
+        allowNull: false,
+        defaultValue: "Diseño",
+    },
     descripcion: {
         type: sequelize_1.DataTypes.TEXT,
         allowNull: false,

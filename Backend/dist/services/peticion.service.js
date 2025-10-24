@@ -44,7 +44,8 @@ class PeticionService {
                 throw new error_util_1.NotFoundError("Categoría no encontrada");
             }
             // Si la categoría requiere descripción extra, validar que venga
-            if (categoria.requiere_descripcion_extra && !data.descripcion_extra) {
+            // EXCEPCIÓN: No validar para Gestión Administrativa
+            if (categoria.requiere_descripcion_extra && !data.descripcion_extra && data.area !== "Gestión Administrativa") {
                 throw new error_util_1.ValidationError(`La categoría "${categoria.nombre}" requiere descripción adicional`);
             }
             // Si la categoría es variable, el costo debe venir en el request
@@ -329,13 +330,17 @@ class PeticionService {
     obtenerPendientes(area) {
         return __awaiter(this, void 0, void 0, function* () {
             const whereClause = { estado: "Pendiente" };
+            // ✅ CORRECCIÓN: Filtrar directamente por el campo "area" de la petición
+            // en lugar de por categorías (permite filtrar Pautas correctamente)
             if (area) {
-                const categoria = yield Categoria_1.default.findAll({
-                    where: { area_tipo: area },
-                    attributes: ["id"],
-                });
-                const categoriasIds = categoria.map((c) => c.id);
-                whereClause.categoria_id = categoriasIds;
+                // Si el área es "Pautas", mostrar peticiones de Pautas Y Gestión Administrativa
+                if (area === "Pautas") {
+                    whereClause.area = ["Pautas", "Gestión Administrativa"];
+                }
+                else {
+                    // Para Diseño u otras áreas, solo mostrar sus propias peticiones
+                    whereClause.area = area;
+                }
             }
             return yield Peticion_1.default.findAll({
                 where: whereClause,
@@ -369,11 +374,19 @@ class PeticionService {
             if (peticion.estado !== "Pendiente") {
                 throw new error_util_1.ValidationError("Solo se pueden aceptar peticiones pendientes");
             }
-            // Verificar que el usuario sea del área correcta
-            const categoria = yield Categoria_1.default.findByPk(peticion.categoria_id);
+            // ✅ CORRECCIÓN: Verificar permisos según el área de la petición
             const usuarioArea = yield Area_1.default.findOne({ where: { nombre: usuarioActual.area } });
-            if ((categoria === null || categoria === void 0 ? void 0 : categoria.area_tipo) !== (usuarioArea === null || usuarioArea === void 0 ? void 0 : usuarioArea.nombre)) {
-                throw new error_util_1.ForbiddenError(`Solo usuarios del área de ${categoria === null || categoria === void 0 ? void 0 : categoria.area_tipo} pueden aceptar esta petición`);
+            // Los pautadores pueden aceptar peticiones de Pautas Y Gestión Administrativa
+            if ((usuarioArea === null || usuarioArea === void 0 ? void 0 : usuarioArea.nombre) === "Pautas") {
+                if (peticion.area !== "Pautas" && peticion.area !== "Gestión Administrativa") {
+                    throw new error_util_1.ForbiddenError(`Solo usuarios de Pautas pueden aceptar peticiones de Pautas y Gestión Administrativa`);
+                }
+            }
+            else {
+                // Otras áreas solo pueden aceptar sus propias peticiones
+                if (peticion.area !== (usuarioArea === null || usuarioArea === void 0 ? void 0 : usuarioArea.nombre)) {
+                    throw new error_util_1.ForbiddenError(`Solo usuarios del área de ${peticion.area} pueden aceptar esta petición`);
+                }
             }
             // Iniciar temporizador automáticamente
             const fecha_aceptacion = new Date();
